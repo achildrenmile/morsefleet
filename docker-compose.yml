@@ -16,10 +16,10 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: morsefleet
-    # Port 3402 matches production config
+    # Port 3405 matches production config
     # localhost-only binding for security (exposed via Cloudflare tunnel in prod)
     ports:
-      - "127.0.0.1:3402:80"
+      - "127.0.0.1:3405:80"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
