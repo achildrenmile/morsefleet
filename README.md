@@ -35,11 +35,16 @@ MorseFleet is an interactive web-based game that combines the classic battleship
 - English
 - Slovenian (Slovenščina)
 
+### Game Modes
+- **Normal Mode**: Uses letters A-G and numbers 1-7 (2 Morse characters per coordinate)
+- **Advanced Mode**: Uses letter pairs AB-MN and number pairs 01-13 (4 Morse characters per coordinate)
+  - Learn the full alphabet A-N and all digits 0-9
+
 ### Additional Features
 - Adjustable speed (10-25 WPM)
 - Interactive tutorial with live demo
 - Autoplay mode to watch the game play itself
-- Built-in Morse code reference
+- Built-in Morse code reference (updates based on game mode)
 - Mobile-responsive design
 - No cookies, no tracking
 
@@ -63,6 +68,7 @@ MorseFleet is an interactive web-based game that combines the classic battleship
 
 ## Morse Reference
 
+### Normal Mode (A-G, 1-7)
 ```
 Letters:        Numbers:
 A = .-          1 = .----
@@ -72,6 +78,21 @@ D = -..         4 = ....-
 E = .           5 = .....
 F = ..-.        6 = -....
 G = --.         7 = --...
+```
+
+### Advanced Mode (A-N, 0-9)
+```
+Letters:                    Numbers:
+A = .-      H = ....       0 = -----
+B = -...    I = ..         1 = .----
+C = -.-.    J = .---       2 = ..---
+D = -..     K = -.-        3 = ...--
+E = .       L = .-..       4 = ....-
+F = ..-.    M = --         5 = .....
+G = --.     N = -.         6 = -....
+                           7 = --...
+                           8 = ---..
+                           9 = ----.
 ```
 
 ## Technical Details
