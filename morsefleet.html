@@ -420,8 +420,11 @@ section h2 {
     background: #ff6b6b;
 }
 
-.btn:active {
+.btn:active,
+.btn.pressed {
     transform: scale(0.96);
+    background: #ff6b6b;
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
 }
 
 .btn:disabled {
@@ -2971,9 +2974,17 @@ const Autoplay = {
         await this.sendCharacter(coord[1], game);
         await this.sleep(timing.CHAR_GAP + 100); // Wait for character to be decoded
 
-        // Trigger send
+        // Trigger send with visual feedback
         this.updateStatus(i18n.t('autoplaySending', { coord }));
+        const sendBtn = document.getElementById('send-btn');
+        if (sendBtn) {
+            sendBtn.classList.add('pressed');
+            await this.sleep(150);
+        }
         await game.sendCoordinate();
+        if (sendBtn) {
+            sendBtn.classList.remove('pressed');
+        }
 
         // Wait for response to play
         await this.sleep(500);
