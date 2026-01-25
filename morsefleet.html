@@ -467,6 +467,127 @@ footer {
     border-top: 1px solid #0f3460;
 }
 
+.footer-links {
+    margin-top: 8px;
+}
+
+.footer-links a {
+    color: #888;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: #e94560;
+}
+
+.footer-sep {
+    margin: 0 8px;
+    color: #444;
+}
+
+/* Legal Modal */
+.legal-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.legal-modal {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.legal-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #0f3460;
+    position: sticky;
+    top: 0;
+    background: #16213e;
+}
+
+.legal-modal-header h2 {
+    color: #e94560;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.legal-modal-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.8em;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.legal-modal-close:hover {
+    color: #e94560;
+}
+
+.legal-modal-content {
+    padding: 20px;
+}
+
+.legal-info {
+    color: #888;
+    font-size: 0.85em;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.legal-section {
+    margin-bottom: 20px;
+}
+
+.legal-section h3 {
+    color: #4ecca3;
+    font-size: 1em;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #0f3460;
+}
+
+.legal-section p {
+    color: #ccc;
+    font-size: 0.9em;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.legal-address p {
+    margin-bottom: 4px;
+}
+
+.legal-email {
+    color: #e94560;
+    text-decoration: none;
+}
+
+.legal-email:hover {
+    text-decoration: underline;
+}
+
 /* ===========================================
    RESPONSIVE BREAKPOINTS
    =========================================== */
@@ -785,6 +906,13 @@ footer {
 
         <footer>
             <p>MorseFleet - Based on rules by Radioklub Vegova (S59VEG)</p>
+            <div class="footer-links">
+                <a href="#" id="imprint-link">Impressum</a>
+                <span class="footer-sep">|</span>
+                <a href="#" id="privacy-link">Datenschutz</a>
+                <span class="footer-sep">|</span>
+                <a href="https://github.com/achildrenmile/morsefleet" target="_blank" rel="noopener">GitHub</a>
+            </div>
         </footer>
     </div>
 
@@ -1564,11 +1692,214 @@ class MorseFleetGame {
 }
 
 // =============================================================================
+// LEGAL MODALS (Imprint & Privacy)
+// =============================================================================
+
+/**
+ * Imprint and Privacy modal functionality
+ * Required by Austrian law (§ 5 ECG and § 25 MedienG)
+ */
+const LegalModals = {
+    // Imprint content
+    imprint: {
+        title: 'Impressum',
+        info: 'Angaben gemäß § 5 ECG und § 25 MedienG',
+        operator: 'Inhaber / Betreiber',
+        operatorName: 'Michael Linder',
+        operatorCallsign: 'OE8YML',
+        operatorAddress: 'Nötsch 219, 9611 Nötsch',
+        operatorCountry: 'Österreich',
+        contact: 'Kontakt',
+        contactEmail: 'oe8yml@rednil.at',
+        liability: {
+            title: 'Haftung für Inhalte',
+            text: 'Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte übernehmen wir jedoch keine Gewähr. Diese Website dient ausschließlich Bildungszwecken im Bereich Amateurfunk und Morsecode.'
+        },
+        copyright: {
+            title: 'Urheberrecht',
+            text: 'Die durch den Betreiber erstellten Inhalte und Werke auf dieser Website unterliegen dem österreichischen Urheberrecht. Der Quellcode ist unter der MIT-Lizenz auf GitHub verfügbar.'
+        }
+    },
+
+    // Privacy content
+    privacy: {
+        title: 'Datenschutzerklärung',
+        intro: {
+            title: 'Datenschutz auf einen Blick',
+            text: 'Diese Website speichert keine personenbezogenen Daten. Es werden keine Cookies gesetzt und kein Tracking durchgeführt.'
+        },
+        collection: {
+            title: 'Datenerfassung',
+            text: 'Diese Anwendung läuft vollständig im Browser. Es werden keine Daten an Server übertragen. Alle Spielstände existieren nur lokal während der Sitzung.'
+        },
+        hosting: {
+            title: 'Hosting',
+            text: 'Diese Website wird über Cloudflare bereitgestellt. Cloudflare kann technische Zugriffsdaten (IP-Adresse, Zeitpunkt) in Server-Logs speichern. Details finden Sie in der Datenschutzerklärung von Cloudflare.'
+        },
+        rights: {
+            title: 'Ihre Rechte',
+            text: 'Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung Ihrer Daten. Da wir jedoch keine personenbezogenen Daten speichern, fallen diese Rechte praktisch nicht an.'
+        }
+    },
+
+    /**
+     * Show imprint modal
+     */
+    showImprint() {
+        this.removeExisting();
+        const i = this.imprint;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'legal-modal-overlay';
+        overlay.innerHTML = `
+            <div class="legal-modal">
+                <div class="legal-modal-header">
+                    <h2>${i.title}</h2>
+                    <button class="legal-modal-close">&times;</button>
+                </div>
+                <div class="legal-modal-content">
+                    <p class="legal-info">${i.info}</p>
+
+                    <div class="legal-section">
+                        <h3>${i.operator}</h3>
+                        <div class="legal-address">
+                            <p><strong>${i.operatorName}</strong></p>
+                            <p>${i.operatorCallsign}</p>
+                            <p>${i.operatorAddress}</p>
+                            <p>${i.operatorCountry}</p>
+                        </div>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${i.contact}</h3>
+                        <p><a href="mailto:${i.contactEmail}" class="legal-email">${i.contactEmail}</a></p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${i.liability.title}</h3>
+                        <p>${i.liability.text}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${i.copyright.title}</h3>
+                        <p>${i.copyright.text}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        this.setupCloseHandlers(overlay);
+    },
+
+    /**
+     * Show privacy modal
+     */
+    showPrivacy() {
+        this.removeExisting();
+        const p = this.privacy;
+
+        const overlay = document.createElement('div');
+        overlay.className = 'legal-modal-overlay';
+        overlay.innerHTML = `
+            <div class="legal-modal">
+                <div class="legal-modal-header">
+                    <h2>${p.title}</h2>
+                    <button class="legal-modal-close">&times;</button>
+                </div>
+                <div class="legal-modal-content">
+                    <div class="legal-section">
+                        <h3>${p.intro.title}</h3>
+                        <p>${p.intro.text}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${p.collection.title}</h3>
+                        <p>${p.collection.text}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${p.hosting.title}</h3>
+                        <p>${p.hosting.text}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${p.rights.title}</h3>
+                        <p>${p.rights.text}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        this.setupCloseHandlers(overlay);
+    },
+
+    /**
+     * Remove existing modal
+     */
+    removeExisting() {
+        const existing = document.querySelector('.legal-modal-overlay');
+        if (existing) existing.remove();
+    },
+
+    /**
+     * Setup close handlers for modal
+     */
+    setupCloseHandlers(overlay) {
+        // Close button
+        const closeBtn = overlay.querySelector('.legal-modal-close');
+        if (closeBtn) {
+            closeBtn.onclick = () => overlay.remove();
+        }
+
+        // Click outside to close
+        overlay.onclick = (e) => {
+            if (e.target === overlay) overlay.remove();
+        };
+
+        // Escape key to close
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                overlay.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    },
+
+    /**
+     * Initialize footer links
+     */
+    init() {
+        const imprintLink = document.getElementById('imprint-link');
+        const privacyLink = document.getElementById('privacy-link');
+
+        if (imprintLink) {
+            imprintLink.onclick = (e) => {
+                e.preventDefault();
+                this.showImprint();
+            };
+        }
+
+        if (privacyLink) {
+            privacyLink.onclick = (e) => {
+                e.preventDefault();
+                this.showPrivacy();
+            };
+        }
+    }
+};
+
+// =============================================================================
 // INITIALIZATION
 // =============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
     window.game = new MorseFleetGame();
+
+    // Initialize legal modals
+    LegalModals.init();
 
     // Prevent pull-to-refresh on mobile
     document.body.addEventListener('touchmove', (e) => {
