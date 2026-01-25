@@ -1668,6 +1668,8 @@ footer {
             </p>
             <p data-i18n="footerText">MorseFleet - Basierend auf Regeln von Radioklub Vegova (S59VEG)</p>
             <div class="footer-links">
+                <a href="#" id="help-link" data-i18n="help">Hilfe</a>
+                <span class="footer-sep">|</span>
                 <a href="#" id="imprint-link" data-i18n="imprint">Impressum</a>
                 <span class="footer-sep">|</span>
                 <a href="#" id="privacy-link" data-i18n="privacy">Datenschutz</a>
@@ -1840,6 +1842,24 @@ const i18n = {
             autoplaySending: 'Sende {coord}...',
             autoplayVictory: 'Sieg in {shots} Schüssen!',
             stop: 'Stopp',
+            // Help
+            help: 'Hilfe',
+            helpTitle: 'Spielanleitung',
+            helpIntro: 'MorseFleet ist ein Morse-Code Seeschlacht-Trainer. Lerne Morsecode während du gegen den Computer spielst!',
+            helpPhase1Title: '1. Schiffe platzieren',
+            helpPhase1Text: 'Zu Beginn platzierst du deine 6 Schiffe auf dem linken Raster (Deine Flotte). Klicke auf eine Zelle um ein Schiff zu setzen. Drücke <strong>R</strong> oder den Drehen-Button um das Schiff zu rotieren. Du kannst auch "Zufällig" klicken für automatische Platzierung. Wenn alle Schiffe platziert sind, klicke "Flotte bestätigen".',
+            helpPhase2Title: '2. Morsecode eingeben',
+            helpPhase2Text: 'Halte die Morsetaste (oder Leertaste) gedrückt um Signale zu senden. <strong>Kurzer Druck</strong> = Punkt (.), <strong>Langer Druck</strong> = Strich (-). Nach einer kurzen Pause wird das Zeichen automatisch erkannt.',
+            helpPhase3Title: '3. Koordinaten senden',
+            helpPhase3Text: 'Gib einen Buchstaben (A-G) und eine Zahl (1-7) ein, z.B. "B3". Klicke dann "Senden". Der Computer antwortet mit: <strong>W</strong> (Wasser), <strong>S</strong> (Treffer), oder <strong>K</strong> (Versenkt).',
+            helpPhase4Title: '4. Rundenkampf',
+            helpPhase4Text: 'Nach deinem Schuss feuert der Computer auf deine Flotte zurück. Beobachte das linke Raster für eingehende Treffer. Wer zuerst alle 6 feindlichen Schiffe versenkt, gewinnt!',
+            helpMorseTitle: 'Morse-Referenz',
+            helpMorseText: 'A=.- B=-... C=-.-. D=-.. E=. F=..-. G=--.<br>1=.---- 2=..--- 3=...-- 4=....- 5=..... 6=-.... 7=--...',
+            helpTipsTitle: 'Tipps',
+            helpTip1: 'Öffne die "Morsecode Referenz" unter dem Spielfeld als Spickzettel',
+            helpTip2: 'Nutze den Autoplay-Modus um zu sehen wie das Spiel funktioniert',
+            helpTip3: 'Die Geschwindigkeit (WPM) kannst du oben anpassen',
             // Imprint
             imprintTitle: 'Impressum',
             imprintInfo: 'Angaben gemäß § 5 ECG und § 25 MedienG',
@@ -1954,6 +1974,24 @@ const i18n = {
             autoplaySending: 'Sending {coord}...',
             autoplayVictory: 'Victory in {shots} shots!',
             stop: 'Stop',
+            // Help
+            help: 'Help',
+            helpTitle: 'How to Play',
+            helpIntro: 'MorseFleet is a Morse code naval battle trainer. Learn Morse code while playing against the computer!',
+            helpPhase1Title: '1. Place Your Ships',
+            helpPhase1Text: 'At the start, place your 6 ships on the left grid (Your Fleet). Click a cell to place a ship. Press <strong>R</strong> or the Rotate button to rotate the ship. You can also click "Random" for automatic placement. When all ships are placed, click "Confirm Fleet".',
+            helpPhase2Title: '2. Enter Morse Code',
+            helpPhase2Text: 'Hold the Morse key (or Spacebar) to send signals. <strong>Short press</strong> = dot (.), <strong>Long press</strong> = dash (-). After a brief pause, the character is automatically recognized.',
+            helpPhase3Title: '3. Send Coordinates',
+            helpPhase3Text: 'Enter a letter (A-G) and a number (1-7), e.g. "B3". Then click "Send". The computer responds with: <strong>W</strong> (Water), <strong>S</strong> (Hit), or <strong>K</strong> (Sunk).',
+            helpPhase4Title: '4. Turn-Based Combat',
+            helpPhase4Text: 'After your shot, the computer fires back at your fleet. Watch the left grid for incoming hits. First to sink all 6 enemy ships wins!',
+            helpMorseTitle: 'Morse Reference',
+            helpMorseText: 'A=.- B=-... C=-.-. D=-.. E=. F=..-. G=--.<br>1=.---- 2=..--- 3=...-- 4=....- 5=..... 6=-.... 7=--...',
+            helpTipsTitle: 'Tips',
+            helpTip1: 'Open the "Morse Code Reference" below the game grid as a cheat sheet',
+            helpTip2: 'Use Autoplay mode to see how the game works',
+            helpTip3: 'You can adjust the speed (WPM) at the top',
             // Imprint
             imprintTitle: 'Imprint',
             imprintInfo: 'Information according to § 5 ECG and § 25 MedienG (Austrian law)',
@@ -2068,6 +2106,24 @@ const i18n = {
             autoplaySending: 'Pošiljam {coord}...',
             autoplayVictory: 'Zmaga v {shots} strelih!',
             stop: 'Ustavi',
+            // Help
+            help: 'Pomoč',
+            helpTitle: 'Kako igrati',
+            helpIntro: 'MorseFleet je Morze-kodni trener pomorske bitke. Nauči se Morzejevo abecedo med igranjem proti računalniku!',
+            helpPhase1Title: '1. Postavi ladje',
+            helpPhase1Text: 'Na začetku postavi svojih 6 ladij na levo mrežo (Tvoja flota). Klikni na celico za postavitev ladje. Pritisni <strong>R</strong> ali gumb Zasukaj za rotacijo. Lahko tudi klikneš "Naključno" za samodejno postavitev. Ko so vse ladje postavljene, klikni "Potrdi floto".',
+            helpPhase2Title: '2. Vnesi Morzejevo kodo',
+            helpPhase2Text: 'Drži Morzejevo tipko (ali preslednico) za pošiljanje signalov. <strong>Kratek pritisk</strong> = pika (.), <strong>Dolg pritisk</strong> = črtica (-). Po kratkem premoru se znak samodejno prepozna.',
+            helpPhase3Title: '3. Pošlji koordinate',
+            helpPhase3Text: 'Vnesi črko (A-G) in številko (1-7), npr. "B3". Nato klikni "Pošlji". Računalnik odgovori z: <strong>W</strong> (Voda), <strong>S</strong> (Zadetek), ali <strong>K</strong> (Potopljena).',
+            helpPhase4Title: '4. Boj po rundah',
+            helpPhase4Text: 'Po tvojem strelu računalnik strelja nazaj na tvojo floto. Opazuj levo mrežo za vhodne zadetke. Kdor prvi potopi vseh 6 sovražnih ladij, zmaga!',
+            helpMorseTitle: 'Morzejeva referenca',
+            helpMorseText: 'A=.- B=-... C=-.-. D=-.. E=. F=..-. G=--.<br>1=.---- 2=..--- 3=...-- 4=....- 5=..... 6=-.... 7=--...',
+            helpTipsTitle: 'Nasveti',
+            helpTip1: 'Odpri "Morzejeva referenca" pod igralno mrežo kot plonk listek',
+            helpTip2: 'Uporabi samodejni način da vidiš kako igra deluje',
+            helpTip3: 'Hitrost (WPM) lahko prilagodiš na vrhu',
             // Imprint
             imprintTitle: 'Impressum',
             imprintInfo: 'Podatki v skladu s § 5 ECG in § 25 MedienG (avstrijska zakonodaja)',
@@ -4685,6 +4741,120 @@ const LegalModals = {
 };
 
 // =============================================================================
+// HELP MODAL
+// =============================================================================
+
+/**
+ * Help modal - Game instructions in all languages
+ */
+const HelpModal = {
+    /**
+     * Show help modal
+     */
+    show() {
+        this.removeExisting();
+
+        const overlay = document.createElement('div');
+        overlay.className = 'legal-modal-overlay';
+        overlay.innerHTML = `
+            <div class="legal-modal">
+                <div class="legal-modal-header">
+                    <h2>${i18n.t('helpTitle')}</h2>
+                    <button class="legal-modal-close">&times;</button>
+                </div>
+                <div class="legal-modal-content">
+                    <p class="legal-info">${i18n.t('helpIntro')}</p>
+
+                    <div class="legal-section">
+                        <h3>${i18n.t('helpPhase1Title')}</h3>
+                        <p>${i18n.t('helpPhase1Text')}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${i18n.t('helpPhase2Title')}</h3>
+                        <p>${i18n.t('helpPhase2Text')}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${i18n.t('helpPhase3Title')}</h3>
+                        <p>${i18n.t('helpPhase3Text')}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${i18n.t('helpPhase4Title')}</h3>
+                        <p>${i18n.t('helpPhase4Text')}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${i18n.t('helpMorseTitle')}</h3>
+                        <p style="font-family: monospace; color: var(--accent-success);">${i18n.t('helpMorseText')}</p>
+                    </div>
+
+                    <div class="legal-section">
+                        <h3>${i18n.t('helpTipsTitle')}</h3>
+                        <ul style="color: var(--text-primary); padding-left: 20px;">
+                            <li>${i18n.t('helpTip1')}</li>
+                            <li>${i18n.t('helpTip2')}</li>
+                            <li>${i18n.t('helpTip3')}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        this.setupCloseHandlers(overlay);
+    },
+
+    /**
+     * Remove existing modal
+     */
+    removeExisting() {
+        const existing = document.querySelector('.legal-modal-overlay');
+        if (existing) existing.remove();
+    },
+
+    /**
+     * Setup close handlers for modal
+     */
+    setupCloseHandlers(overlay) {
+        // Close button
+        const closeBtn = overlay.querySelector('.legal-modal-close');
+        if (closeBtn) {
+            closeBtn.onclick = () => overlay.remove();
+        }
+
+        // Click outside to close
+        overlay.onclick = (e) => {
+            if (e.target === overlay) overlay.remove();
+        };
+
+        // Escape key to close
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                overlay.remove();
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
+    },
+
+    /**
+     * Initialize help link
+     */
+    init() {
+        const helpLink = document.getElementById('help-link');
+
+        if (helpLink) {
+            helpLink.onclick = (e) => {
+                e.preventDefault();
+                this.show();
+            };
+        }
+    }
+};
+
+// =============================================================================
 // SITE CONFIG (Parent Site Branding)
 // =============================================================================
 
@@ -4776,6 +4946,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize legal modals
     LegalModals.init();
+
+    // Initialize help modal
+    HelpModal.init();
 
     // Prevent pull-to-refresh on mobile
     document.body.addEventListener('touchmove', (e) => {
