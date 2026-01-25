@@ -1529,7 +1529,7 @@ footer {
                     <span class="label" data-i18n="gameMode">Modus:</span>
                     <select id="mode-select" class="speed-select">
                         <option value="normal" selected data-i18n-value="modeNormal">Normal (A-G, 1-7)</option>
-                        <option value="advanced" data-i18n-value="modeAdvanced">Erweitert (A-N, 0-9)</option>
+                        <option value="advanced" data-i18n-value="modeAdvanced">Erweitert 9×9 (A-Z, 0-9)</option>
                     </select>
                 </div>
             </section>
@@ -1792,7 +1792,7 @@ const i18n = {
             language: 'Sprache:',
             gameMode: 'Modus:',
             modeNormal: 'Normal (A-G, 1-7)',
-            modeAdvanced: 'Erweitert (A-N, 0-9)',
+            modeAdvanced: 'Erweitert 9×9 (A-Z, 0-9)',
             result: 'Ergebnis:',
             // Grid
             targetGrid: 'Zielraster',
@@ -1824,7 +1824,7 @@ const i18n = {
             // Reference
             morseReference: 'Morsecode Referenz',
             letters: 'Buchstaben (A-G)',
-            lettersAdvanced: 'Buchstaben (A-N)',
+            lettersAdvanced: 'Buchstaben (A-Z)',
             numbers: 'Zahlen (1-7)',
             numbersAdvanced: 'Zahlen (0-9)',
             responses: 'Antworten',
@@ -1847,6 +1847,7 @@ const i18n = {
             rotate: 'Drehen (R)',
             randomFleet: 'Zufällig',
             confirmFleet: 'Flotte bestätigen',
+            carrier: 'Flugzeugträger',
             battleship: 'Schlachtschiff',
             cruiser: 'Kreuzer',
             destroyer: 'Zerstörer',
@@ -1931,7 +1932,7 @@ const i18n = {
             language: 'Language:',
             gameMode: 'Mode:',
             modeNormal: 'Normal (A-G, 1-7)',
-            modeAdvanced: 'Advanced (A-N, 0-9)',
+            modeAdvanced: 'Advanced 9×9 (A-Z, 0-9)',
             result: 'Result:',
             // Grid
             targetGrid: 'Target Grid',
@@ -1963,7 +1964,7 @@ const i18n = {
             // Reference
             morseReference: 'Morse Code Reference',
             letters: 'Letters (A-G)',
-            lettersAdvanced: 'Letters (A-N)',
+            lettersAdvanced: 'Letters (A-Z)',
             numbers: 'Numbers (1-7)',
             numbersAdvanced: 'Numbers (0-9)',
             responses: 'Responses',
@@ -1986,6 +1987,7 @@ const i18n = {
             rotate: 'Rotate (R)',
             randomFleet: 'Random',
             confirmFleet: 'Confirm Fleet',
+            carrier: 'Carrier',
             battleship: 'Battleship',
             cruiser: 'Cruiser',
             destroyer: 'Destroyer',
@@ -2070,7 +2072,7 @@ const i18n = {
             language: 'Jezik:',
             gameMode: 'Način:',
             modeNormal: 'Normalno (A-G, 1-7)',
-            modeAdvanced: 'Napredno (A-N, 0-9)',
+            modeAdvanced: 'Napredno 9×9 (A-Z, 0-9)',
             result: 'Rezultat:',
             // Grid
             targetGrid: 'Ciljna mreža',
@@ -2102,7 +2104,7 @@ const i18n = {
             // Reference
             morseReference: 'Morzejeva referenca',
             letters: 'Črke (A-G)',
-            lettersAdvanced: 'Črke (A-N)',
+            lettersAdvanced: 'Črke (A-Z)',
             numbers: 'Številke (1-7)',
             numbersAdvanced: 'Številke (0-9)',
             responses: 'Odgovori',
@@ -2125,6 +2127,7 @@ const i18n = {
             rotate: 'Zasukaj (R)',
             randomFleet: 'Naključno',
             confirmFleet: 'Potrdi floto',
+            carrier: 'Letalonosilka',
             battleship: 'Bojna ladja',
             cruiser: 'Križarka',
             destroyer: 'Rušilec',
@@ -2485,17 +2488,16 @@ class Ship {
  * - Ships cannot touch (not even diagonally)
  */
 class ShipPlacer {
-    constructor(gridSize = 7) {
+    constructor(gridSize = 7, shipSizes = [4, 3, 3, 2, 2, 2]) {
         this.gridSize = gridSize;
+        this.shipSizes = shipSizes;
     }
 
     placeShips() {
-        // 3 ships of 2, 2 ships of 3, 1 ship of 4
-        const shipSizes = [4, 3, 3, 2, 2, 2];
         const ships = [];
         const occupied = this.createEmptyGrid();
 
-        for (const size of shipSizes) {
+        for (const size of this.shipSizes) {
             const ship = this.placeShip(size, occupied);
             if (ship) {
                 ships.push(ship);
@@ -2589,21 +2591,27 @@ class ShipPlacer {
  * - Validation and preview
  */
 class ShipPlacementManager {
-    constructor(gridSize = 7) {
+    constructor(gridSize = 7, shipSizes = [4, 3, 3, 2, 2, 2]) {
         this.gridSize = gridSize;
+        this.shipSizes = shipSizes;
+        this.reset();
+    }
+
+    setConfig(gridSize, shipSizes) {
+        this.gridSize = gridSize;
+        this.shipSizes = shipSizes;
         this.reset();
     }
 
     reset() {
-        // Ship sizes to place: 4, 3, 3, 2, 2, 2
-        this.shipQueue = [
-            { size: 4, name: 'battleship' },
-            { size: 3, name: 'cruiser' },
-            { size: 3, name: 'cruiser' },
-            { size: 2, name: 'destroyer' },
-            { size: 2, name: 'destroyer' },
-            { size: 2, name: 'destroyer' }
-        ];
+        // Build ship queue from sizes
+        this.shipQueue = this.shipSizes.map(size => {
+            let name = 'destroyer';
+            if (size >= 5) name = 'carrier';
+            else if (size >= 4) name = 'battleship';
+            else if (size >= 3) name = 'cruiser';
+            return { size, name };
+        });
 
         this.placedShips = [];
         this.currentIndex = 0;
@@ -2786,6 +2794,11 @@ class ShipPlacementManager {
  */
 class ComputerAI {
     constructor(gridSize = 7) {
+        this.gridSize = gridSize;
+        this.reset();
+    }
+
+    setGridSize(gridSize) {
         this.gridSize = gridSize;
         this.reset();
     }
@@ -3035,18 +3048,28 @@ const Turn = {
 
 class GameState {
     constructor() {
-        this.gridSize = 7;
         this.gameMode = 'normal'; // 'normal' or 'advanced'
+        this.gridSize = 7;
         this.reset();
     }
 
     setGameMode(mode) {
         this.gameMode = mode;
+        this.gridSize = (mode === 'advanced') ? 9 : 7;
+    }
+
+    getShipSizes() {
+        // Normal mode (7x7): 6 ships - 4, 3, 3, 2, 2, 2
+        // Advanced mode (9x9): 9 ships - 5, 4, 4, 3, 3, 3, 2, 2, 2
+        if (this.gameMode === 'advanced') {
+            return [5, 4, 4, 3, 3, 3, 2, 2, 2];
+        }
+        return [4, 3, 3, 2, 2, 2];
     }
 
     reset() {
         // Computer's ships (enemy fleet)
-        const placer = new ShipPlacer(this.gridSize);
+        const placer = new ShipPlacer(this.gridSize, this.getShipSizes());
         this.enemyShips = placer.placeShips();
 
         // Player's ships (will be placed manually or randomly)
@@ -3214,11 +3237,13 @@ class RulesEngine {
 
     updateLabels() {
         if (this.gameMode === 'advanced') {
-            // Advanced mode: 2-letter rows (A-N), 2-digit columns (0-9)
-            this.validRows = ['AB', 'CD', 'EF', 'GH', 'IJ', 'KL', 'MN'];
-            this.validCols = ['01', '23', '45', '67', '89', '02', '13'];
+            // Advanced mode (9x9): Full alphabet A-Z and digits 0-9
+            // Rows: AB, CD, EF, GH, IJ, KL, MN, OP, QR (uses A-R)
+            // Cols: S0, T1, U2, V3, W4, X5, Y6, Z7, 89 (uses S-Z + 0-9)
+            this.validRows = ['AB', 'CD', 'EF', 'GH', 'IJ', 'KL', 'MN', 'OP', 'QR'];
+            this.validCols = ['S0', 'T1', 'U2', 'V3', 'W4', 'X5', 'Y6', 'Z7', '89'];
         } else {
-            // Normal mode: single letter rows (A-G), single digit columns (1-7)
+            // Normal mode (7x7): single letter rows (A-G), single digit columns (1-7)
             this.validRows = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
             this.validCols = ['1', '2', '3', '4', '5', '6', '7'];
         }
@@ -3335,17 +3360,66 @@ class GameUI {
     }
 
     createGrids() {
+        this.gridSize = this.game.gameState.gridSize;
         this.createTargetGrid();
         this.createPlayerGrid();
     }
 
+    recreateGrids(gridSize) {
+        this.gridSize = gridSize;
+
+        // Update grid CSS for new size
+        const gridStyle = `repeat(${gridSize}, 1fr)`;
+        this.elements.targetGrid.style.gridTemplateColumns = gridStyle;
+        this.elements.targetGrid.style.gridTemplateRows = gridStyle;
+        this.elements.playerGrid.style.gridTemplateColumns = gridStyle;
+        this.elements.playerGrid.style.gridTemplateRows = gridStyle;
+
+        // Recreate grid cells
+        this.createTargetGrid();
+        this.createPlayerGrid();
+
+        // Recreate labels
+        this.recreateGridLabels(gridSize);
+    }
+
+    recreateGridLabels(gridSize) {
+        // Recreate player grid labels
+        const playerLabelsLeft = document.getElementById('player-grid-labels-left');
+        const playerLabelsTop = document.getElementById('player-grid-labels-top');
+        const targetLabelsLeft = document.getElementById('target-grid-labels-left');
+        const targetLabelsTop = document.getElementById('target-grid-labels-top');
+
+        // Clear and recreate row labels (left)
+        playerLabelsLeft.innerHTML = '';
+        targetLabelsLeft.innerHTML = '';
+        for (let i = 0; i < gridSize; i++) {
+            playerLabelsLeft.appendChild(document.createElement('span'));
+            targetLabelsLeft.appendChild(document.createElement('span'));
+        }
+
+        // Clear and recreate column labels (top) - first span is empty corner
+        playerLabelsTop.innerHTML = '<span></span>';
+        targetLabelsTop.innerHTML = '<span></span>';
+        for (let i = 0; i < gridSize; i++) {
+            playerLabelsTop.appendChild(document.createElement('span'));
+            targetLabelsTop.appendChild(document.createElement('span'));
+        }
+
+        // Update top labels grid template
+        const topLabelStyle = `28px repeat(${gridSize}, 1fr)`;
+        playerLabelsTop.style.gridTemplateColumns = topLabelStyle;
+        targetLabelsTop.style.gridTemplateColumns = topLabelStyle;
+    }
+
     createTargetGrid() {
+        const gridSize = this.gridSize || 7;
         this.elements.targetGrid.innerHTML = '';
         this.targetCells = [];
 
-        for (let row = 0; row < 7; row++) {
+        for (let row = 0; row < gridSize; row++) {
             this.targetCells[row] = [];
-            for (let col = 0; col < 7; col++) {
+            for (let col = 0; col < gridSize; col++) {
                 const cell = document.createElement('div');
                 cell.className = 'cell unknown';
                 cell.dataset.row = row;
@@ -3360,12 +3434,13 @@ class GameUI {
     }
 
     createPlayerGrid() {
+        const gridSize = this.gridSize || 7;
         this.elements.playerGrid.innerHTML = '';
         this.playerCells = [];
 
-        for (let row = 0; row < 7; row++) {
+        for (let row = 0; row < gridSize; row++) {
             this.playerCells[row] = [];
-            for (let col = 0; col < 7; col++) {
+            for (let col = 0; col < gridSize; col++) {
                 const cell = document.createElement('div');
                 cell.className = 'cell unknown';
                 cell.dataset.row = row;
@@ -3410,7 +3485,7 @@ class GameUI {
         const refNumbers = document.getElementById('ref-numbers');
 
         if (mode === 'advanced') {
-            // Advanced mode: A-N for rows, 0-9 for columns
+            // Advanced mode (9x9): Full alphabet A-Z and 0-9
             refLetters.innerHTML = `
                 <h4 data-i18n="lettersAdvanced">${i18n.t('lettersAdvanced')}</h4>
                 <div class="ref-item"><span>A</span><span>.-</span></div>
@@ -3427,6 +3502,18 @@ class GameUI {
                 <div class="ref-item"><span>L</span><span>.-..</span></div>
                 <div class="ref-item"><span>M</span><span>--</span></div>
                 <div class="ref-item"><span>N</span><span>-.</span></div>
+                <div class="ref-item"><span>O</span><span>---</span></div>
+                <div class="ref-item"><span>P</span><span>.--.</span></div>
+                <div class="ref-item"><span>Q</span><span>--.-</span></div>
+                <div class="ref-item"><span>R</span><span>.-.</span></div>
+                <div class="ref-item"><span>S</span><span>...</span></div>
+                <div class="ref-item"><span>T</span><span>-</span></div>
+                <div class="ref-item"><span>U</span><span>..-</span></div>
+                <div class="ref-item"><span>V</span><span>...-</span></div>
+                <div class="ref-item"><span>W</span><span>.--</span></div>
+                <div class="ref-item"><span>X</span><span>-..-</span></div>
+                <div class="ref-item"><span>Y</span><span>-.--</span></div>
+                <div class="ref-item"><span>Z</span><span>--..</span></div>
             `;
             refNumbers.innerHTML = `
                 <h4 data-i18n="numbersAdvanced">${i18n.t('numbersAdvanced')}</h4>
@@ -3482,8 +3569,9 @@ class GameUI {
     }
 
     updateTargetGrid() {
-        for (let row = 0; row < 7; row++) {
-            for (let col = 0; col < 7; col++) {
+        const gridSize = this.gridSize || 7;
+        for (let row = 0; row < gridSize; row++) {
+            for (let col = 0; col < gridSize; col++) {
                 const state = this.game.gameState.getCellState(row, col);
                 this.updateTargetCell(row, col, state);
             }
@@ -3491,8 +3579,9 @@ class GameUI {
     }
 
     updatePlayerGrid() {
-        for (let row = 0; row < 7; row++) {
-            for (let col = 0; col < 7; col++) {
+        const gridSize = this.gridSize || 7;
+        for (let row = 0; row < gridSize; row++) {
+            for (let col = 0; col < gridSize; col++) {
                 const state = this.game.gameState.getPlayerCellState(row, col);
                 this.updatePlayerCell(row, col, state);
             }
@@ -3760,16 +3849,29 @@ class MorseFleetGame {
     // =========================================================================
 
     setGameMode(mode) {
-        // Only allow mode change during placement phase
-        if (this.gameState.phase !== GamePhase.PLACEMENT) {
-            // Reset the game if mode changes during battle
-            this.newGame();
-        }
-
+        // Set game mode which updates grid size
         this.gameState.setGameMode(mode);
         this.rules.setGameMode(mode);
+
+        // Get new grid size and ship configuration
+        const gridSize = this.gameState.gridSize;
+        const shipSizes = this.gameState.getShipSizes();
+
+        // Update all components with new grid size
+        this.computerAI.setGridSize(gridSize);
+        this.placementManager.setConfig(gridSize, shipSizes);
+
+        // Recreate grids with new size
+        this.ui.recreateGrids(gridSize);
         this.ui.updateGridLabels(this.rules);
         this.ui.updateMorseReference(mode);
+
+        // Reset the game state for new grid
+        this.gameState.reset();
+        this.ui.reset();
+
+        // Restart placement phase
+        this.startPlacementPhase();
     }
 
     // =========================================================================
@@ -4481,10 +4583,10 @@ const Autoplay = {
 
     /**
      * Morse code patterns for coordinates (dot=0, dash=1)
-     * Extended for both normal and advanced modes
+     * Full alphabet A-Z and digits 0-9 for advanced mode
      */
     morsePatterns: {
-        // Letters A-N (for advanced mode, A-G for normal)
+        // Full alphabet A-Z
         'A': [0, 1],           // .-
         'B': [1, 0, 0, 0],     // -...
         'C': [1, 0, 1, 0],     // -.-.
@@ -4499,7 +4601,19 @@ const Autoplay = {
         'L': [0, 1, 0, 0],     // .-..
         'M': [1, 1],           // --
         'N': [1, 0],           // -.
-        // Numbers 0-9 (for advanced mode, 1-7 for normal)
+        'O': [1, 1, 1],        // ---
+        'P': [0, 1, 1, 0],     // .--.
+        'Q': [1, 1, 0, 1],     // --.-
+        'R': [0, 1, 0],        // .-.
+        'S': [0, 0, 0],        // ...
+        'T': [1],              // -
+        'U': [0, 0, 1],        // ..-
+        'V': [0, 0, 0, 1],     // ...-
+        'W': [0, 1, 1],        // .--
+        'X': [1, 0, 0, 1],     // -..-
+        'Y': [1, 0, 1, 1],     // -.--
+        'Z': [1, 1, 0, 0],     // --..
+        // Numbers 0-9
         '0': [1, 1, 1, 1, 1],  // -----
         '1': [0, 1, 1, 1, 1],  // .----
         '2': [0, 0, 1, 1, 1],  // ..---
