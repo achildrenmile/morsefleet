@@ -1866,7 +1866,7 @@ const i18n = {
             tutorialStep3Title: 'Schiffe platzieren',
             tutorialStep3Text: 'Zuerst platzierst du deine Flotte auf dem linken Raster. Klicke um Schiffe zu setzen, <strong>R</strong> zum Drehen. Du kannst auch "Zufällig" für automatische Platzierung wählen.',
             tutorialStep4Title: 'Koordinaten senden',
-            tutorialStep4Text: 'Um auf ein Ziel zu schießen, sende einen Buchstaben (A-G) gefolgt von einer Zahl (1-7). Zum Beispiel zielt <strong>A1</strong> auf die obere linke Ecke des feindlichen Rasters.',
+            tutorialStep4Text: 'Um auf ein Ziel zu schießen, sende einen Buchstaben (A-G) gefolgt von einer Zahl (1-7). Zum Beispiel zielt <strong>A1</strong> auf die obere linke Ecke. Im <strong>Erweiterten Modus</strong> werden Buchstabenpaare (AB-MN) und Zahlenpaare (01-13) verwendet - ideal zum Lernen des gesamten Alphabets!',
             playDemo: '▶ Demo abspielen: "A1"',
             playing: 'Spielt...',
             readyToSend: '✓ Bereit zum Senden!',
@@ -1891,7 +1891,7 @@ const i18n = {
             helpPhase2Title: '2. Morsecode eingeben',
             helpPhase2Text: 'Halte die Morsetaste (oder Leertaste) gedrückt um Signale zu senden. <strong>Kurzer Druck</strong> = Punkt (.), <strong>Langer Druck</strong> = Strich (-). Nach einer kurzen Pause wird das Zeichen automatisch erkannt.',
             helpPhase3Title: '3. Koordinaten senden',
-            helpPhase3Text: 'Gib einen Buchstaben (A-G) und eine Zahl (1-7) ein, z.B. "B3". Klicke dann "Senden". Der Computer antwortet mit: <strong>W</strong> (Wasser), <strong>S</strong> (Treffer), oder <strong>K</strong> (Versenkt).',
+            helpPhase3Text: 'Gib einen Buchstaben (A-G) und eine Zahl (1-7) ein, z.B. "B3". Klicke dann "Senden". Der Computer antwortet mit: <strong>W</strong> (Wasser), <strong>S</strong> (Treffer), oder <strong>K</strong> (Versenkt). Im <strong>Erweiterten Modus</strong> verwendest du Buchstabenpaare (AB-MN) und Zahlenpaare (01-13).',
             helpPhase4Title: '4. Rundenkampf',
             helpPhase4Text: 'Nach deinem Schuss feuert der Computer auf deine Flotte zurück. Beobachte das linke Raster für eingehende Treffer. Wer zuerst alle 6 feindlichen Schiffe versenkt, gewinnt!',
             helpMorseTitle: 'Morse-Referenz',
@@ -1900,6 +1900,7 @@ const i18n = {
             helpTip1: 'Öffne die "Morsecode Referenz" unter dem Spielfeld als Spickzettel',
             helpTip2: 'Nutze den Autoplay-Modus um zu sehen wie das Spiel funktioniert',
             helpTip3: 'Die Geschwindigkeit (WPM) kannst du oben anpassen',
+            helpTip4: 'Wähle den "Erweiterten Modus" um das gesamte Alphabet (A-N) und alle Ziffern (0-9) zu lernen',
             // Imprint
             imprintTitle: 'Impressum',
             imprintInfo: 'Angaben gemäß § 5 ECG und § 25 MedienG',
@@ -2004,7 +2005,7 @@ const i18n = {
             tutorialStep3Title: 'Place Your Ships',
             tutorialStep3Text: 'First, place your fleet on the left grid. Click to place ships, press <strong>R</strong> to rotate. You can also click "Random" for automatic placement.',
             tutorialStep4Title: 'Send Coordinates',
-            tutorialStep4Text: 'To fire at a target, send a letter (A-G) followed by a number (1-7). For example, <strong>A1</strong> targets the top-left corner of the enemy grid.',
+            tutorialStep4Text: 'To fire at a target, send a letter (A-G) followed by a number (1-7). For example, <strong>A1</strong> targets the top-left corner. In <strong>Advanced Mode</strong>, letter pairs (AB-MN) and number pairs (01-13) are used - perfect for learning the full alphabet!',
             playDemo: '▶ Play Demo: "A1"',
             playing: 'Playing...',
             readyToSend: '✓ Ready to send!',
@@ -2029,7 +2030,7 @@ const i18n = {
             helpPhase2Title: '2. Enter Morse Code',
             helpPhase2Text: 'Hold the Morse key (or Spacebar) to send signals. <strong>Short press</strong> = dot (.), <strong>Long press</strong> = dash (-). After a brief pause, the character is automatically recognized.',
             helpPhase3Title: '3. Send Coordinates',
-            helpPhase3Text: 'Enter a letter (A-G) and a number (1-7), e.g. "B3". Then click "Send". The computer responds with: <strong>W</strong> (Water), <strong>S</strong> (Hit), or <strong>K</strong> (Sunk).',
+            helpPhase3Text: 'Enter a letter (A-G) and a number (1-7), e.g. "B3". Then click "Send". The computer responds with: <strong>W</strong> (Water), <strong>S</strong> (Hit), or <strong>K</strong> (Sunk). In <strong>Advanced Mode</strong>, use letter pairs (AB-MN) and number pairs (01-13).',
             helpPhase4Title: '4. Turn-Based Combat',
             helpPhase4Text: 'After your shot, the computer fires back at your fleet. Watch the left grid for incoming hits. First to sink all 6 enemy ships wins!',
             helpMorseTitle: 'Morse Reference',
@@ -2038,6 +2039,7 @@ const i18n = {
             helpTip1: 'Open the "Morse Code Reference" below the game grid as a cheat sheet',
             helpTip2: 'Use Autoplay mode to see how the game works',
             helpTip3: 'You can adjust the speed (WPM) at the top',
+            helpTip4: 'Select "Advanced Mode" to learn the full alphabet (A-N) and all digits (0-9)',
             // Imprint
             imprintTitle: 'Imprint',
             imprintInfo: 'Information according to § 5 ECG and § 25 MedienG (Austrian law)',
@@ -2142,7 +2144,7 @@ const i18n = {
             tutorialStep3Title: 'Postavi ladje',
             tutorialStep3Text: 'Najprej postavi svojo floto na levi mreži. Klikni za postavitev ladij, pritisni <strong>R</strong> za rotacijo. Lahko tudi klikneš "Naključno" za samodejno postavitev.',
             tutorialStep4Title: 'Pošlji koordinate',
-            tutorialStep4Text: 'Za streljanje na cilj pošlji črko (A-G) in nato številko (1-7). Na primer, <strong>A1</strong> cilja na zgornji levi kot sovražne mreže.',
+            tutorialStep4Text: 'Za streljanje na cilj pošlji črko (A-G) in nato številko (1-7). Na primer, <strong>A1</strong> cilja na zgornji levi kot. V <strong>Naprednem načinu</strong> se uporabljajo pari črk (AB-MN) in pari številk (01-13) - idealno za učenje celotne abecede!',
             playDemo: '▶ Predvajaj demo: "A1"',
             playing: 'Predvajanje...',
             readyToSend: '✓ Pripravljeno za pošiljanje!',
@@ -2167,7 +2169,7 @@ const i18n = {
             helpPhase2Title: '2. Vnesi Morzejevo kodo',
             helpPhase2Text: 'Drži Morzejevo tipko (ali preslednico) za pošiljanje signalov. <strong>Kratek pritisk</strong> = pika (.), <strong>Dolg pritisk</strong> = črtica (-). Po kratkem premoru se znak samodejno prepozna.',
             helpPhase3Title: '3. Pošlji koordinate',
-            helpPhase3Text: 'Vnesi črko (A-G) in številko (1-7), npr. "B3". Nato klikni "Pošlji". Računalnik odgovori z: <strong>W</strong> (Voda), <strong>S</strong> (Zadetek), ali <strong>K</strong> (Potopljena).',
+            helpPhase3Text: 'Vnesi črko (A-G) in številko (1-7), npr. "B3". Nato klikni "Pošlji". Računalnik odgovori z: <strong>W</strong> (Voda), <strong>S</strong> (Zadetek), ali <strong>K</strong> (Potopljena). V <strong>Naprednem načinu</strong> uporabi pare črk (AB-MN) in pare številk (01-13).',
             helpPhase4Title: '4. Boj po rundah',
             helpPhase4Text: 'Po tvojem strelu računalnik strelja nazaj na tvojo floto. Opazuj levo mrežo za vhodne zadetke. Kdor prvi potopi vseh 6 sovražnih ladij, zmaga!',
             helpMorseTitle: 'Morzejeva referenca',
@@ -2176,6 +2178,7 @@ const i18n = {
             helpTip1: 'Odpri "Morzejeva referenca" pod igralno mrežo kot plonk listek',
             helpTip2: 'Uporabi samodejni način da vidiš kako igra deluje',
             helpTip3: 'Hitrost (WPM) lahko prilagodiš na vrhu',
+            helpTip4: 'Izberi "Napredni način" za učenje celotne abecede (A-N) in vseh številk (0-9)',
             // Imprint
             imprintTitle: 'Impressum',
             imprintInfo: 'Podatki v skladu s § 5 ECG in § 25 MedienG (avstrijska zakonodaja)',
@@ -5029,6 +5032,7 @@ const HelpModal = {
                             <li>${i18n.t('helpTip1')}</li>
                             <li>${i18n.t('helpTip2')}</li>
                             <li>${i18n.t('helpTip3')}</li>
+                            <li>${i18n.t('helpTip4')}</li>
                         </ul>
                     </div>
                 </div>
