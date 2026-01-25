@@ -100,6 +100,41 @@ section h2 {
     color: #4ecca3;
 }
 
+/* Speed Selector */
+.speed-selector {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.speed-selector .label {
+    color: #888;
+    font-size: 0.7em;
+    white-space: nowrap;
+}
+
+.speed-select {
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 0.9em;
+    background: #0f3460;
+    color: #4ecca3;
+    border: 1px solid #1a4a7a;
+    border-radius: 6px;
+    cursor: pointer;
+    min-height: 36px;
+    font-weight: bold;
+}
+
+.speed-select:hover {
+    background: #1a4a7a;
+}
+
+.speed-select:focus {
+    outline: 2px solid #4ecca3;
+    outline-offset: 2px;
+}
+
 /* Grid - Mobile First */
 .grid-section {
     text-align: center;
@@ -1046,6 +1081,15 @@ footer {
                     <span class="label">Shots Fired:</span>
                     <span id="shots-fired">0</span>
                 </div>
+                <div class="status-item speed-selector">
+                    <span class="label">Speed:</span>
+                    <select id="speed-select" class="speed-select">
+                        <option value="10">10 WPM</option>
+                        <option value="15" selected>15 WPM</option>
+                        <option value="20">20 WPM</option>
+                        <option value="25">25 WPM</option>
+                    </select>
+                </div>
                 <div class="status-item" id="game-result" style="display: none;">
                     <span class="label">Result:</span>
                     <span id="result-text"></span>
@@ -1200,20 +1244,41 @@ for (const [char, code] of Object.entries(MORSE_CODE)) {
 }
 
 // =============================================================================
-// MORSE TIMING CONSTANTS (~15 WPM)
+// MORSE TIMING - Speed-configurable
 // =============================================================================
+// WPM formula: PARIS = 50 units, so 1 WPM = 1200ms per unit
 
-const MORSE_TIMING = {
-    UNIT: 80,
-    DOT_MAX: 200,
-    DASH_MIN: 200,
-    CHAR_GAP: 300,
-    WORD_GAP: 600,
-    OUT_DOT: 80,
-    OUT_DASH: 240,
-    OUT_INTRA: 80,
-    OUT_INTER: 240
+const MorseTiming = {
+    wpm: 15,
+
+    // Calculate unit time in ms from WPM
+    getUnit() {
+        return Math.round(1200 / this.wpm);
+    },
+
+    // Get all timing values based on current WPM
+    get() {
+        const unit = this.getUnit();
+        return {
+            UNIT: unit,
+            DOT_MAX: unit * 2.5,      // Threshold for dot vs dash input
+            DASH_MIN: unit * 2.5,
+            CHAR_GAP: unit * 4,       // Gap to finalize character
+            WORD_GAP: unit * 7,       // Gap between words
+            OUT_DOT: unit,            // Output dot duration
+            OUT_DASH: unit * 3,       // Output dash duration
+            OUT_INTRA: unit,          // Gap within character
+            OUT_INTER: unit * 3       // Gap between characters
+        };
+    },
+
+    setWPM(wpm) {
+        this.wpm = wpm;
+    }
 };
+
+// For backwards compatibility
+const MORSE_TIMING = MorseTiming.get();
 
 // =============================================================================
 // AUDIO OUTPUT (Web Audio API)
@@ -1275,22 +1340,23 @@ class MorseAudio {
 
     async playMorse(morseString) {
         this.init();
+        const timing = MorseTiming.get();
 
         for (let i = 0; i < morseString.length; i++) {
             const symbol = morseString[i];
 
             if (symbol === '.') {
                 this.startTone();
-                await this.sleep(MORSE_TIMING.OUT_DOT);
+                await this.sleep(timing.OUT_DOT);
                 this.stopTone();
             } else if (symbol === '-') {
                 this.startTone();
-                await this.sleep(MORSE_TIMING.OUT_DASH);
+                await this.sleep(timing.OUT_DASH);
                 this.stopTone();
             }
 
             if (i < morseString.length - 1) {
-                await this.sleep(MORSE_TIMING.OUT_INTRA);
+                await this.sleep(timing.OUT_INTRA);
             }
         }
     }
@@ -1352,7 +1418,8 @@ class MorseInput {
         this.audio.stopTone();
 
         // Dot: short signal (<= DOT_MAX ms), Dash: long signal
-        if (duration <= MORSE_TIMING.DOT_MAX) {
+        const timing = MorseTiming.get();
+        if (duration <= timing.DOT_MAX) {
             this.currentSymbols += '.';
         } else {
             this.currentSymbols += '-';
@@ -1367,9 +1434,10 @@ class MorseInput {
             clearTimeout(this.gapTimer);
         }
 
+        const timing = MorseTiming.get();
         this.gapTimer = setTimeout(() => {
             this.finalizeCharacter();
-        }, MORSE_TIMING.CHAR_GAP);
+        }, timing.CHAR_GAP);
     }
 
     finalizeCharacter() {
@@ -2167,16 +2235,22 @@ const Tutorial = {
         };
 
         try {
+            const timing = MorseTiming.get();
+            const dot = timing.OUT_DOT;
+            const dash = timing.OUT_DASH;
+            const intra = timing.OUT_INTRA;
+            const charGap = timing.CHAR_GAP;
+
             // A = .- (dot dash)
             // Dot
-            await playTone(80);
+            await playTone(dot);
             demoOutput.textContent = '.';
-            await this.sleep(100);
+            await this.sleep(intra);
 
             // Dash
-            await playTone(240);
+            await playTone(dash);
             demoOutput.textContent = '.-';
-            await this.sleep(350);
+            await this.sleep(charGap + 50);
 
             // Character decoded
             demoDecoded.textContent = 'A';
@@ -2185,29 +2259,29 @@ const Tutorial = {
 
             // 1 = .---- (dot dash dash dash dash)
             // Dot
-            await playTone(80);
+            await playTone(dot);
             demoOutput.textContent = '.';
-            await this.sleep(100);
+            await this.sleep(intra);
 
             // Dash 1
-            await playTone(240);
+            await playTone(dash);
             demoOutput.textContent = '.-';
-            await this.sleep(100);
+            await this.sleep(intra);
 
             // Dash 2
-            await playTone(240);
+            await playTone(dash);
             demoOutput.textContent = '.--';
-            await this.sleep(100);
+            await this.sleep(intra);
 
             // Dash 3
-            await playTone(240);
+            await playTone(dash);
             demoOutput.textContent = '.---';
-            await this.sleep(100);
+            await this.sleep(intra);
 
             // Dash 4
-            await playTone(240);
+            await playTone(dash);
             demoOutput.textContent = '.----';
-            await this.sleep(350);
+            await this.sleep(charGap + 50);
 
             // Character decoded
             demoDecoded.textContent = 'A1';
@@ -2277,23 +2351,31 @@ const Autoplay = {
     statusEl: null,
 
     /**
-     * Morse code patterns for coordinates
+     * Morse code patterns for coordinates (dot=0, dash=1)
      */
     morsePatterns: {
-        'A': [80, 240],           // .-
-        'B': [240, 80, 80, 80],   // -...
-        'C': [240, 80, 240, 80],  // -.-.
-        'D': [240, 80, 80],       // -..
-        'E': [80],                // .
-        'F': [80, 80, 240, 80],   // ..-.
-        'G': [240, 240, 80],      // --.
-        '1': [80, 240, 240, 240, 240],   // .----
-        '2': [80, 80, 240, 240, 240],    // ..---
-        '3': [80, 80, 80, 240, 240],     // ...--
-        '4': [80, 80, 80, 80, 240],      // ....-
-        '5': [80, 80, 80, 80, 80],       // .....
-        '6': [240, 80, 80, 80, 80],      // -....
-        '7': [240, 240, 80, 80, 80]      // --...
+        'A': [0, 1],           // .-
+        'B': [1, 0, 0, 0],     // -...
+        'C': [1, 0, 1, 0],     // -.-.
+        'D': [1, 0, 0],        // -..
+        'E': [0],              // .
+        'F': [0, 0, 1, 0],     // ..-.
+        'G': [1, 1, 0],        // --.
+        '1': [0, 1, 1, 1, 1],  // .----
+        '2': [0, 0, 1, 1, 1],  // ..---
+        '3': [0, 0, 0, 1, 1],  // ...--
+        '4': [0, 0, 0, 0, 1],  // ....-
+        '5': [0, 0, 0, 0, 0],  // .....
+        '6': [1, 0, 0, 0, 0],  // -....
+        '7': [1, 1, 0, 0, 0]   // --...
+    },
+
+    /**
+     * Get duration for a morse element based on current WPM
+     */
+    getDuration(isDash) {
+        const timing = MorseTiming.get();
+        return isDash ? timing.OUT_DASH : timing.OUT_DOT;
     },
 
     /**
@@ -2477,13 +2559,15 @@ const Autoplay = {
         // Clear any existing input
         game.morseInput.clear();
 
+        const timing = MorseTiming.get();
+
         // Send first character (letter)
         await this.sendCharacter(coord[0], game);
-        await this.sleep(350); // Inter-character gap
+        await this.sleep(timing.CHAR_GAP + 50); // Inter-character gap
 
         // Send second character (number)
         await this.sendCharacter(coord[1], game);
-        await this.sleep(400); // Wait for character to be decoded
+        await this.sleep(timing.CHAR_GAP + 100); // Wait for character to be decoded
 
         // Trigger send
         this.updateStatus(`Sending ${coord}...`);
@@ -2500,8 +2584,10 @@ const Autoplay = {
         const pattern = this.morsePatterns[char];
         if (!pattern) return;
 
+        const timing = MorseTiming.get();
         for (let i = 0; i < pattern.length; i++) {
-            const duration = pattern[i];
+            const isDash = pattern[i] === 1;
+            const duration = this.getDuration(isDash);
 
             // Key down
             game.morseInput.keyDown();
@@ -2512,7 +2598,7 @@ const Autoplay = {
 
             // Gap between elements (except last)
             if (i < pattern.length - 1) {
-                await this.sleep(100);
+                await this.sleep(timing.OUT_INTRA);
             }
         }
     },
@@ -2739,6 +2825,13 @@ const LegalModals = {
 
 document.addEventListener('DOMContentLoaded', () => {
     window.game = new MorseFleetGame();
+
+    // Initialize speed selector
+    const speedSelect = document.getElementById('speed-select');
+    speedSelect.addEventListener('change', (e) => {
+        const wpm = parseInt(e.target.value, 10);
+        MorseTiming.setWPM(wpm);
+    });
 
     // Initialize tutorial
     Tutorial.init();
