@@ -588,6 +588,264 @@ footer {
     text-decoration: underline;
 }
 
+/* Tutorial Button */
+.btn-tutorial {
+    background: #4ecca3;
+}
+
+.btn-tutorial:hover {
+    background: #3db892;
+}
+
+/* Tutorial Modal */
+.tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 15px;
+}
+
+.tutorial-modal {
+    background: #16213e;
+    border: 2px solid #4ecca3;
+    border-radius: 15px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 0 30px rgba(78, 204, 163, 0.3);
+}
+
+.tutorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #0f3460;
+    background: #0f3460;
+    border-radius: 13px 13px 0 0;
+}
+
+.tutorial-header h2 {
+    color: #4ecca3;
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.tutorial-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.8em;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.tutorial-close:hover {
+    color: #e94560;
+}
+
+.tutorial-content {
+    padding: 20px;
+}
+
+.tutorial-step {
+    margin-bottom: 25px;
+}
+
+.tutorial-step-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.tutorial-step-num {
+    background: #4ecca3;
+    color: #1a1a2e;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.tutorial-step h3 {
+    color: #fff;
+    font-size: 1em;
+    margin: 0;
+}
+
+.tutorial-step p {
+    color: #aaa;
+    font-size: 0.9em;
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+/* Demo Key */
+.tutorial-demo {
+    background: #0f3460;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.demo-key {
+    width: 120px;
+    height: 50px;
+    background: linear-gradient(180deg, #444 0%, #222 100%);
+    border: 3px solid #555;
+    border-radius: 8px;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 0.8em;
+    transition: all 0.05s;
+}
+
+.demo-key.active {
+    background: linear-gradient(180deg, #e94560 0%, #b33654 100%);
+    border-color: #e94560;
+    color: #fff;
+}
+
+.demo-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #333;
+    margin: 0 auto 10px;
+    border: 2px solid #444;
+    transition: all 0.05s;
+}
+
+.demo-indicator.on {
+    background: #4ecca3;
+    box-shadow: 0 0 10px #4ecca3;
+}
+
+.demo-output {
+    font-family: monospace;
+    font-size: 1.5em;
+    color: #4ecca3;
+    min-height: 1.5em;
+    letter-spacing: 3px;
+}
+
+.demo-decoded {
+    color: #e94560;
+    font-size: 1.2em;
+    font-weight: bold;
+    min-height: 1.2em;
+    margin-top: 5px;
+}
+
+/* Morse timing diagram */
+.timing-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+
+.timing-dot {
+    width: 15px;
+    height: 15px;
+    background: #4ecca3;
+    border-radius: 50%;
+}
+
+.timing-dash {
+    width: 45px;
+    height: 15px;
+    background: #4ecca3;
+    border-radius: 8px;
+}
+
+.timing-gap {
+    width: 10px;
+}
+
+.timing-label {
+    font-size: 0.7em;
+    color: #888;
+    text-align: center;
+    margin-top: 3px;
+}
+
+/* Tutorial controls */
+.tutorial-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #0f3460;
+}
+
+.tutorial-btn-demo {
+    background: #e94560;
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.tutorial-btn-demo:hover {
+    background: #ff6b6b;
+}
+
+.tutorial-btn-demo:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
+.tutorial-progress {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.tutorial-progress-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #333;
+    border: 1px solid #555;
+}
+
+.tutorial-progress-dot.active {
+    background: #4ecca3;
+    border-color: #4ecca3;
+}
+
+.tutorial-progress-dot.completed {
+    background: #0f3460;
+    border-color: #4ecca3;
+}
+
 /* ===========================================
    RESPONSIVE BREAKPOINTS
    =========================================== */
@@ -847,6 +1105,7 @@ footer {
                     <button id="send-btn" class="btn">Send</button>
                     <button id="clear-btn" class="btn btn-secondary">Clear</button>
                     <button id="new-game-btn" class="btn btn-secondary">New Game</button>
+                    <button id="tutorial-btn" class="btn btn-tutorial">Tutorial</button>
                 </div>
             </section>
 
@@ -1692,6 +1951,294 @@ class MorseFleetGame {
 }
 
 // =============================================================================
+// TUTORIAL MODE
+// =============================================================================
+
+/**
+ * Interactive tutorial that demonstrates Morse code input
+ * Shows animated key presses and timing
+ */
+const Tutorial = {
+    overlay: null,
+    isRunning: false,
+    abortController: null,
+
+    /**
+     * Show the tutorial modal
+     */
+    show() {
+        this.remove();
+
+        this.overlay = document.createElement('div');
+        this.overlay.className = 'tutorial-overlay';
+        this.overlay.innerHTML = `
+            <div class="tutorial-modal">
+                <div class="tutorial-header">
+                    <h2>Tutorial: Morse Code Input</h2>
+                    <button class="tutorial-close">&times;</button>
+                </div>
+                <div class="tutorial-content">
+                    <div class="tutorial-step">
+                        <div class="tutorial-step-header">
+                            <span class="tutorial-step-num">1</span>
+                            <h3>Dots and Dashes</h3>
+                        </div>
+                        <p>Morse code uses short signals (dots) and long signals (dashes).
+                           A <strong>short press</strong> (&lt;200ms) creates a dot.
+                           A <strong>long press</strong> (&gt;200ms) creates a dash.</p>
+                        <div class="timing-diagram">
+                            <div>
+                                <div class="timing-dot"></div>
+                                <div class="timing-label">Dot<br>&lt;200ms</div>
+                            </div>
+                            <div class="timing-gap"></div>
+                            <div>
+                                <div class="timing-dash"></div>
+                                <div class="timing-label">Dash<br>&gt;200ms</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-step">
+                        <div class="tutorial-step-header">
+                            <span class="tutorial-step-num">2</span>
+                            <h3>Character Timing</h3>
+                        </div>
+                        <p>Pause between signals to complete a character. After ~300ms pause,
+                           the dots and dashes are decoded into a letter or number.</p>
+                    </div>
+
+                    <div class="tutorial-step">
+                        <div class="tutorial-step-header">
+                            <span class="tutorial-step-num">3</span>
+                            <h3>Sending Coordinates</h3>
+                        </div>
+                        <p>To fire at a target, send a letter (A-G) followed by a number (1-7).
+                           For example, <strong>A1</strong> targets the top-left corner.</p>
+                        <p style="color: #4ecca3; font-family: monospace;">
+                            A = .-  &nbsp;&nbsp; 1 = .----
+                        </p>
+                    </div>
+
+                    <div class="tutorial-step">
+                        <div class="tutorial-step-header">
+                            <span class="tutorial-step-num">4</span>
+                            <h3>Live Demo</h3>
+                        </div>
+                        <p>Watch how "A1" is keyed. The key lights up, and you'll hear the tones.</p>
+
+                        <div class="tutorial-demo">
+                            <div class="demo-key" id="demo-key">MORSE KEY</div>
+                            <div class="demo-indicator" id="demo-indicator"></div>
+                            <div class="demo-output" id="demo-output"></div>
+                            <div class="demo-decoded" id="demo-decoded"></div>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-controls">
+                        <button class="tutorial-btn-demo" id="demo-start-btn">
+                            ▶ Play Demo: "A1"
+                        </button>
+                    </div>
+
+                    <div class="tutorial-step" style="margin-top: 20px; margin-bottom: 0;">
+                        <div class="tutorial-step-header">
+                            <span class="tutorial-step-num">5</span>
+                            <h3>Computer Response</h3>
+                        </div>
+                        <p>After you send a coordinate, the computer responds in Morse:</p>
+                        <p style="font-family: monospace; color: #ccc;">
+                            <span style="color: #4ecca3;">W (.--)</span> = Water (miss)<br>
+                            <span style="color: #e94560;">S (...)</span> = Ship hit!<br>
+                            <span style="color: #ff6b6b;">K (-.-))</span> = Ship sunk!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(this.overlay);
+        this.setupHandlers();
+    },
+
+    /**
+     * Setup event handlers
+     */
+    setupHandlers() {
+        const closeBtn = this.overlay.querySelector('.tutorial-close');
+        const demoBtn = this.overlay.querySelector('#demo-start-btn');
+
+        closeBtn.onclick = () => this.remove();
+
+        this.overlay.onclick = (e) => {
+            if (e.target === this.overlay) this.remove();
+        };
+
+        demoBtn.onclick = () => this.runDemo();
+
+        // ESC to close
+        this.escHandler = (e) => {
+            if (e.key === 'Escape') this.remove();
+        };
+        document.addEventListener('keydown', this.escHandler);
+    },
+
+    /**
+     * Remove tutorial modal
+     */
+    remove() {
+        if (this.abortController) {
+            this.abortController.abort();
+            this.abortController = null;
+        }
+        if (this.overlay) {
+            this.overlay.remove();
+            this.overlay = null;
+        }
+        if (this.escHandler) {
+            document.removeEventListener('keydown', this.escHandler);
+            this.escHandler = null;
+        }
+        this.isRunning = false;
+    },
+
+    /**
+     * Run the demo animation showing how to key "A1"
+     */
+    async runDemo() {
+        if (this.isRunning) return;
+        this.isRunning = true;
+        this.abortController = new AbortController();
+
+        const demoKey = document.getElementById('demo-key');
+        const demoIndicator = document.getElementById('demo-indicator');
+        const demoOutput = document.getElementById('demo-output');
+        const demoDecoded = document.getElementById('demo-decoded');
+        const demoBtn = document.getElementById('demo-start-btn');
+
+        if (!demoKey) return;
+
+        demoBtn.disabled = true;
+        demoBtn.textContent = 'Playing...';
+
+        // Clear previous
+        demoOutput.textContent = '';
+        demoDecoded.textContent = '';
+
+        // Create audio context for demo
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        const playTone = async (duration) => {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+
+            // Visual feedback
+            demoKey.classList.add('active');
+            demoIndicator.classList.add('on');
+
+            await this.sleep(duration);
+
+            oscillator.stop();
+            demoKey.classList.remove('active');
+            demoIndicator.classList.remove('on');
+        };
+
+        try {
+            // A = .- (dot dash)
+            // Dot
+            await playTone(80);
+            demoOutput.textContent = '.';
+            await this.sleep(100);
+
+            // Dash
+            await playTone(240);
+            demoOutput.textContent = '.-';
+            await this.sleep(350);
+
+            // Character decoded
+            demoDecoded.textContent = 'A';
+            demoOutput.textContent = '';
+            await this.sleep(500);
+
+            // 1 = .---- (dot dash dash dash dash)
+            // Dot
+            await playTone(80);
+            demoOutput.textContent = '.';
+            await this.sleep(100);
+
+            // Dash 1
+            await playTone(240);
+            demoOutput.textContent = '.-';
+            await this.sleep(100);
+
+            // Dash 2
+            await playTone(240);
+            demoOutput.textContent = '.--';
+            await this.sleep(100);
+
+            // Dash 3
+            await playTone(240);
+            demoOutput.textContent = '.---';
+            await this.sleep(100);
+
+            // Dash 4
+            await playTone(240);
+            demoOutput.textContent = '.----';
+            await this.sleep(350);
+
+            // Character decoded
+            demoDecoded.textContent = 'A1';
+            demoOutput.textContent = '✓ Ready to send!';
+            demoOutput.style.color = '#4ecca3';
+
+            await this.sleep(1500);
+            demoOutput.style.color = '';
+            demoOutput.textContent = '';
+
+        } catch (e) {
+            // Aborted
+        }
+
+        audioCtx.close();
+
+        demoBtn.disabled = false;
+        demoBtn.textContent = '▶ Play Demo: "A1"';
+        this.isRunning = false;
+    },
+
+    /**
+     * Sleep helper
+     */
+    sleep(ms) {
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(resolve, ms);
+            if (this.abortController) {
+                this.abortController.signal.addEventListener('abort', () => {
+                    clearTimeout(timeout);
+                    reject(new Error('Aborted'));
+                });
+            }
+        });
+    },
+
+    /**
+     * Initialize tutorial button
+     */
+    init() {
+        const tutorialBtn = document.getElementById('tutorial-btn');
+        if (tutorialBtn) {
+            tutorialBtn.onclick = () => this.show();
+        }
+    }
+};
+
+// =============================================================================
 // LEGAL MODALS (Imprint & Privacy)
 // =============================================================================
 
@@ -1897,6 +2444,9 @@ const LegalModals = {
 
 document.addEventListener('DOMContentLoaded', () => {
     window.game = new MorseFleetGame();
+
+    // Initialize tutorial
+    Tutorial.init();
 
     // Initialize legal modals
     LegalModals.init();
