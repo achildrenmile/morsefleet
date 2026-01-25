@@ -1067,22 +1067,22 @@ footer {
     <div class="container">
         <header>
             <h1>MorseFleet</h1>
-            <p class="subtitle">Morse Code Naval Battle Trainer</p>
+            <p class="subtitle" data-i18n="subtitle">Morsezeichen Seeschlacht Trainer</p>
         </header>
 
         <main>
             <!-- Game Status -->
             <section class="game-status">
                 <div class="status-item">
-                    <span class="label">Ships Remaining:</span>
+                    <span class="label" data-i18n="shipsRemaining">Verbleibende Schiffe:</span>
                     <span id="ships-remaining">6</span>
                 </div>
                 <div class="status-item">
-                    <span class="label">Shots Fired:</span>
+                    <span class="label" data-i18n="shotsFired">Schüsse:</span>
                     <span id="shots-fired">0</span>
                 </div>
                 <div class="status-item speed-selector">
-                    <span class="label">Speed:</span>
+                    <span class="label" data-i18n="speed">Tempo:</span>
                     <select id="speed-select" class="speed-select">
                         <option value="10">10 WPM</option>
                         <option value="15" selected>15 WPM</option>
@@ -1090,15 +1090,23 @@ footer {
                         <option value="25">25 WPM</option>
                     </select>
                 </div>
+                <div class="status-item speed-selector">
+                    <span class="label" data-i18n="language">Sprache:</span>
+                    <select id="lang-select" class="speed-select">
+                        <option value="de" selected>Deutsch</option>
+                        <option value="en">English</option>
+                        <option value="sl">Slovenščina</option>
+                    </select>
+                </div>
                 <div class="status-item" id="game-result" style="display: none;">
-                    <span class="label">Result:</span>
+                    <span class="label" data-i18n="result">Ergebnis:</span>
                     <span id="result-text"></span>
                 </div>
             </section>
 
             <!-- Target Grid (Computer's ships) -->
             <section class="grid-section">
-                <h2>Target Grid</h2>
+                <h2 data-i18n="targetGrid">Zielraster</h2>
                 <div class="grid-container">
                     <div class="grid-labels-top">
                         <span></span>
@@ -1112,61 +1120,61 @@ footer {
                     </div>
                 </div>
                 <div class="legend">
-                    <span class="legend-item"><span class="cell-sample water"></span> Water</span>
-                    <span class="legend-item"><span class="cell-sample hit"></span> Hit</span>
-                    <span class="legend-item"><span class="cell-sample sunk"></span> Sunk</span>
+                    <span class="legend-item"><span class="cell-sample water"></span> <span data-i18n="water">Wasser</span></span>
+                    <span class="legend-item"><span class="cell-sample hit"></span> <span data-i18n="hit">Treffer</span></span>
+                    <span class="legend-item"><span class="cell-sample sunk"></span> <span data-i18n="sunk">Versenkt</span></span>
                 </div>
             </section>
 
             <!-- Morse Input Section -->
             <section class="morse-section">
-                <h2>Morse Input</h2>
+                <h2 data-i18n="morseInput">Morseeingabe</h2>
 
                 <div class="morse-display">
                     <div class="morse-row">
-                        <span class="label">Current Signal:</span>
+                        <span class="label" data-i18n="currentSignal">Aktuelles Signal:</span>
                         <span id="current-signal" class="morse-text"></span>
                     </div>
                     <div class="morse-row">
-                        <span class="label">Current Character:</span>
+                        <span class="label" data-i18n="currentChar">Aktuelles Zeichen:</span>
                         <span id="current-char" class="morse-text"></span>
                     </div>
                     <div class="morse-row">
-                        <span class="label">Decoded Input:</span>
+                        <span class="label" data-i18n="decodedInput">Dekodierte Eingabe:</span>
                         <span id="decoded-input" class="morse-text highlight"></span>
                     </div>
                 </div>
 
                 <div class="morse-key-container">
                     <button id="morse-key" class="morse-key">
-                        MORSE KEY<br>
-                        <small>Hold to send signal</small>
+                        MORSETASTE<br>
+                        <small>Gedrückt halten zum Senden</small>
                     </button>
                     <div id="signal-indicator" class="signal-indicator"></div>
                 </div>
 
                 <div class="controls">
-                    <button id="send-btn" class="btn">Send</button>
-                    <button id="clear-btn" class="btn btn-secondary">Clear</button>
-                    <button id="new-game-btn" class="btn btn-secondary">New Game</button>
-                    <button id="tutorial-btn" class="btn btn-tutorial">Tutorial</button>
+                    <button id="send-btn" class="btn" data-i18n="send">Senden</button>
+                    <button id="clear-btn" class="btn btn-secondary" data-i18n="clear">Löschen</button>
+                    <button id="new-game-btn" class="btn btn-secondary" data-i18n="newGame">Neues Spiel</button>
+                    <button id="tutorial-btn" class="btn btn-tutorial" data-i18n="tutorial">Anleitung</button>
                 </div>
             </section>
 
             <!-- Computer Response Section -->
             <section class="response-section">
-                <h2>Computer Response</h2>
+                <h2 data-i18n="computerResponse">Computer Antwort</h2>
                 <div class="response-display">
                     <div class="response-row">
-                        <span class="label">Last Coordinate:</span>
+                        <span class="label" data-i18n="lastCoord">Letzte Koordinate:</span>
                         <span id="last-coord" class="response-text"></span>
                     </div>
                     <div class="response-row">
-                        <span class="label">Response:</span>
+                        <span class="label" data-i18n="response">Antwort:</span>
                         <span id="response-char" class="response-text highlight"></span>
                     </div>
                     <div class="response-row">
-                        <span class="label">Meaning:</span>
+                        <span class="label" data-i18n="meaning">Bedeutung:</span>
                         <span id="response-meaning" class="response-text"></span>
                     </div>
                 </div>
@@ -1174,10 +1182,10 @@ footer {
 
             <!-- Morse Reference (Debug/Help) -->
             <details class="morse-reference">
-                <summary>Morse Code Reference</summary>
+                <summary data-i18n="morseReference">Morsecode Referenz</summary>
                 <div class="reference-grid">
                     <div class="ref-section">
-                        <h4>Letters (A-G)</h4>
+                        <h4 data-i18n="letters">Buchstaben (A-G)</h4>
                         <div class="ref-item"><span>A</span><span>.-</span></div>
                         <div class="ref-item"><span>B</span><span>-...</span></div>
                         <div class="ref-item"><span>C</span><span>-.-.</span></div>
@@ -1187,7 +1195,7 @@ footer {
                         <div class="ref-item"><span>G</span><span>--.</span></div>
                     </div>
                     <div class="ref-section">
-                        <h4>Numbers (1-7)</h4>
+                        <h4 data-i18n="numbers">Zahlen (1-7)</h4>
                         <div class="ref-item"><span>1</span><span>.----</span></div>
                         <div class="ref-item"><span>2</span><span>..---</span></div>
                         <div class="ref-item"><span>3</span><span>...--</span></div>
@@ -1197,10 +1205,10 @@ footer {
                         <div class="ref-item"><span>7</span><span>--...</span></div>
                     </div>
                     <div class="ref-section">
-                        <h4>Responses</h4>
-                        <div class="ref-item"><span>S (Hit)</span><span>...</span></div>
-                        <div class="ref-item"><span>K (Sunk)</span><span>-.-</span></div>
-                        <div class="ref-item"><span>W (Water)</span><span>.--</span></div>
+                        <h4 data-i18n="responses">Antworten</h4>
+                        <div class="ref-item"><span>S (<span data-i18n="hit">Treffer</span>)</span><span>...</span></div>
+                        <div class="ref-item"><span>K (<span data-i18n="sunk">Versenkt</span>)</span><span>-.-</span></div>
+                        <div class="ref-item"><span>W (<span data-i18n="water">Wasser</span>)</span><span>.--</span></div>
                         <div class="ref-item"><span>? (Error)</span><span>..--..</span></div>
                     </div>
                 </div>
@@ -1208,11 +1216,11 @@ footer {
         </main>
 
         <footer>
-            <p>MorseFleet - Based on rules by Radioklub Vegova (S59VEG)</p>
+            <p data-i18n="footerText">MorseFleet - Basierend auf Regeln von Radioklub Vegova (S59VEG)</p>
             <div class="footer-links">
-                <a href="#" id="imprint-link">Impressum</a>
+                <a href="#" id="imprint-link" data-i18n="imprint">Impressum</a>
                 <span class="footer-sep">|</span>
-                <a href="#" id="privacy-link">Datenschutz</a>
+                <a href="#" id="privacy-link" data-i18n="privacy">Datenschutz</a>
                 <span class="footer-sep">|</span>
                 <a href="https://github.com/achildrenmile/morsefleet" target="_blank" rel="noopener">GitHub</a>
             </div>
@@ -1279,6 +1287,283 @@ const MorseTiming = {
 
 // For backwards compatibility
 const MORSE_TIMING = MorseTiming.get();
+
+// =============================================================================
+// INTERNATIONALIZATION (i18n)
+// =============================================================================
+
+const i18n = {
+    currentLang: 'de',
+
+    translations: {
+        de: {
+            // Header
+            subtitle: 'Morsezeichen Seeschlacht Trainer',
+            // Game status
+            shipsRemaining: 'Verbleibende Schiffe:',
+            shotsFired: 'Schüsse:',
+            speed: 'Tempo:',
+            language: 'Sprache:',
+            result: 'Ergebnis:',
+            // Grid
+            targetGrid: 'Zielraster',
+            water: 'Wasser',
+            hit: 'Treffer',
+            sunk: 'Versenkt',
+            // Morse input
+            morseInput: 'Morseeingabe',
+            currentSignal: 'Aktuelles Signal:',
+            currentChar: 'Aktuelles Zeichen:',
+            decodedInput: 'Dekodierte Eingabe:',
+            morseKey: 'MORSETASTE',
+            holdToSend: 'Gedrückt halten zum Senden',
+            send: 'Senden',
+            clear: 'Löschen',
+            newGame: 'Neues Spiel',
+            tutorial: 'Anleitung',
+            // Response
+            computerResponse: 'Computer Antwort',
+            lastCoord: 'Letzte Koordinate:',
+            response: 'Antwort:',
+            meaning: 'Bedeutung:',
+            shipHit: 'Schiff getroffen!',
+            shipSunk: 'Schiff versenkt!',
+            waterMiss: 'Wasser (daneben)',
+            invalidCoord: 'Ungültige Koordinate',
+            alreadyShot: 'Bereits beschossen',
+            // Reference
+            morseReference: 'Morsecode Referenz',
+            letters: 'Buchstaben (A-G)',
+            numbers: 'Zahlen (1-7)',
+            responses: 'Antworten',
+            // Footer
+            footerText: 'MorseFleet - Basierend auf Regeln von Radioklub Vegova (S59VEG)',
+            imprint: 'Impressum',
+            privacy: 'Datenschutz',
+            // Victory
+            victory: 'Sieg! Flotte in {shots} Schüssen zerstört.',
+            victoryAutoplay: 'Sieg in {shots} Schüssen!',
+            // Tutorial
+            tutorialTitle: 'Anleitung',
+            tutorialStep1Title: 'Punkte und Striche',
+            tutorialStep1Text: 'Morsecode verwendet kurze Signale (Punkte) und lange Signale (Striche). Ein <strong>kurzer Druck</strong> (<200ms) erzeugt einen Punkt. Ein <strong>langer Druck</strong> (>200ms) erzeugt einen Strich.',
+            dot: 'Punkt',
+            dash: 'Strich',
+            tutorialStep2Title: 'Zeichentiming',
+            tutorialStep2Text: 'Pause zwischen den Signalen um ein Zeichen abzuschließen. Nach ~300ms Pause werden die Punkte und Striche in einen Buchstaben oder eine Zahl dekodiert.',
+            tutorialStep3Title: 'Koordinaten senden',
+            tutorialStep3Text: 'Um auf ein Ziel zu schießen, sende einen Buchstaben (A-G) gefolgt von einer Zahl (1-7). Zum Beispiel zielt <strong>A1</strong> auf die obere linke Ecke.',
+            tutorialStep4Title: 'Live Demo',
+            tutorialStep4Text: 'Sieh zu wie "A1" gemorst wird. Die Taste leuchtet auf und du hörst die Töne.',
+            playDemo: '▶ Demo abspielen: "A1"',
+            playing: 'Spielt...',
+            readyToSend: '✓ Bereit zum Senden!',
+            tutorialStep5Title: 'Computer Antwort',
+            tutorialStep5Text: 'Nach dem Senden einer Koordinate antwortet der Computer in Morsecode:',
+            tutorialStep6Title: 'Autoplay Modus',
+            tutorialStep6Text: 'Willst du das komplette Spiel in Aktion sehen? Klicke <strong>Spiel automatisch</strong> um das Spiel automatisch spielen zu sehen. Die Morsetaste wird bedient, Koordinaten gesendet, und du siehst und hörst alles!',
+            autoplayGame: '▶ Spiel automatisch',
+            // Autoplay
+            autoplay: 'AUTOPLAY',
+            autoplayStarting: 'Startet...',
+            autoplayFiring: 'Feuere auf {coord}...',
+            autoplaySending: 'Sende {coord}...',
+            autoplayVictory: 'Sieg in {shots} Schüssen!',
+            stop: 'Stopp'
+        },
+        en: {
+            // Header
+            subtitle: 'Morse Code Naval Battle Trainer',
+            // Game status
+            shipsRemaining: 'Ships Remaining:',
+            shotsFired: 'Shots Fired:',
+            speed: 'Speed:',
+            language: 'Language:',
+            result: 'Result:',
+            // Grid
+            targetGrid: 'Target Grid',
+            water: 'Water',
+            hit: 'Hit',
+            sunk: 'Sunk',
+            // Morse input
+            morseInput: 'Morse Input',
+            currentSignal: 'Current Signal:',
+            currentChar: 'Current Character:',
+            decodedInput: 'Decoded Input:',
+            morseKey: 'MORSE KEY',
+            holdToSend: 'Hold to send signal',
+            send: 'Send',
+            clear: 'Clear',
+            newGame: 'New Game',
+            tutorial: 'Tutorial',
+            // Response
+            computerResponse: 'Computer Response',
+            lastCoord: 'Last Coordinate:',
+            response: 'Response:',
+            meaning: 'Meaning:',
+            shipHit: 'Ship hit!',
+            shipSunk: 'Ship sunk!',
+            waterMiss: 'Water (miss)',
+            invalidCoord: 'Invalid coordinate',
+            alreadyShot: 'Already shot here',
+            // Reference
+            morseReference: 'Morse Code Reference',
+            letters: 'Letters (A-G)',
+            numbers: 'Numbers (1-7)',
+            responses: 'Responses',
+            // Footer
+            footerText: 'MorseFleet - Based on rules by Radioklub Vegova (S59VEG)',
+            imprint: 'Imprint',
+            privacy: 'Privacy',
+            // Victory
+            victory: 'Victory! Fleet destroyed in {shots} shots.',
+            victoryAutoplay: 'Victory in {shots} shots!',
+            // Tutorial
+            tutorialTitle: 'Tutorial',
+            tutorialStep1Title: 'Dots and Dashes',
+            tutorialStep1Text: 'Morse code uses short signals (dots) and long signals (dashes). A <strong>short press</strong> (<200ms) creates a dot. A <strong>long press</strong> (>200ms) creates a dash.',
+            dot: 'Dot',
+            dash: 'Dash',
+            tutorialStep2Title: 'Character Timing',
+            tutorialStep2Text: 'Pause between signals to complete a character. After ~300ms pause, the dots and dashes are decoded into a letter or number.',
+            tutorialStep3Title: 'Sending Coordinates',
+            tutorialStep3Text: 'To fire at a target, send a letter (A-G) followed by a number (1-7). For example, <strong>A1</strong> targets the top-left corner.',
+            tutorialStep4Title: 'Live Demo',
+            tutorialStep4Text: 'Watch how "A1" is keyed. The key lights up, and you\'ll hear the tones.',
+            playDemo: '▶ Play Demo: "A1"',
+            playing: 'Playing...',
+            readyToSend: '✓ Ready to send!',
+            tutorialStep5Title: 'Computer Response',
+            tutorialStep5Text: 'After you send a coordinate, the computer responds in Morse:',
+            tutorialStep6Title: 'Autoplay Mode',
+            tutorialStep6Text: 'Want to see the full game in action? Click <strong>Autoplay Game</strong> to watch the game play itself automatically. The Morse key will be operated, coordinates sent, and you\'ll see and hear everything!',
+            autoplayGame: '▶ Autoplay Game',
+            // Autoplay
+            autoplay: 'AUTOPLAY',
+            autoplayStarting: 'Starting...',
+            autoplayFiring: 'Firing at {coord}...',
+            autoplaySending: 'Sending {coord}...',
+            autoplayVictory: 'Victory in {shots} shots!',
+            stop: 'Stop'
+        },
+        sl: {
+            // Header
+            subtitle: 'Morzejeva pomorska bitka',
+            // Game status
+            shipsRemaining: 'Preostale ladje:',
+            shotsFired: 'Streli:',
+            speed: 'Hitrost:',
+            language: 'Jezik:',
+            result: 'Rezultat:',
+            // Grid
+            targetGrid: 'Ciljna mreža',
+            water: 'Voda',
+            hit: 'Zadetek',
+            sunk: 'Potopljena',
+            // Morse input
+            morseInput: 'Morzejeva tipka',
+            currentSignal: 'Trenutni signal:',
+            currentChar: 'Trenutni znak:',
+            decodedInput: 'Dekodiran vnos:',
+            morseKey: 'MORZEJEVA TIPKA',
+            holdToSend: 'Drži za pošiljanje',
+            send: 'Pošlji',
+            clear: 'Briši',
+            newGame: 'Nova igra',
+            tutorial: 'Navodila',
+            // Response
+            computerResponse: 'Odgovor računalnika',
+            lastCoord: 'Zadnja koordinata:',
+            response: 'Odgovor:',
+            meaning: 'Pomen:',
+            shipHit: 'Ladja zadetena!',
+            shipSunk: 'Ladja potopljena!',
+            waterMiss: 'Voda (zgrešeno)',
+            invalidCoord: 'Neveljavna koordinata',
+            alreadyShot: 'Že streljano',
+            // Reference
+            morseReference: 'Morzejeva referenca',
+            letters: 'Črke (A-G)',
+            numbers: 'Številke (1-7)',
+            responses: 'Odgovori',
+            // Footer
+            footerText: 'MorseFleet - Po pravilih Radiokluba Vegova (S59VEG)',
+            imprint: 'Impressum',
+            privacy: 'Zasebnost',
+            // Victory
+            victory: 'Zmaga! Flota uničena v {shots} strelih.',
+            victoryAutoplay: 'Zmaga v {shots} strelih!',
+            // Tutorial
+            tutorialTitle: 'Navodila',
+            tutorialStep1Title: 'Pike in črtice',
+            tutorialStep1Text: 'Morzejeva abeceda uporablja kratke signale (pike) in dolge signale (črtice). <strong>Kratek pritisk</strong> (<200ms) ustvari piko. <strong>Dolg pritisk</strong> (>200ms) ustvari črtico.',
+            dot: 'Pika',
+            dash: 'Črtica',
+            tutorialStep2Title: 'Časovni razmik',
+            tutorialStep2Text: 'Premor med signali zaključi znak. Po ~300ms premora se pike in črtice dekodirajo v črko ali številko.',
+            tutorialStep3Title: 'Pošiljanje koordinat',
+            tutorialStep3Text: 'Za streljanje na cilj pošlji črko (A-G) in nato številko (1-7). Na primer, <strong>A1</strong> cilja na zgornji levi kot.',
+            tutorialStep4Title: 'Demo v živo',
+            tutorialStep4Text: 'Poglej kako se tipka "A1". Tipka zasveti in slišiš tone.',
+            playDemo: '▶ Predvajaj demo: "A1"',
+            playing: 'Predvajanje...',
+            readyToSend: '✓ Pripravljeno za pošiljanje!',
+            tutorialStep5Title: 'Odgovor računalnika',
+            tutorialStep5Text: 'Po pošiljanju koordinate računalnik odgovori v Morzu:',
+            tutorialStep6Title: 'Samodejni način',
+            tutorialStep6Text: 'Želiš videti celotno igro v akciji? Klikni <strong>Samodejno predvajaj</strong> za ogled samodejne igre. Morzejeva tipka bo upravljana, koordinate poslane, in vse boš videl in slišal!',
+            autoplayGame: '▶ Samodejno predvajaj',
+            // Autoplay
+            autoplay: 'SAMODEJNO',
+            autoplayStarting: 'Začenjam...',
+            autoplayFiring: 'Streljam na {coord}...',
+            autoplaySending: 'Pošiljam {coord}...',
+            autoplayVictory: 'Zmaga v {shots} strelih!',
+            stop: 'Ustavi'
+        }
+    },
+
+    t(key, replacements = {}) {
+        let text = this.translations[this.currentLang]?.[key] || this.translations['en'][key] || key;
+        for (const [k, v] of Object.entries(replacements)) {
+            text = text.replace(`{${k}}`, v);
+        }
+        return text;
+    },
+
+    setLang(lang) {
+        if (this.translations[lang]) {
+            this.currentLang = lang;
+            this.updateUI();
+            localStorage.setItem('morsefleet-lang', lang);
+        }
+    },
+
+    updateUI() {
+        // Update all translatable elements
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                el.placeholder = this.t(key);
+            } else {
+                el.innerHTML = this.t(key);
+            }
+        });
+        // Update morse key (special handling for <br>)
+        const morseKey = document.getElementById('morse-key');
+        if (morseKey) {
+            morseKey.innerHTML = `${this.t('morseKey')}<br><small>${this.t('holdToSend')}</small>`;
+        }
+    },
+
+    init() {
+        const saved = localStorage.getItem('morsefleet-lang');
+        if (saved && this.translations[saved]) {
+            this.currentLang = saved;
+        }
+        this.updateUI();
+    }
+};
 
 // =============================================================================
 // AUDIO OUTPUT (Web Audio API)
@@ -1716,10 +2001,10 @@ class RulesEngine {
 
     getResponseMeaning(response) {
         switch (response) {
-            case 'S': return 'Ship hit!';
-            case 'K': return 'Ship sunk!';
-            case 'W': return 'Water (miss)';
-            case '?': return 'Not understood';
+            case 'S': return i18n.t('shipHit');
+            case 'K': return i18n.t('shipSunk');
+            case 'W': return i18n.t('waterMiss');
+            case '?': return i18n.t('invalidCoord');
             default: return 'Unknown';
         }
     }
@@ -1816,7 +2101,7 @@ class GameUI {
     showGameOver() {
         this.elements.gameResult.style.display = 'block';
         this.elements.resultText.textContent =
-            `Victory! Fleet destroyed in ${this.game.gameState.shotsFired} shots.`;
+            i18n.t('victory', { shots: this.game.gameState.shotsFired });
         this.elements.sendBtn.disabled = true;
     }
 
@@ -2042,27 +2327,25 @@ const Tutorial = {
         this.overlay.innerHTML = `
             <div class="tutorial-modal">
                 <div class="tutorial-header">
-                    <h2>Tutorial: Morse Code Input</h2>
+                    <h2>${i18n.t('tutorialTitle')}</h2>
                     <button class="tutorial-close">&times;</button>
                 </div>
                 <div class="tutorial-content">
                     <div class="tutorial-step">
                         <div class="tutorial-step-header">
                             <span class="tutorial-step-num">1</span>
-                            <h3>Dots and Dashes</h3>
+                            <h3>${i18n.t('tutorialStep1Title')}</h3>
                         </div>
-                        <p>Morse code uses short signals (dots) and long signals (dashes).
-                           A <strong>short press</strong> (&lt;200ms) creates a dot.
-                           A <strong>long press</strong> (&gt;200ms) creates a dash.</p>
+                        <p>${i18n.t('tutorialStep1Text')}</p>
                         <div class="timing-diagram">
                             <div>
                                 <div class="timing-dot"></div>
-                                <div class="timing-label">Dot<br>&lt;200ms</div>
+                                <div class="timing-label">${i18n.t('dot')}<br>&lt;200ms</div>
                             </div>
                             <div class="timing-gap"></div>
                             <div>
                                 <div class="timing-dash"></div>
-                                <div class="timing-label">Dash<br>&gt;200ms</div>
+                                <div class="timing-label">${i18n.t('dash')}<br>&gt;200ms</div>
                             </div>
                         </div>
                     </div>
@@ -2070,19 +2353,17 @@ const Tutorial = {
                     <div class="tutorial-step">
                         <div class="tutorial-step-header">
                             <span class="tutorial-step-num">2</span>
-                            <h3>Character Timing</h3>
+                            <h3>${i18n.t('tutorialStep2Title')}</h3>
                         </div>
-                        <p>Pause between signals to complete a character. After ~300ms pause,
-                           the dots and dashes are decoded into a letter or number.</p>
+                        <p>${i18n.t('tutorialStep2Text')}</p>
                     </div>
 
                     <div class="tutorial-step">
                         <div class="tutorial-step-header">
                             <span class="tutorial-step-num">3</span>
-                            <h3>Sending Coordinates</h3>
+                            <h3>${i18n.t('tutorialStep3Title')}</h3>
                         </div>
-                        <p>To fire at a target, send a letter (A-G) followed by a number (1-7).
-                           For example, <strong>A1</strong> targets the top-left corner.</p>
+                        <p>${i18n.t('tutorialStep3Text')}</p>
                         <p style="color: #4ecca3; font-family: monospace;">
                             A = .-  &nbsp;&nbsp; 1 = .----
                         </p>
@@ -2091,12 +2372,12 @@ const Tutorial = {
                     <div class="tutorial-step">
                         <div class="tutorial-step-header">
                             <span class="tutorial-step-num">4</span>
-                            <h3>Live Demo</h3>
+                            <h3>${i18n.t('tutorialStep4Title')}</h3>
                         </div>
-                        <p>Watch how "A1" is keyed. The key lights up, and you'll hear the tones.</p>
+                        <p>${i18n.t('tutorialStep4Text')}</p>
 
                         <div class="tutorial-demo">
-                            <div class="demo-key" id="demo-key">MORSE KEY</div>
+                            <div class="demo-key" id="demo-key">${i18n.t('morseKey')}</div>
                             <div class="demo-indicator" id="demo-indicator"></div>
                             <div class="demo-output" id="demo-output"></div>
                             <div class="demo-decoded" id="demo-decoded"></div>
@@ -2105,34 +2386,32 @@ const Tutorial = {
 
                     <div class="tutorial-controls">
                         <button class="tutorial-btn-demo" id="demo-start-btn">
-                            ▶ Play Demo: "A1"
+                            ${i18n.t('playDemo')}
                         </button>
                     </div>
 
                     <div class="tutorial-step" style="margin-top: 20px;">
                         <div class="tutorial-step-header">
                             <span class="tutorial-step-num">5</span>
-                            <h3>Computer Response</h3>
+                            <h3>${i18n.t('tutorialStep5Title')}</h3>
                         </div>
-                        <p>After you send a coordinate, the computer responds in Morse:</p>
+                        <p>${i18n.t('tutorialStep5Text')}</p>
                         <p style="font-family: monospace; color: #ccc;">
-                            <span style="color: #4ecca3;">W (.--)</span> = Water (miss)<br>
-                            <span style="color: #e94560;">S (...)</span> = Ship hit!<br>
-                            <span style="color: #ff6b6b;">K (-.-))</span> = Ship sunk!
+                            <span style="color: #4ecca3;">W (.--)</span> = ${i18n.t('waterMiss')}<br>
+                            <span style="color: #e94560;">S (...)</span> = ${i18n.t('shipHit')}<br>
+                            <span style="color: #ff6b6b;">K (-.-)</span> = ${i18n.t('shipSunk')}
                         </p>
                     </div>
 
                     <div class="tutorial-step" style="margin-bottom: 0;">
                         <div class="tutorial-step-header">
                             <span class="tutorial-step-num">6</span>
-                            <h3>Autoplay Mode</h3>
+                            <h3>${i18n.t('tutorialStep6Title')}</h3>
                         </div>
-                        <p>Want to see the full game in action? Click <strong>Autoplay Game</strong>
-                           to watch the game play itself automatically. The Morse key will be
-                           operated, coordinates sent, and you'll see and hear everything!</p>
+                        <p>${i18n.t('tutorialStep6Text')}</p>
                         <div class="tutorial-controls" style="border: none; padding-top: 10px; margin-top: 10px;">
                             <button class="tutorial-btn-demo" id="autoplay-btn" style="background: #4ecca3;">
-                                ▶ Autoplay Game
+                                ${i18n.t('autoplayGame')}
                             </button>
                         </div>
                     </div>
@@ -2204,7 +2483,7 @@ const Tutorial = {
         if (!demoKey) return;
 
         demoBtn.disabled = true;
-        demoBtn.textContent = 'Playing...';
+        demoBtn.textContent = i18n.t('playing');
 
         // Clear previous
         demoOutput.textContent = '';
@@ -2285,7 +2564,7 @@ const Tutorial = {
 
             // Character decoded
             demoDecoded.textContent = 'A1';
-            demoOutput.textContent = '✓ Ready to send!';
+            demoOutput.textContent = i18n.t('readyToSend');
             demoOutput.style.color = '#4ecca3';
 
             await this.sleep(1500);
@@ -2299,7 +2578,7 @@ const Tutorial = {
         audioCtx.close();
 
         demoBtn.disabled = false;
-        demoBtn.textContent = '▶ Play Demo: "A1"';
+        demoBtn.textContent = i18n.t('playDemo');
         this.isRunning = false;
     },
 
@@ -2442,7 +2721,7 @@ const Autoplay = {
                 border-radius: 50%;
                 animation: autoplay-pulse 1s infinite;
             "></span>
-            <span id="autoplay-text">AUTOPLAY: Starting...</span>
+            <span id="autoplay-text"></span>
             <button id="autoplay-stop" style="
                 background: #e94560;
                 color: white;
@@ -2452,7 +2731,7 @@ const Autoplay = {
                 cursor: pointer;
                 font-size: 0.85em;
                 margin-left: 10px;
-            ">Stop</button>
+            ">${i18n.t('stop')}</button>
         `;
 
         // Add pulse animation
@@ -2467,6 +2746,9 @@ const Autoplay = {
         document.head.appendChild(style);
 
         document.body.appendChild(this.statusEl);
+
+        // Set initial status text
+        this.updateStatus(i18n.t('autoplayStarting'));
 
         // Stop button handler
         document.getElementById('autoplay-stop').onclick = () => this.stop();
@@ -2489,7 +2771,7 @@ const Autoplay = {
      */
     updateStatus(text) {
         const el = document.getElementById('autoplay-text');
-        if (el) el.textContent = 'AUTOPLAY: ' + text;
+        if (el) el.textContent = i18n.t('autoplay') + ': ' + text;
     },
 
     /**
@@ -2522,7 +2804,7 @@ const Autoplay = {
             for (const coord of coords) {
                 if (!this.isRunning || game.gameState.isGameOver) break;
 
-                this.updateStatus(`Targeting ${coord}...`);
+                this.updateStatus(i18n.t('autoplayFiring', { coord }));
 
                 // Check if already hit
                 const row = rows.indexOf(coord[0]);
@@ -2541,7 +2823,7 @@ const Autoplay = {
             }
 
             if (game.gameState.isGameOver && this.isRunning) {
-                this.updateStatus(`Victory in ${game.gameState.shotsFired} shots!`);
+                this.updateStatus(i18n.t('autoplayVictory', { shots: game.gameState.shotsFired }));
                 await this.sleep(3000);
             }
 
@@ -2570,7 +2852,7 @@ const Autoplay = {
         await this.sleep(timing.CHAR_GAP + 100); // Wait for character to be decoded
 
         // Trigger send
-        this.updateStatus(`Sending ${coord}...`);
+        this.updateStatus(i18n.t('autoplaySending', { coord }));
         await game.sendCoordinate();
 
         // Wait for response to play
@@ -2824,6 +3106,9 @@ const LegalModals = {
 // =============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize i18n first
+    i18n.init();
+
     window.game = new MorseFleetGame();
 
     // Initialize speed selector
@@ -2831,6 +3116,13 @@ document.addEventListener('DOMContentLoaded', () => {
     speedSelect.addEventListener('change', (e) => {
         const wpm = parseInt(e.target.value, 10);
         MorseTiming.setWPM(wpm);
+    });
+
+    // Initialize language selector
+    const langSelect = document.getElementById('lang-select');
+    langSelect.value = i18n.currentLang;
+    langSelect.addEventListener('change', (e) => {
+        i18n.setLang(e.target.value);
     });
 
     // Initialize tutorial
