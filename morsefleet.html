@@ -5,10 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1a1a2e">
+    <meta name="theme-color" content="#0f172a">
     <title>MorseFleet - Morse Code Battleship</title>
     <style>
 /* MorseFleet - Mobile-First Responsive Styles */
+
+/* CSS Variables - Matching FirstContact color scheme */
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-primary: #3b82f6;
+    --accent-success: #22c55e;
+    --accent-warning: #eab308;
+    --accent-danger: #ef4444;
+    --border-color: #475569;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
 
 * {
     box-sizing: border-box;
@@ -23,9 +39,9 @@ html, body {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Courier New', monospace;
-    background-color: #1a1a2e;
-    color: #eee;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     line-height: 1.5;
     min-height: 100vh;
     min-height: -webkit-fill-available;
@@ -42,7 +58,7 @@ body {
 /* Header */
 header {
     margin-bottom: 15px;
-    border-bottom: 2px solid #0f3460;
+    border-bottom: 2px solid var(--border-color);
     padding-bottom: 10px;
 }
 
@@ -74,13 +90,13 @@ header {
 }
 
 header h1 {
-    color: #e94560;
+    color: var(--accent-primary);
     font-size: 1.5em;
     letter-spacing: 2px;
 }
 
 .subtitle {
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.8em;
 }
 
@@ -94,19 +110,19 @@ header h1 {
 
 /* Sections */
 section {
-    background: #16213e;
-    border: 1px solid #0f3460;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 12px;
     margin-bottom: 12px;
 }
 
 section h2 {
-    color: #e94560;
+    color: var(--accent-primary);
     font-size: 1em;
     margin-bottom: 10px;
     padding-bottom: 5px;
-    border-bottom: 1px solid #0f3460;
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* Game Status */
@@ -123,7 +139,7 @@ section h2 {
 }
 
 .status-item .label {
-    color: #888;
+    color: var(--text-secondary);
     display: block;
     font-size: 0.7em;
 }
@@ -131,7 +147,7 @@ section h2 {
 .status-item span:not(.label) {
     font-size: 1.3em;
     font-weight: bold;
-    color: #4ecca3;
+    color: var(--accent-success);
 }
 
 /* Speed Selector */
@@ -142,7 +158,7 @@ section h2 {
 }
 
 .speed-selector .label {
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.7em;
     white-space: nowrap;
 }
@@ -151,9 +167,9 @@ section h2 {
     padding: 6px 10px;
     font-family: inherit;
     font-size: 0.9em;
-    background: #0f3460;
-    color: #4ecca3;
-    border: 1px solid #1a4a7a;
+    background: var(--bg-tertiary);
+    color: var(--accent-success);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     cursor: pointer;
     min-height: 36px;
@@ -161,11 +177,11 @@ section h2 {
 }
 
 .speed-select:hover {
-    background: #1a4a7a;
+    background: var(--border-color);
 }
 
 .speed-select:focus {
-    outline: 2px solid #4ecca3;
+    outline: 2px solid var(--accent-success);
     outline-offset: 2px;
 }
 
@@ -190,7 +206,7 @@ section h2 {
 .grid-labels-top span {
     text-align: center;
     font-weight: bold;
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.85em;
 }
 
@@ -212,7 +228,7 @@ section h2 {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.85em;
 }
 
@@ -224,8 +240,8 @@ section h2 {
 }
 
 .cell {
-    background: #0f3460;
-    border: 1px solid #1a1a2e;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--bg-primary);
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -236,20 +252,20 @@ section h2 {
 }
 
 .cell.unknown {
-    background: #0f3460;
+    background: var(--bg-tertiary);
 }
 
 .cell.water {
-    background: #1e3a5f;
+    background: var(--bg-secondary);
 }
 
 .cell.water::after {
     content: '~';
-    color: #4a90a4;
+    color: var(--accent-primary);
 }
 
 .cell.hit {
-    background: #e94560;
+    background: var(--accent-danger);
 }
 
 .cell.hit::after {
@@ -259,7 +275,7 @@ section h2 {
 }
 
 .cell.sunk {
-    background: #7b2d42;
+    background: #7f1d1d;
 }
 
 .cell.sunk::after {
@@ -289,16 +305,16 @@ section h2 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #1a1a2e;
+    border: 1px solid var(--bg-primary);
     border-radius: 3px;
     font-size: 0.8em;
 }
 
-.cell-sample.water { background: #1e3a5f; }
-.cell-sample.water::after { content: '~'; color: #4a90a4; }
-.cell-sample.hit { background: #e94560; }
+.cell-sample.water { background: var(--bg-secondary); }
+.cell-sample.water::after { content: '~'; color: var(--accent-primary); }
+.cell-sample.hit { background: var(--accent-danger); }
 .cell-sample.hit::after { content: 'X'; color: #fff; }
-.cell-sample.sunk { background: #7b2d42; }
+.cell-sample.sunk { background: #7f1d1d; }
 .cell-sample.sunk::after { content: '#'; color: #ccc; }
 
 /* Morse Display */
@@ -315,7 +331,7 @@ section h2 {
 
 .morse-row .label {
     width: 110px;
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.75em;
     flex-shrink: 0;
 }
@@ -324,13 +340,13 @@ section h2 {
     font-size: 1em;
     min-width: 80px;
     padding: 6px 10px;
-    background: #0f3460;
+    background: var(--bg-tertiary);
     border-radius: 4px;
     flex: 1;
 }
 
 .morse-text.highlight {
-    color: #4ecca3;
+    color: var(--accent-success);
     font-weight: bold;
 }
 
@@ -347,10 +363,10 @@ section h2 {
     width: 90%;
     max-width: 280px;
     height: 100px;
-    background: linear-gradient(180deg, #444 0%, #222 100%);
-    border: 4px solid #555;
+    background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    border: 4px solid var(--border-color);
     border-radius: 15px;
-    color: #fff;
+    color: var(--text-primary);
     font-family: inherit;
     font-size: 1.1em;
     cursor: pointer;
@@ -361,18 +377,18 @@ section h2 {
 }
 
 .morse-key:hover {
-    border-color: #e94560;
+    border-color: var(--accent-primary);
 }
 
 .morse-key:active,
 .morse-key.active {
-    background: linear-gradient(180deg, #e94560 0%, #b33654 100%);
+    background: linear-gradient(180deg, var(--accent-primary) 0%, #2563eb 100%);
     transform: scale(0.98);
     box-shadow: inset 0 3px 8px rgba(0,0,0,0.4);
 }
 
 .morse-key small {
-    color: #aaa;
+    color: var(--text-secondary);
     font-size: 0.65em;
     display: block;
     margin-top: 5px;
@@ -382,15 +398,15 @@ section h2 {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: #333;
+    background: var(--bg-tertiary);
     margin-top: 12px;
-    border: 2px solid #444;
+    border: 2px solid var(--border-color);
     transition: all 0.05s;
 }
 
 .signal-indicator.on {
-    background: #4ecca3;
-    box-shadow: 0 0 15px #4ecca3;
+    background: var(--accent-success);
+    box-shadow: 0 0 15px var(--accent-success);
 }
 
 /* Controls - Touch Friendly */
@@ -405,7 +421,7 @@ section h2 {
     padding: 14px 20px;
     font-family: inherit;
     font-size: 0.95em;
-    background: #e94560;
+    background: var(--accent-primary);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -417,28 +433,28 @@ section h2 {
 }
 
 .btn:hover {
-    background: #ff6b6b;
+    background: #60a5fa;
 }
 
 .btn:active,
 .btn.pressed {
     transform: scale(0.96);
-    background: #ff6b6b;
-    box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
+    background: #60a5fa;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
 }
 
 .btn:disabled {
-    background: #555;
+    background: var(--text-muted);
     cursor: not-allowed;
     transform: none;
 }
 
 .btn-secondary {
-    background: #0f3460;
+    background: var(--bg-tertiary);
 }
 
 .btn-secondary:hover {
-    background: #1a4a7a;
+    background: var(--border-color);
 }
 
 /* Response Section */
@@ -456,7 +472,7 @@ section h2 {
 
 .response-row .label {
     width: 110px;
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.75em;
     text-align: right;
     padding-right: 8px;
@@ -468,20 +484,20 @@ section h2 {
     min-width: 120px;
     text-align: left;
     padding: 6px 10px;
-    background: #0f3460;
+    background: var(--bg-tertiary);
     border-radius: 4px;
 }
 
 .response-text.highlight {
-    color: #e94560;
+    color: var(--accent-primary);
     font-weight: bold;
     font-size: 1.3em;
 }
 
 /* Morse Reference */
 .morse-reference {
-    background: #16213e;
-    border: 1px solid #0f3460;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 12px;
     margin-bottom: 15px;
@@ -489,7 +505,7 @@ section h2 {
 
 .morse-reference summary {
     cursor: pointer;
-    color: #e94560;
+    color: var(--accent-primary);
     font-weight: bold;
     outline: none;
     padding: 8px 0;
@@ -497,7 +513,7 @@ section h2 {
 }
 
 .morse-reference summary:hover {
-    color: #ff6b6b;
+    color: #60a5fa;
 }
 
 .reference-grid {
@@ -508,7 +524,7 @@ section h2 {
 }
 
 .ref-section h4 {
-    color: #888;
+    color: var(--text-secondary);
     margin-bottom: 8px;
     font-size: 0.8em;
 }
@@ -522,7 +538,7 @@ section h2 {
 }
 
 .ref-item span:first-child {
-    color: #4ecca3;
+    color: var(--accent-success);
 }
 
 .ref-item span:last-child {
@@ -534,9 +550,9 @@ section h2 {
 footer {
     text-align: center;
     padding: 15px 10px;
-    color: #555;
+    color: var(--text-muted);
     font-size: 0.7em;
-    border-top: 1px solid #0f3460;
+    border-top: 1px solid var(--border-color);
 }
 
 .footer-links {
@@ -544,27 +560,27 @@ footer {
 }
 
 .footer-links a {
-    color: #888;
+    color: var(--text-secondary);
     text-decoration: none;
     transition: color 0.2s;
 }
 
 .footer-links a:hover {
-    color: #e94560;
+    color: var(--accent-primary);
 }
 
 .footer-sep {
     margin: 0 8px;
-    color: #444;
+    color: var(--text-muted);
 }
 
 .parent-site-text {
     margin-bottom: 8px;
-    color: #888;
+    color: var(--text-secondary);
 }
 
 .parent-site-text a {
-    color: #4ecca3;
+    color: var(--accent-primary);
     text-decoration: none;
     font-weight: bold;
 }
@@ -590,8 +606,8 @@ footer {
 }
 
 .legal-modal {
-    background: #16213e;
-    border: 1px solid #0f3460;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     max-width: 600px;
     width: 100%;
@@ -605,14 +621,14 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    border-bottom: 1px solid #0f3460;
+    border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
-    background: #16213e;
+    background: var(--bg-secondary);
 }
 
 .legal-modal-header h2 {
-    color: #e94560;
+    color: var(--accent-primary);
     margin: 0;
     font-size: 1.2em;
 }
@@ -620,7 +636,7 @@ footer {
 .legal-modal-close {
     background: none;
     border: none;
-    color: #888;
+    color: var(--text-secondary);
     font-size: 1.8em;
     cursor: pointer;
     padding: 0;
@@ -629,7 +645,7 @@ footer {
 }
 
 .legal-modal-close:hover {
-    color: #e94560;
+    color: var(--accent-primary);
 }
 
 .legal-modal-content {
@@ -637,7 +653,7 @@ footer {
 }
 
 .legal-info {
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.85em;
     margin-bottom: 20px;
     font-style: italic;
@@ -648,15 +664,15 @@ footer {
 }
 
 .legal-section h3 {
-    color: #4ecca3;
+    color: var(--accent-success);
     font-size: 1em;
     margin-bottom: 10px;
     padding-bottom: 5px;
-    border-bottom: 1px solid #0f3460;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .legal-section p {
-    color: #ccc;
+    color: var(--text-primary);
     font-size: 0.9em;
     line-height: 1.6;
     margin-bottom: 8px;
@@ -667,7 +683,7 @@ footer {
 }
 
 .legal-email {
-    color: #e94560;
+    color: var(--accent-primary);
     text-decoration: none;
 }
 
@@ -677,11 +693,11 @@ footer {
 
 /* Tutorial Button */
 .btn-tutorial {
-    background: #4ecca3;
+    background: var(--accent-success);
 }
 
 .btn-tutorial:hover {
-    background: #3db892;
+    background: #16a34a;
 }
 
 /* Tutorial Modal */
@@ -700,14 +716,14 @@ footer {
 }
 
 .tutorial-modal {
-    background: #16213e;
-    border: 2px solid #4ecca3;
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent-success);
     border-radius: 15px;
     max-width: 500px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 0 30px rgba(78, 204, 163, 0.3);
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
 }
 
 .tutorial-header {
@@ -715,13 +731,13 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    border-bottom: 1px solid #0f3460;
-    background: #0f3460;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
     border-radius: 13px 13px 0 0;
 }
 
 .tutorial-header h2 {
-    color: #4ecca3;
+    color: var(--accent-success);
     margin: 0;
     font-size: 1.2em;
 }
@@ -729,7 +745,7 @@ footer {
 .tutorial-close {
     background: none;
     border: none;
-    color: #888;
+    color: var(--text-secondary);
     font-size: 1.8em;
     cursor: pointer;
     padding: 0;
@@ -737,7 +753,7 @@ footer {
 }
 
 .tutorial-close:hover {
-    color: #e94560;
+    color: var(--accent-primary);
 }
 
 .tutorial-content {
@@ -756,8 +772,8 @@ footer {
 }
 
 .tutorial-step-num {
-    background: #4ecca3;
-    color: #1a1a2e;
+    background: var(--accent-success);
+    color: var(--bg-primary);
     width: 28px;
     height: 28px;
     border-radius: 50%;
@@ -769,13 +785,13 @@ footer {
 }
 
 .tutorial-step h3 {
-    color: #fff;
+    color: var(--text-primary);
     font-size: 1em;
     margin: 0;
 }
 
 .tutorial-step p {
-    color: #aaa;
+    color: var(--text-secondary);
     font-size: 0.9em;
     line-height: 1.5;
     margin-bottom: 10px;
@@ -783,7 +799,7 @@ footer {
 
 /* Demo Key */
 .tutorial-demo {
-    background: #0f3460;
+    background: var(--bg-tertiary);
     border-radius: 10px;
     padding: 15px;
     margin: 15px 0;
@@ -793,21 +809,21 @@ footer {
 .demo-key {
     width: 120px;
     height: 50px;
-    background: linear-gradient(180deg, #444 0%, #222 100%);
-    border: 3px solid #555;
+    background: linear-gradient(180deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    border: 3px solid var(--border-color);
     border-radius: 8px;
     margin: 0 auto 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.8em;
     transition: all 0.05s;
 }
 
 .demo-key.active {
-    background: linear-gradient(180deg, #e94560 0%, #b33654 100%);
-    border-color: #e94560;
+    background: linear-gradient(180deg, var(--accent-primary) 0%, #2563eb 100%);
+    border-color: var(--accent-primary);
     color: #fff;
 }
 
@@ -815,27 +831,27 @@ footer {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #333;
+    background: var(--bg-tertiary);
     margin: 0 auto 10px;
-    border: 2px solid #444;
+    border: 2px solid var(--border-color);
     transition: all 0.05s;
 }
 
 .demo-indicator.on {
-    background: #4ecca3;
-    box-shadow: 0 0 10px #4ecca3;
+    background: var(--accent-success);
+    box-shadow: 0 0 10px var(--accent-success);
 }
 
 .demo-output {
     font-family: monospace;
     font-size: 1.5em;
-    color: #4ecca3;
+    color: var(--accent-success);
     min-height: 1.5em;
     letter-spacing: 3px;
 }
 
 .demo-decoded {
-    color: #e94560;
+    color: var(--accent-primary);
     font-size: 1.2em;
     font-weight: bold;
     min-height: 1.2em;
@@ -855,14 +871,14 @@ footer {
 .timing-dot {
     width: 15px;
     height: 15px;
-    background: #4ecca3;
+    background: var(--accent-success);
     border-radius: 50%;
 }
 
 .timing-dash {
     width: 45px;
     height: 15px;
-    background: #4ecca3;
+    background: var(--accent-success);
     border-radius: 8px;
 }
 
@@ -872,7 +888,7 @@ footer {
 
 .timing-label {
     font-size: 0.7em;
-    color: #888;
+    color: var(--text-secondary);
     text-align: center;
     margin-top: 3px;
 }
@@ -884,11 +900,11 @@ footer {
     justify-content: center;
     margin-top: 20px;
     padding-top: 15px;
-    border-top: 1px solid #0f3460;
+    border-top: 1px solid var(--border-color);
 }
 
 .tutorial-btn-demo {
-    background: #e94560;
+    background: var(--accent-primary);
     color: #fff;
     border: none;
     padding: 12px 25px;
@@ -900,11 +916,11 @@ footer {
 }
 
 .tutorial-btn-demo:hover {
-    background: #ff6b6b;
+    background: #60a5fa;
 }
 
 .tutorial-btn-demo:disabled {
-    background: #555;
+    background: var(--text-muted);
     cursor: not-allowed;
 }
 
@@ -919,18 +935,18 @@ footer {
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: #333;
-    border: 1px solid #555;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
 }
 
 .tutorial-progress-dot.active {
-    background: #4ecca3;
-    border-color: #4ecca3;
+    background: var(--accent-success);
+    border-color: var(--accent-success);
 }
 
 .tutorial-progress-dot.completed {
-    background: #0f3460;
-    border-color: #4ecca3;
+    background: var(--bg-tertiary);
+    border-color: var(--accent-success);
 }
 
 /* ===========================================
@@ -1109,8 +1125,8 @@ footer {
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
     body {
-        background-color: #1a1a2e;
-        color: #eee;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
     }
 }
     </style>
@@ -2487,7 +2503,7 @@ const Tutorial = {
                             <h3>${i18n.t('tutorialStep3Title')}</h3>
                         </div>
                         <p>${i18n.t('tutorialStep3Text')}</p>
-                        <p style="color: #4ecca3; font-family: monospace;">
+                        <p style="color: var(--accent-success); font-family: monospace;">
                             A = .-  &nbsp;&nbsp; 1 = .----
                         </p>
                     </div>
@@ -2519,10 +2535,10 @@ const Tutorial = {
                             <h3>${i18n.t('tutorialStep5Title')}</h3>
                         </div>
                         <p>${i18n.t('tutorialStep5Text')}</p>
-                        <p style="font-family: monospace; color: #ccc;">
-                            <span style="color: #4ecca3;">W (.--)</span> = ${i18n.t('waterMiss')}<br>
-                            <span style="color: #e94560;">S (...)</span> = ${i18n.t('shipHit')}<br>
-                            <span style="color: #ff6b6b;">K (-.-)</span> = ${i18n.t('shipSunk')}
+                        <p style="font-family: monospace; color: var(--text-primary);">
+                            <span style="color: var(--accent-primary);">W (.--)</span> = ${i18n.t('waterMiss')}<br>
+                            <span style="color: var(--accent-danger);">S (...)</span> = ${i18n.t('shipHit')}<br>
+                            <span style="color: var(--accent-warning);">K (-.-)</span> = ${i18n.t('shipSunk')}
                         </p>
                     </div>
 
@@ -2533,7 +2549,7 @@ const Tutorial = {
                         </div>
                         <p>${i18n.t('tutorialStep6Text')}</p>
                         <div class="tutorial-controls" style="border: none; padding-top: 10px; margin-top: 10px;">
-                            <button class="tutorial-btn-demo" id="autoplay-btn" style="background: #4ecca3;">
+                            <button class="tutorial-btn-demo" id="autoplay-btn" style="background: var(--accent-success);">
                                 ${i18n.t('autoplayGame')}
                             </button>
                         </div>
@@ -2688,7 +2704,7 @@ const Tutorial = {
             // Character decoded
             demoDecoded.textContent = 'A1';
             demoOutput.textContent = i18n.t('readyToSend');
-            demoOutput.style.color = '#4ecca3';
+            demoOutput.style.color = 'var(--accent-success)';
 
             await this.sleep(1500);
             demoOutput.style.color = '';
@@ -2824,8 +2840,8 @@ const Autoplay = {
             top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(78, 204, 163, 0.95);
-            color: #1a1a2e;
+            background: rgba(34, 197, 94, 0.95);
+            color: var(--bg-primary);
             padding: 10px 20px;
             border-radius: 20px;
             font-weight: bold;
@@ -2840,13 +2856,13 @@ const Autoplay = {
             <span class="autoplay-dot" style="
                 width: 10px;
                 height: 10px;
-                background: #e94560;
+                background: var(--accent-danger);
                 border-radius: 50%;
                 animation: autoplay-pulse 1s infinite;
             "></span>
             <span id="autoplay-text"></span>
             <button id="autoplay-stop" style="
-                background: #e94560;
+                background: var(--accent-danger);
                 color: white;
                 border: none;
                 padding: 5px 12px;
