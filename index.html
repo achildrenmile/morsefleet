@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorseFleet - Morse Code Battleship</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MorseFleet</h1>
+            <p class="subtitle">Morse Code Naval Battle Trainer</p>
+        </header>
+
+        <main>
+            <!-- Game Status -->
+            <section class="game-status">
+                <div class="status-item">
+                    <span class="label">Ships Remaining:</span>
+                    <span id="ships-remaining">6</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">Shots Fired:</span>
+                    <span id="shots-fired">0</span>
+                </div>
+                <div class="status-item" id="game-result" style="display: none;">
+                    <span class="label">Result:</span>
+                    <span id="result-text"></span>
+                </div>
+            </section>
+
+            <!-- Target Grid (Computer's ships) -->
+            <section class="grid-section">
+                <h2>Target Grid</h2>
+                <div class="grid-container">
+                    <div class="grid-labels-top">
+                        <span></span>
+                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                    </div>
+                    <div class="grid-with-labels">
+                        <div class="grid-labels-left">
+                            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span>
+                        </div>
+                        <div id="target-grid" class="grid"></div>
+                    </div>
+                </div>
+                <div class="legend">
+                    <span class="legend-item"><span class="cell-sample water"></span> Water</span>
+                    <span class="legend-item"><span class="cell-sample hit"></span> Hit</span>
+                    <span class="legend-item"><span class="cell-sample sunk"></span> Sunk</span>
+                </div>
+            </section>
+
+            <!-- Morse Input Section -->
+            <section class="morse-section">
+                <h2>Morse Input</h2>
+
+                <div class="morse-display">
+                    <div class="morse-row">
+                        <span class="label">Current Signal:</span>
+                        <span id="current-signal" class="morse-text"></span>
+                    </div>
+                    <div class="morse-row">
+                        <span class="label">Current Character:</span>
+                        <span id="current-char" class="morse-text"></span>
+                    </div>
+                    <div class="morse-row">
+                        <span class="label">Decoded Input:</span>
+                        <span id="decoded-input" class="morse-text highlight"></span>
+                    </div>
+                </div>
+
+                <div class="morse-key-container">
+                    <button id="morse-key" class="morse-key">
+                        MORSE KEY<br>
+                        <small>(Hold SPACE or Click)</small>
+                    </button>
+                    <div id="signal-indicator" class="signal-indicator"></div>
+                </div>
+
+                <div class="controls">
+                    <button id="send-btn" class="btn">Send Coordinate</button>
+                    <button id="clear-btn" class="btn btn-secondary">Clear</button>
+                    <button id="new-game-btn" class="btn btn-secondary">New Game</button>
+                </div>
+            </section>
+
+            <!-- Computer Response Section -->
+            <section class="response-section">
+                <h2>Computer Response</h2>
+                <div class="response-display">
+                    <div class="response-row">
+                        <span class="label">Last Coordinate:</span>
+                        <span id="last-coord" class="response-text"></span>
+                    </div>
+                    <div class="response-row">
+                        <span class="label">Response:</span>
+                        <span id="response-char" class="response-text highlight"></span>
+                    </div>
+                    <div class="response-row">
+                        <span class="label">Meaning:</span>
+                        <span id="response-meaning" class="response-text"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Morse Reference (Debug/Help) -->
+            <details class="morse-reference">
+                <summary>Morse Code Reference</summary>
+                <div class="reference-grid">
+                    <div class="ref-section">
+                        <h4>Letters (A-G)</h4>
+                        <div class="ref-item"><span>A</span><span>.-</span></div>
+                        <div class="ref-item"><span>B</span><span>-...</span></div>
+                        <div class="ref-item"><span>C</span><span>-.-.</span></div>
+                        <div class="ref-item"><span>D</span><span>-..</span></div>
+                        <div class="ref-item"><span>E</span><span>.</span></div>
+                        <div class="ref-item"><span>F</span><span>..-.</span></div>
+                        <div class="ref-item"><span>G</span><span>--.</span></div>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Numbers (1-7)</h4>
+                        <div class="ref-item"><span>1</span><span>.----</span></div>
+                        <div class="ref-item"><span>2</span><span>..---</span></div>
+                        <div class="ref-item"><span>3</span><span>...--</span></div>
+                        <div class="ref-item"><span>4</span><span>....-</span></div>
+                        <div class="ref-item"><span>5</span><span>.....</span></div>
+                        <div class="ref-item"><span>6</span><span>-....</span></div>
+                        <div class="ref-item"><span>7</span><span>--...</span></div>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Responses</h4>
+                        <div class="ref-item"><span>S (Hit)</span><span>...</span></div>
+                        <div class="ref-item"><span>K (Sunk)</span><span>-.-</span></div>
+                        <div class="ref-item"><span>W (Water)</span><span>.--</span></div>
+                        <div class="ref-item"><span>? (Error)</span><span>..--..</span></div>
+                    </div>
+                </div>
+            </details>
+        </main>
+
+        <footer>
+            <p>MorseFleet - Based on rules by Radioklub Vegova (S59VEG)</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

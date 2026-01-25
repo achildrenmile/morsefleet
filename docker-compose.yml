@@ -1,0 +1,29 @@
+# MorseFleet Docker Compose
+# For local development and testing
+#
+# Usage:
+#   docker-compose up -d        # Start container
+#   docker-compose down         # Stop container
+#   docker-compose up -d --build # Rebuild and start
+#
+# Production deployment uses deploy-production.sh instead
+
+version: "3.8"
+
+services:
+  morsefleet:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: morsefleet
+    # Port 3402 matches production config
+    # localhost-only binding for security (exposed via Cloudflare tunnel in prod)
+    ports:
+      - "127.0.0.1:3402:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s

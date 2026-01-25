@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>MorseFleet - Morse Code Battleship</title>
+    <style>
+/* MorseFleet - Mobile-First Responsive Styles */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    touch-action: manipulation;
+    overscroll-behavior: none;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Courier New', monospace;
+    background-color: #1a1a2e;
+    color: #eee;
+    line-height: 1.5;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    font-size: 16px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #0f3460;
+    padding-bottom: 10px;
+}
+
+header h1 {
+    color: #e94560;
+    font-size: 1.5em;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 0.8em;
+}
+
+/* Sections */
+section {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+section h2 {
+    color: #e94560;
+    font-size: 1em;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #0f3460;
+}
+
+/* Game Status */
+.game-status {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.status-item {
+    text-align: center;
+    min-width: 80px;
+}
+
+.status-item .label {
+    color: #888;
+    display: block;
+    font-size: 0.7em;
+}
+
+.status-item span:not(.label) {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #4ecca3;
+}
+
+/* Grid - Mobile First */
+.grid-section {
+    text-align: center;
+    overflow-x: auto;
+}
+
+.grid-container {
+    display: inline-block;
+}
+
+.grid-labels-top {
+    display: grid;
+    grid-template-columns: 24px repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 2px;
+    max-width: calc(24px + 7 * 38px + 12px);
+}
+
+.grid-labels-top span {
+    text-align: center;
+    font-weight: bold;
+    color: #888;
+    font-size: 0.85em;
+}
+
+.grid-with-labels {
+    display: flex;
+}
+
+.grid-labels-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-right: 2px;
+}
+
+.grid-labels-left span {
+    width: 24px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #888;
+    font-size: 0.85em;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 38px);
+    grid-template-rows: repeat(7, 38px);
+    gap: 2px;
+}
+
+.cell {
+    background: #0f3460;
+    border: 1px solid #1a1a2e;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    cursor: default;
+    transition: background-color 0.15s;
+}
+
+.cell.unknown {
+    background: #0f3460;
+}
+
+.cell.water {
+    background: #1e3a5f;
+}
+
+.cell.water::after {
+    content: '~';
+    color: #4a90a4;
+}
+
+.cell.hit {
+    background: #e94560;
+}
+
+.cell.hit::after {
+    content: 'X';
+    color: #fff;
+    font-weight: bold;
+}
+
+.cell.sunk {
+    background: #7b2d42;
+}
+
+.cell.sunk::after {
+    content: '#';
+    color: #ccc;
+}
+
+/* Legend */
+.legend {
+    margin-top: 12px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    font-size: 0.75em;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cell-sample {
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #1a1a2e;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
+
+.cell-sample.water { background: #1e3a5f; }
+.cell-sample.water::after { content: '~'; color: #4a90a4; }
+.cell-sample.hit { background: #e94560; }
+.cell-sample.hit::after { content: 'X'; color: #fff; }
+.cell-sample.sunk { background: #7b2d42; }
+.cell-sample.sunk::after { content: '#'; color: #ccc; }
+
+/* Morse Display */
+.morse-display {
+    margin-bottom: 15px;
+}
+
+.morse-row {
+    display: flex;
+    margin-bottom: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.morse-row .label {
+    width: 110px;
+    color: #888;
+    font-size: 0.75em;
+    flex-shrink: 0;
+}
+
+.morse-text {
+    font-size: 1em;
+    min-width: 80px;
+    padding: 6px 10px;
+    background: #0f3460;
+    border-radius: 4px;
+    flex: 1;
+}
+
+.morse-text.highlight {
+    color: #4ecca3;
+    font-weight: bold;
+}
+
+/* Morse Key - Large Touch Target */
+.morse-key-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15px 0;
+    touch-action: none;
+}
+
+.morse-key {
+    width: 90%;
+    max-width: 280px;
+    height: 100px;
+    background: linear-gradient(180deg, #444 0%, #222 100%);
+    border: 4px solid #555;
+    border-radius: 15px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1.1em;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: all 0.05s;
+    touch-action: none;
+}
+
+.morse-key:hover {
+    border-color: #e94560;
+}
+
+.morse-key:active,
+.morse-key.active {
+    background: linear-gradient(180deg, #e94560 0%, #b33654 100%);
+    transform: scale(0.98);
+    box-shadow: inset 0 3px 8px rgba(0,0,0,0.4);
+}
+
+.morse-key small {
+    color: #aaa;
+    font-size: 0.65em;
+    display: block;
+    margin-top: 5px;
+}
+
+.signal-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #333;
+    margin-top: 12px;
+    border: 2px solid #444;
+    transition: all 0.05s;
+}
+
+.signal-indicator.on {
+    background: #4ecca3;
+    box-shadow: 0 0 15px #4ecca3;
+}
+
+/* Controls - Touch Friendly */
+.controls {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 14px 20px;
+    font-family: inherit;
+    font-size: 0.95em;
+    background: #e94560;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    min-height: 48px;
+    min-width: 48px;
+    touch-action: manipulation;
+}
+
+.btn:hover {
+    background: #ff6b6b;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.btn:disabled {
+    background: #555;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-secondary {
+    background: #0f3460;
+}
+
+.btn-secondary:hover {
+    background: #1a4a7a;
+}
+
+/* Response Section */
+.response-display {
+    text-align: center;
+}
+
+.response-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.response-row .label {
+    width: 110px;
+    color: #888;
+    font-size: 0.75em;
+    text-align: right;
+    padding-right: 8px;
+    flex-shrink: 0;
+}
+
+.response-text {
+    font-size: 1em;
+    min-width: 120px;
+    text-align: left;
+    padding: 6px 10px;
+    background: #0f3460;
+    border-radius: 4px;
+}
+
+.response-text.highlight {
+    color: #e94560;
+    font-weight: bold;
+    font-size: 1.3em;
+}
+
+/* Morse Reference */
+.morse-reference {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 15px;
+}
+
+.morse-reference summary {
+    cursor: pointer;
+    color: #e94560;
+    font-weight: bold;
+    outline: none;
+    padding: 8px 0;
+    font-size: 0.95em;
+}
+
+.morse-reference summary:hover {
+    color: #ff6b6b;
+}
+
+.reference-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 12px;
+}
+
+.ref-section h4 {
+    color: #888;
+    margin-bottom: 8px;
+    font-size: 0.8em;
+}
+
+.ref-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 4px 0;
+    font-size: 0.85em;
+}
+
+.ref-item span:first-child {
+    color: #4ecca3;
+}
+
+.ref-item span:last-child {
+    font-family: monospace;
+    letter-spacing: 2px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px 10px;
+    color: #555;
+    font-size: 0.7em;
+    border-top: 1px solid #0f3460;
+}
+
+/* ===========================================
+   RESPONSIVE BREAKPOINTS
+   =========================================== */
+
+/* Small phones */
+@media (max-width: 360px) {
+    .grid {
+        grid-template-columns: repeat(7, 32px);
+        grid-template-rows: repeat(7, 32px);
+    }
+
+    .grid-labels-left span {
+        width: 20px;
+        height: 32px;
+    }
+
+    .grid-labels-top {
+        grid-template-columns: 20px repeat(7, 32px);
+    }
+
+    header h1 {
+        font-size: 1.3em;
+    }
+
+    .morse-key {
+        height: 80px;
+    }
+}
+
+/* Tablets portrait */
+@media (min-width: 600px) {
+    .container {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    .grid {
+        grid-template-columns: repeat(7, 45px);
+        grid-template-rows: repeat(7, 45px);
+    }
+
+    .grid-labels-left span {
+        width: 30px;
+        height: 45px;
+    }
+
+    .grid-labels-top {
+        grid-template-columns: 30px repeat(7, 45px);
+    }
+
+    .morse-key {
+        max-width: 320px;
+        height: 110px;
+        font-size: 1.2em;
+    }
+
+    .btn {
+        padding: 16px 28px;
+        font-size: 1em;
+    }
+
+    .morse-row .label,
+    .response-row .label {
+        width: 140px;
+        font-size: 0.85em;
+    }
+
+    .morse-text,
+    .response-text {
+        font-size: 1.1em;
+    }
+}
+
+/* Tablets landscape / Desktop */
+@media (min-width: 800px) {
+    .container {
+        padding: 30px;
+    }
+
+    section {
+        padding: 20px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(7, 50px);
+        grid-template-rows: repeat(7, 50px);
+    }
+
+    .grid-labels-left span {
+        width: 35px;
+        height: 50px;
+    }
+
+    .grid-labels-top {
+        grid-template-columns: 35px repeat(7, 50px);
+    }
+
+    .cell {
+        font-size: 1.3em;
+    }
+
+    .morse-key {
+        max-width: 350px;
+        height: 120px;
+    }
+}
+
+/* Landscape mode on phones */
+@media (max-height: 500px) and (orientation: landscape) {
+    .container {
+        padding: 8px;
+    }
+
+    header {
+        margin-bottom: 8px;
+        padding-bottom: 5px;
+    }
+
+    header h1 {
+        font-size: 1.2em;
+    }
+
+    .subtitle {
+        display: none;
+    }
+
+    section {
+        padding: 8px;
+        margin-bottom: 8px;
+    }
+
+    section h2 {
+        font-size: 0.9em;
+        margin-bottom: 6px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(7, 30px);
+        grid-template-rows: repeat(7, 30px);
+    }
+
+    .grid-labels-left span {
+        width: 20px;
+        height: 30px;
+    }
+
+    .grid-labels-top {
+        grid-template-columns: 20px repeat(7, 30px);
+    }
+
+    .morse-key {
+        height: 70px;
+        max-width: 200px;
+    }
+
+    .morse-key-container {
+        margin: 8px 0;
+    }
+
+    .signal-indicator {
+        width: 18px;
+        height: 18px;
+        margin-top: 6px;
+    }
+
+    footer {
+        padding: 8px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a2e;
+        color: #eee;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MorseFleet</h1>
+            <p class="subtitle">Morse Code Naval Battle Trainer</p>
+        </header>
+
+        <main>
+            <!-- Game Status -->
+            <section class="game-status">
+                <div class="status-item">
+                    <span class="label">Ships Remaining:</span>
+                    <span id="ships-remaining">6</span>
+                </div>
+                <div class="status-item">
+                    <span class="label">Shots Fired:</span>
+                    <span id="shots-fired">0</span>
+                </div>
+                <div class="status-item" id="game-result" style="display: none;">
+                    <span class="label">Result:</span>
+                    <span id="result-text"></span>
+                </div>
+            </section>
+
+            <!-- Target Grid (Computer's ships) -->
+            <section class="grid-section">
+                <h2>Target Grid</h2>
+                <div class="grid-container">
+                    <div class="grid-labels-top">
+                        <span></span>
+                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span>
+                    </div>
+                    <div class="grid-with-labels">
+                        <div class="grid-labels-left">
+                            <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span>
+                        </div>
+                        <div id="target-grid" class="grid"></div>
+                    </div>
+                </div>
+                <div class="legend">
+                    <span class="legend-item"><span class="cell-sample water"></span> Water</span>
+                    <span class="legend-item"><span class="cell-sample hit"></span> Hit</span>
+                    <span class="legend-item"><span class="cell-sample sunk"></span> Sunk</span>
+                </div>
+            </section>
+
+            <!-- Morse Input Section -->
+            <section class="morse-section">
+                <h2>Morse Input</h2>
+
+                <div class="morse-display">
+                    <div class="morse-row">
+                        <span class="label">Current Signal:</span>
+                        <span id="current-signal" class="morse-text"></span>
+                    </div>
+                    <div class="morse-row">
+                        <span class="label">Current Character:</span>
+                        <span id="current-char" class="morse-text"></span>
+                    </div>
+                    <div class="morse-row">
+                        <span class="label">Decoded Input:</span>
+                        <span id="decoded-input" class="morse-text highlight"></span>
+                    </div>
+                </div>
+
+                <div class="morse-key-container">
+                    <button id="morse-key" class="morse-key">
+                        MORSE KEY<br>
+                        <small>Hold to send signal</small>
+                    </button>
+                    <div id="signal-indicator" class="signal-indicator"></div>
+                </div>
+
+                <div class="controls">
+                    <button id="send-btn" class="btn">Send</button>
+                    <button id="clear-btn" class="btn btn-secondary">Clear</button>
+                    <button id="new-game-btn" class="btn btn-secondary">New Game</button>
+                </div>
+            </section>
+
+            <!-- Computer Response Section -->
+            <section class="response-section">
+                <h2>Computer Response</h2>
+                <div class="response-display">
+                    <div class="response-row">
+                        <span class="label">Last Coordinate:</span>
+                        <span id="last-coord" class="response-text"></span>
+                    </div>
+                    <div class="response-row">
+                        <span class="label">Response:</span>
+                        <span id="response-char" class="response-text highlight"></span>
+                    </div>
+                    <div class="response-row">
+                        <span class="label">Meaning:</span>
+                        <span id="response-meaning" class="response-text"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Morse Reference (Debug/Help) -->
+            <details class="morse-reference">
+                <summary>Morse Code Reference</summary>
+                <div class="reference-grid">
+                    <div class="ref-section">
+                        <h4>Letters (A-G)</h4>
+                        <div class="ref-item"><span>A</span><span>.-</span></div>
+                        <div class="ref-item"><span>B</span><span>-...</span></div>
+                        <div class="ref-item"><span>C</span><span>-.-.</span></div>
+                        <div class="ref-item"><span>D</span><span>-..</span></div>
+                        <div class="ref-item"><span>E</span><span>.</span></div>
+                        <div class="ref-item"><span>F</span><span>..-.</span></div>
+                        <div class="ref-item"><span>G</span><span>--.</span></div>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Numbers (1-7)</h4>
+                        <div class="ref-item"><span>1</span><span>.----</span></div>
+                        <div class="ref-item"><span>2</span><span>..---</span></div>
+                        <div class="ref-item"><span>3</span><span>...--</span></div>
+                        <div class="ref-item"><span>4</span><span>....-</span></div>
+                        <div class="ref-item"><span>5</span><span>.....</span></div>
+                        <div class="ref-item"><span>6</span><span>-....</span></div>
+                        <div class="ref-item"><span>7</span><span>--...</span></div>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Responses</h4>
+                        <div class="ref-item"><span>S (Hit)</span><span>...</span></div>
+                        <div class="ref-item"><span>K (Sunk)</span><span>-.-</span></div>
+                        <div class="ref-item"><span>W (Water)</span><span>.--</span></div>
+                        <div class="ref-item"><span>? (Error)</span><span>..--..</span></div>
+                    </div>
+                </div>
+            </details>
+        </main>
+
+        <footer>
+            <p>MorseFleet - Based on rules by Radioklub Vegova (S59VEG)</p>
+        </footer>
+    </div>
+
+    <script>
+/**
+ * MorseFleet - Morse Code Naval Battle Game
+ * Based on rules by Radioklub Vegova (S59VEG)
+ * Mobile-optimized version with touch support
+ */
+
+// =============================================================================
+// MORSE CODE DEFINITIONS
+// =============================================================================
+
+const MORSE_CODE = {
+    'A': '.-',    'B': '-...',  'C': '-.-.',  'D': '-..',
+    'E': '.',     'F': '..-.',  'G': '--.',
+    '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+    '5': '.....', '6': '-....', '7': '--...',
+    'S': '...',   'K': '-.-',   'W': '.--',   '?': '..--..'
+};
+
+const MORSE_DECODE = {};
+for (const [char, code] of Object.entries(MORSE_CODE)) {
+    MORSE_DECODE[code] = char;
+}
+
+// =============================================================================
+// MORSE TIMING CONSTANTS (~15 WPM)
+// =============================================================================
+
+const MORSE_TIMING = {
+    UNIT: 80,
+    DOT_MAX: 200,
+    DASH_MIN: 200,
+    CHAR_GAP: 300,
+    WORD_GAP: 600,
+    OUT_DOT: 80,
+    OUT_DASH: 240,
+    OUT_INTRA: 80,
+    OUT_INTER: 240
+};
+
+// =============================================================================
+// AUDIO OUTPUT (Web Audio API)
+// =============================================================================
+
+class MorseAudio {
+    constructor() {
+        this.audioCtx = null;
+        this.oscillator = null;
+        this.gainNode = null;
+        this.frequency = 600;
+    }
+
+    init() {
+        if (!this.audioCtx) {
+            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+        }
+    }
+
+    startTone() {
+        this.init();
+        if (this.oscillator) {
+            this.stopTone();
+        }
+
+        this.oscillator = this.audioCtx.createOscillator();
+        this.gainNode = this.audioCtx.createGain();
+
+        this.oscillator.type = 'sine';
+        this.oscillator.frequency.setValueAtTime(this.frequency, this.audioCtx.currentTime);
+
+        this.gainNode.gain.setValueAtTime(0, this.audioCtx.currentTime);
+        this.gainNode.gain.linearRampToValueAtTime(0.3, this.audioCtx.currentTime + 0.01);
+
+        this.oscillator.connect(this.gainNode);
+        this.gainNode.connect(this.audioCtx.destination);
+        this.oscillator.start();
+    }
+
+    stopTone() {
+        if (this.oscillator && this.gainNode) {
+            const now = this.audioCtx.currentTime;
+            this.gainNode.gain.cancelScheduledValues(now);
+            this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
+            this.gainNode.gain.linearRampToValueAtTime(0, now + 0.01);
+
+            const osc = this.oscillator;
+            setTimeout(() => {
+                try { osc.stop(); } catch (e) {}
+            }, 20);
+
+            this.oscillator = null;
+            this.gainNode = null;
+        }
+    }
+
+    async playMorse(morseString) {
+        this.init();
+
+        for (let i = 0; i < morseString.length; i++) {
+            const symbol = morseString[i];
+
+            if (symbol === '.') {
+                this.startTone();
+                await this.sleep(MORSE_TIMING.OUT_DOT);
+                this.stopTone();
+            } else if (symbol === '-') {
+                this.startTone();
+                await this.sleep(MORSE_TIMING.OUT_DASH);
+                this.stopTone();
+            }
+
+            if (i < morseString.length - 1) {
+                await this.sleep(MORSE_TIMING.OUT_INTRA);
+            }
+        }
+    }
+
+    async playChar(char) {
+        const morse = MORSE_CODE[char.toUpperCase()];
+        if (morse) {
+            await this.playMorse(morse);
+        }
+    }
+
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+}
+
+// =============================================================================
+// MORSE INPUT HANDLING
+// =============================================================================
+
+class MorseInput {
+    constructor(audio, onUpdate) {
+        this.audio = audio;
+        this.onUpdate = onUpdate;
+
+        this.isKeyDown = false;
+        this.keyDownTime = 0;
+        this.keyUpTime = 0;
+
+        this.currentSymbols = '';
+        this.decodedChars = '';
+
+        this.gapTimer = null;
+    }
+
+    keyDown() {
+        if (this.isKeyDown) return;
+
+        this.isKeyDown = true;
+        this.keyDownTime = Date.now();
+
+        if (this.gapTimer) {
+            clearTimeout(this.gapTimer);
+            this.gapTimer = null;
+        }
+
+        this.audio.startTone();
+        this.updateUI();
+    }
+
+    keyUp() {
+        if (!this.isKeyDown) return;
+
+        this.isKeyDown = false;
+        this.keyUpTime = Date.now();
+
+        const duration = this.keyUpTime - this.keyDownTime;
+
+        this.audio.stopTone();
+
+        // Dot: short signal (<= DOT_MAX ms), Dash: long signal
+        if (duration <= MORSE_TIMING.DOT_MAX) {
+            this.currentSymbols += '.';
+        } else {
+            this.currentSymbols += '-';
+        }
+
+        this.startGapTimer();
+        this.updateUI();
+    }
+
+    startGapTimer() {
+        if (this.gapTimer) {
+            clearTimeout(this.gapTimer);
+        }
+
+        this.gapTimer = setTimeout(() => {
+            this.finalizeCharacter();
+        }, MORSE_TIMING.CHAR_GAP);
+    }
+
+    finalizeCharacter() {
+        if (this.currentSymbols) {
+            const decoded = MORSE_DECODE[this.currentSymbols];
+            if (decoded) {
+                this.decodedChars += decoded;
+            } else {
+                this.decodedChars += '?';
+            }
+            this.currentSymbols = '';
+            this.updateUI();
+        }
+    }
+
+    getDecodedInput() {
+        return this.decodedChars;
+    }
+
+    clear() {
+        this.currentSymbols = '';
+        this.decodedChars = '';
+        if (this.gapTimer) {
+            clearTimeout(this.gapTimer);
+            this.gapTimer = null;
+        }
+        this.updateUI();
+    }
+
+    finalize() {
+        this.finalizeCharacter();
+    }
+
+    updateUI() {
+        if (this.onUpdate) {
+            this.onUpdate({
+                isKeyDown: this.isKeyDown,
+                currentSymbols: this.currentSymbols,
+                decodedChars: this.decodedChars
+            });
+        }
+    }
+}
+
+// =============================================================================
+// SHIP PLACEMENT
+// =============================================================================
+
+class Ship {
+    constructor(cells) {
+        this.cells = cells;
+        this.hits = new Set();
+    }
+
+    occupies(row, col) {
+        return this.cells.some(cell => cell.row === row && cell.col === col);
+    }
+
+    hit(row, col) {
+        for (let i = 0; i < this.cells.length; i++) {
+            if (this.cells[i].row === row && this.cells[i].col === col) {
+                this.hits.add(i);
+                break;
+            }
+        }
+        return this.isSunk();
+    }
+
+    isSunk() {
+        return this.hits.size === this.cells.length;
+    }
+}
+
+/**
+ * ShipPlacer: Random ship placement with rules enforcement
+ * - Ships horizontal or vertical only
+ * - Ships cannot touch (not even diagonally)
+ */
+class ShipPlacer {
+    constructor(gridSize = 7) {
+        this.gridSize = gridSize;
+    }
+
+    placeShips() {
+        // 3 ships of 2, 2 ships of 3, 1 ship of 4
+        const shipSizes = [4, 3, 3, 2, 2, 2];
+        const ships = [];
+        const occupied = this.createEmptyGrid();
+
+        for (const size of shipSizes) {
+            const ship = this.placeShip(size, occupied);
+            if (ship) {
+                ships.push(ship);
+                this.markOccupied(ship, occupied);
+            } else {
+                return this.placeShips(); // Retry
+            }
+        }
+
+        return ships;
+    }
+
+    createEmptyGrid() {
+        const grid = [];
+        for (let i = 0; i < this.gridSize; i++) {
+            grid.push(new Array(this.gridSize).fill(false));
+        }
+        return grid;
+    }
+
+    placeShip(size, occupied) {
+        const maxAttempts = 100;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            const horizontal = Math.random() < 0.5;
+
+            let row, col;
+            if (horizontal) {
+                row = Math.floor(Math.random() * this.gridSize);
+                col = Math.floor(Math.random() * (this.gridSize - size + 1));
+            } else {
+                row = Math.floor(Math.random() * (this.gridSize - size + 1));
+                col = Math.floor(Math.random() * this.gridSize);
+            }
+
+            const cells = [];
+            for (let i = 0; i < size; i++) {
+                if (horizontal) {
+                    cells.push({ row, col: col + i });
+                } else {
+                    cells.push({ row: row + i, col });
+                }
+            }
+
+            if (this.isValidPlacement(cells, occupied)) {
+                return new Ship(cells);
+            }
+        }
+
+        return null;
+    }
+
+    isValidPlacement(cells, occupied) {
+        for (const cell of cells) {
+            if (cell.row < 0 || cell.row >= this.gridSize ||
+                cell.col < 0 || cell.col >= this.gridSize) {
+                return false;
+            }
+            if (occupied[cell.row][cell.col]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Mark ship cells + surrounding cells (enforces no-touching rule)
+    markOccupied(ship, occupied) {
+        for (const cell of ship.cells) {
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    const r = cell.row + dr;
+                    const c = cell.col + dc;
+                    if (r >= 0 && r < this.gridSize && c >= 0 && c < this.gridSize) {
+                        occupied[r][c] = true;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// =============================================================================
+// GAME STATE
+// =============================================================================
+
+const CellState = {
+    UNKNOWN: 'unknown',
+    WATER: 'water',
+    HIT: 'hit',
+    SUNK: 'sunk'
+};
+
+class GameState {
+    constructor() {
+        this.gridSize = 7;
+        this.reset();
+    }
+
+    reset() {
+        const placer = new ShipPlacer(this.gridSize);
+        this.ships = placer.placeShips();
+
+        this.targetGrid = [];
+        for (let i = 0; i < this.gridSize; i++) {
+            this.targetGrid.push(new Array(this.gridSize).fill(CellState.UNKNOWN));
+        }
+
+        this.shotsFired = 0;
+        this.shipsRemaining = this.ships.length;
+        this.isGameOver = false;
+    }
+
+    /**
+     * Process shot - returns 'S' (hit), 'K' (sunk), 'W' (water)
+     */
+    processShot(row, col) {
+        if (this.targetGrid[row][col] !== CellState.UNKNOWN) {
+            return 'W';
+        }
+
+        this.shotsFired++;
+
+        for (const ship of this.ships) {
+            if (ship.occupies(row, col)) {
+                const sunk = ship.hit(row, col);
+
+                if (sunk) {
+                    for (const cell of ship.cells) {
+                        this.targetGrid[cell.row][cell.col] = CellState.SUNK;
+                    }
+                    this.shipsRemaining--;
+
+                    if (this.shipsRemaining === 0) {
+                        this.isGameOver = true;
+                    }
+
+                    return 'K';
+                } else {
+                    this.targetGrid[row][col] = CellState.HIT;
+                    return 'S';
+                }
+            }
+        }
+
+        this.targetGrid[row][col] = CellState.WATER;
+        return 'W';
+    }
+
+    getCellState(row, col) {
+        return this.targetGrid[row][col];
+    }
+}
+
+// =============================================================================
+// RULES ENGINE
+// =============================================================================
+
+class RulesEngine {
+    constructor() {
+        this.validRows = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+        this.validCols = ['1', '2', '3', '4', '5', '6', '7'];
+    }
+
+    parseCoordinate(input) {
+        if (!input || input.length < 2) {
+            return null;
+        }
+
+        const normalized = input.toUpperCase().trim();
+        const letter = normalized.charAt(0);
+        const number = normalized.charAt(1);
+
+        const rowIndex = this.validRows.indexOf(letter);
+        const colIndex = this.validCols.indexOf(number);
+
+        if (rowIndex === -1 || colIndex === -1) {
+            return null;
+        }
+
+        return { row: rowIndex, col: colIndex };
+    }
+
+    formatCoordinate(row, col) {
+        return this.validRows[row] + this.validCols[col];
+    }
+
+    getResponseMeaning(response) {
+        switch (response) {
+            case 'S': return 'Ship hit!';
+            case 'K': return 'Ship sunk!';
+            case 'W': return 'Water (miss)';
+            case '?': return 'Not understood';
+            default: return 'Unknown';
+        }
+    }
+}
+
+// =============================================================================
+// GAME UI
+// =============================================================================
+
+class GameUI {
+    constructor(game) {
+        this.game = game;
+        this.initElements();
+        this.createGrid();
+    }
+
+    initElements() {
+        this.elements = {
+            targetGrid: document.getElementById('target-grid'),
+            shipsRemaining: document.getElementById('ships-remaining'),
+            shotsFired: document.getElementById('shots-fired'),
+            gameResult: document.getElementById('game-result'),
+            resultText: document.getElementById('result-text'),
+            currentSignal: document.getElementById('current-signal'),
+            currentChar: document.getElementById('current-char'),
+            decodedInput: document.getElementById('decoded-input'),
+            morseKey: document.getElementById('morse-key'),
+            signalIndicator: document.getElementById('signal-indicator'),
+            sendBtn: document.getElementById('send-btn'),
+            clearBtn: document.getElementById('clear-btn'),
+            newGameBtn: document.getElementById('new-game-btn'),
+            lastCoord: document.getElementById('last-coord'),
+            responseChar: document.getElementById('response-char'),
+            responseMeaning: document.getElementById('response-meaning')
+        };
+    }
+
+    createGrid() {
+        this.elements.targetGrid.innerHTML = '';
+        this.cells = [];
+
+        for (let row = 0; row < 7; row++) {
+            this.cells[row] = [];
+            for (let col = 0; col < 7; col++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell unknown';
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+                this.elements.targetGrid.appendChild(cell);
+                this.cells[row][col] = cell;
+            }
+        }
+    }
+
+    updateCell(row, col, state) {
+        const cell = this.cells[row][col];
+        cell.className = 'cell ' + state;
+    }
+
+    updateGrid() {
+        for (let row = 0; row < 7; row++) {
+            for (let col = 0; col < 7; col++) {
+                const state = this.game.gameState.getCellState(row, col);
+                this.updateCell(row, col, state);
+            }
+        }
+    }
+
+    updateStats() {
+        this.elements.shipsRemaining.textContent = this.game.gameState.shipsRemaining;
+        this.elements.shotsFired.textContent = this.game.gameState.shotsFired;
+    }
+
+    updateMorseInput(state) {
+        this.elements.currentSignal.textContent = state.isKeyDown ? 'ON' : 'OFF';
+        this.elements.currentChar.textContent = state.currentSymbols || '-';
+        this.elements.decodedInput.textContent = state.decodedChars || '-';
+
+        if (state.isKeyDown) {
+            this.elements.signalIndicator.classList.add('on');
+            this.elements.morseKey.classList.add('active');
+        } else {
+            this.elements.signalIndicator.classList.remove('on');
+            this.elements.morseKey.classList.remove('active');
+        }
+    }
+
+    updateResponse(coord, response, meaning) {
+        this.elements.lastCoord.textContent = coord || '-';
+        this.elements.responseChar.textContent = response || '-';
+        this.elements.responseMeaning.textContent = meaning || '-';
+    }
+
+    showGameOver() {
+        this.elements.gameResult.style.display = 'block';
+        this.elements.resultText.textContent =
+            `Victory! Fleet destroyed in ${this.game.gameState.shotsFired} shots.`;
+        this.elements.sendBtn.disabled = true;
+    }
+
+    reset() {
+        this.createGrid();
+        this.updateStats();
+        this.updateResponse(null, null, null);
+        this.elements.gameResult.style.display = 'none';
+        this.elements.sendBtn.disabled = false;
+    }
+}
+
+// =============================================================================
+// MAIN GAME CONTROLLER
+// =============================================================================
+
+class MorseFleetGame {
+    constructor() {
+        this.audio = new MorseAudio();
+        this.gameState = new GameState();
+        this.rules = new RulesEngine();
+        this.ui = new GameUI(this);
+
+        this.morseInput = new MorseInput(this.audio, (state) => {
+            this.ui.updateMorseInput(state);
+        });
+
+        this.isProcessing = false;
+        this.activeTouchId = null;
+
+        this.bindEvents();
+        this.ui.updateStats();
+    }
+
+    bindEvents() {
+        const { morseKey, sendBtn, clearBtn, newGameBtn } = this.ui.elements;
+
+        // ===========================================
+        // TOUCH EVENTS (Mobile/Tablet)
+        // ===========================================
+
+        morseKey.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Track first touch only
+            if (this.activeTouchId === null && e.touches.length > 0) {
+                this.activeTouchId = e.touches[0].identifier;
+
+                if (!this.isProcessing && !this.gameState.isGameOver) {
+                    this.morseInput.keyDown();
+                }
+            }
+        }, { passive: false });
+
+        morseKey.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Check if our tracked touch ended
+            let touchEnded = true;
+            for (let i = 0; i < e.touches.length; i++) {
+                if (e.touches[i].identifier === this.activeTouchId) {
+                    touchEnded = false;
+                    break;
+                }
+            }
+
+            if (touchEnded && this.activeTouchId !== null) {
+                this.activeTouchId = null;
+                this.morseInput.keyUp();
+            }
+        }, { passive: false });
+
+        morseKey.addEventListener('touchcancel', (e) => {
+            e.preventDefault();
+            this.activeTouchId = null;
+            this.morseInput.keyUp();
+        }, { passive: false });
+
+        // Prevent context menu on long press
+        morseKey.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+
+        // ===========================================
+        // MOUSE EVENTS (Desktop)
+        // ===========================================
+
+        morseKey.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            if (!this.isProcessing && !this.gameState.isGameOver) {
+                this.morseInput.keyDown();
+            }
+        });
+
+        morseKey.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            this.morseInput.keyUp();
+        });
+
+        morseKey.addEventListener('mouseleave', () => {
+            if (this.morseInput.isKeyDown) {
+                this.morseInput.keyUp();
+            }
+        });
+
+        // ===========================================
+        // KEYBOARD EVENTS (Spacebar)
+        // ===========================================
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !e.repeat) {
+                e.preventDefault();
+                if (!this.isProcessing && !this.gameState.isGameOver) {
+                    this.morseInput.keyDown();
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                this.morseInput.keyUp();
+            }
+        });
+
+        // ===========================================
+        // BUTTON EVENTS
+        // ===========================================
+
+        sendBtn.addEventListener('click', () => this.sendCoordinate());
+        clearBtn.addEventListener('click', () => this.clearInput());
+        newGameBtn.addEventListener('click', () => this.newGame());
+
+        // Prevent zoom on double-tap for buttons
+        [sendBtn, clearBtn, newGameBtn].forEach(btn => {
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                btn.click();
+            }, { passive: false });
+        });
+    }
+
+    async sendCoordinate() {
+        if (this.isProcessing || this.gameState.isGameOver) return;
+
+        this.morseInput.finalize();
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const input = this.morseInput.getDecodedInput();
+
+        if (!input) {
+            await this.respondWithMorse('?', 'No input received');
+            return;
+        }
+
+        const coord = this.rules.parseCoordinate(input);
+
+        if (!coord) {
+            await this.respondWithMorse('?', 'Invalid: ' + input);
+            return;
+        }
+
+        const response = this.gameState.processShot(coord.row, coord.col);
+        const coordStr = this.rules.formatCoordinate(coord.row, coord.col);
+        const meaning = this.rules.getResponseMeaning(response);
+
+        this.ui.updateGrid();
+        this.ui.updateStats();
+
+        await this.respondWithMorse(response, meaning, coordStr);
+
+        if (this.gameState.isGameOver) {
+            this.ui.showGameOver();
+        }
+
+        this.morseInput.clear();
+    }
+
+    async respondWithMorse(response, meaning, coord = null) {
+        this.isProcessing = true;
+
+        this.ui.updateResponse(coord || '-', response, meaning);
+        await this.audio.playChar(response);
+
+        this.isProcessing = false;
+    }
+
+    clearInput() {
+        this.morseInput.clear();
+    }
+
+    newGame() {
+        this.gameState.reset();
+        this.morseInput.clear();
+        this.ui.reset();
+        this.isProcessing = false;
+    }
+}
+
+// =============================================================================
+// INITIALIZATION
+// =============================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    window.game = new MorseFleetGame();
+
+    // Prevent pull-to-refresh on mobile
+    document.body.addEventListener('touchmove', (e) => {
+        if (e.target.closest('.morse-key-container')) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+});
+    </script>
+</body>
+</html>

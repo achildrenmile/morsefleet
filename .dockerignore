@@ -1,0 +1,27 @@
+# Git
+.git
+.gitignore
+
+# Development files
+*.md
+README*
+
+# Original multi-file version (using bundled SPA instead)
+index.html
+style.css
+app.js
+
+# Docker files (not needed in image)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
