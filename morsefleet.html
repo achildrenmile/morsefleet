@@ -41,10 +41,36 @@ body {
 
 /* Header */
 header {
-    text-align: center;
     margin-bottom: 15px;
     border-bottom: 2px solid #0f3460;
     padding-bottom: 10px;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.parent-logo {
+    display: none;
+}
+
+.parent-logo.visible {
+    display: block;
+}
+
+.parent-logo img {
+    height: 80px;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
+}
+
+.header-text {
+    text-align: center;
 }
 
 header h1 {
@@ -56,6 +82,14 @@ header h1 {
 .subtitle {
     color: #888;
     font-size: 0.8em;
+}
+
+/* Desktop: larger logo */
+@media (min-width: 600px) {
+    .parent-logo img {
+        height: 100px;
+        max-width: 200px;
+    }
 }
 
 /* Sections */
@@ -519,6 +553,21 @@ footer {
 .footer-sep {
     margin: 0 8px;
     color: #444;
+}
+
+.parent-site-text {
+    margin-bottom: 8px;
+    color: #888;
+}
+
+.parent-site-text a {
+    color: #4ecca3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.parent-site-text a:hover {
+    text-decoration: underline;
 }
 
 /* Legal Modal */
@@ -1066,8 +1115,15 @@ footer {
 <body>
     <div class="container">
         <header>
-            <h1>MorseFleet</h1>
-            <p class="subtitle" data-i18n="subtitle">Morsezeichen Seeschlacht Trainer</p>
+            <div class="header-content">
+                <a href="#" id="parent-logo-link" class="parent-logo" target="_blank" rel="noopener">
+                    <img id="parent-logo-img" src="" alt="">
+                </a>
+                <div class="header-text">
+                    <h1>MorseFleet</h1>
+                    <p class="subtitle" data-i18n="subtitle">Morsezeichen Seeschlacht Trainer</p>
+                </div>
+            </div>
         </header>
 
         <main>
@@ -1216,6 +1272,10 @@ footer {
         </main>
 
         <footer>
+            <p id="parent-site-text" class="parent-site-text" style="display: none;">
+                <span data-i18n="partOf">Teil von</span>
+                <a href="#" id="parent-site-link" target="_blank" rel="noopener"></a>
+            </p>
             <p data-i18n="footerText">MorseFleet - Basierend auf Regeln von Radioklub Vegova (S59VEG)</p>
             <div class="footer-links">
                 <a href="#" id="imprint-link" data-i18n="imprint">Impressum</a>
@@ -1338,6 +1398,7 @@ const i18n = {
             responses: 'Antworten',
             // Footer
             footerText: 'MorseFleet - Basierend auf Regeln von Radioklub Vegova (S59VEG)',
+            partOf: 'Teil von',
             imprint: 'Impressum',
             privacy: 'Datenschutz',
             // Victory
@@ -1432,6 +1493,7 @@ const i18n = {
             responses: 'Responses',
             // Footer
             footerText: 'MorseFleet - Based on rules by Radioklub Vegova (S59VEG)',
+            partOf: 'Part of',
             imprint: 'Imprint',
             privacy: 'Privacy',
             // Victory
@@ -1526,6 +1588,7 @@ const i18n = {
             responses: 'Odgovori',
             // Footer
             footerText: 'MorseFleet - Po pravilih Radiokluba Vegova (S59VEG)',
+            partOf: 'Del',
             imprint: 'Impressum',
             privacy: 'Zasebnost',
             // Victory
@@ -3125,12 +3188,75 @@ const LegalModals = {
 };
 
 // =============================================================================
+// SITE CONFIG (Parent Site Branding)
+// =============================================================================
+
+/**
+ * Loads runtime configuration from config.json
+ * Enables parent site branding without rebuilding
+ */
+const SiteConfig = {
+    config: null,
+
+    /**
+     * Load config.json and apply branding
+     */
+    async init() {
+        try {
+            const response = await fetch('config.json');
+            if (response.ok) {
+                this.config = await response.json();
+                this.applyBranding();
+            }
+        } catch (e) {
+            // Config not available, that's fine
+            console.log('No config.json found, using defaults');
+        }
+    },
+
+    /**
+     * Apply parent site branding to header and footer
+     */
+    applyBranding() {
+        if (!this.config) return;
+
+        const { parentSiteUrl, parentSiteLogo, parentSiteName } = this.config;
+
+        // Header logo
+        if (parentSiteLogo && parentSiteUrl) {
+            const logoLink = document.getElementById('parent-logo-link');
+            const logoImg = document.getElementById('parent-logo-img');
+            if (logoLink && logoImg) {
+                logoLink.href = parentSiteUrl;
+                logoImg.src = parentSiteLogo;
+                logoImg.alt = parentSiteName || 'Parent Site';
+                logoLink.classList.add('visible');
+            }
+        }
+
+        // Footer text
+        if (parentSiteName && parentSiteUrl) {
+            const parentText = document.getElementById('parent-site-text');
+            const parentLink = document.getElementById('parent-site-link');
+            if (parentText && parentLink) {
+                parentLink.href = parentSiteUrl;
+                parentLink.textContent = parentSiteName;
+                parentText.style.display = 'block';
+            }
+        }
+    }
+};
+
+// =============================================================================
 // INITIALIZATION
 // =============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize i18n first
     i18n.init();
+
+    // Load site config (async, non-blocking)
+    SiteConfig.init();
 
     window.game = new MorseFleetGame();
 
