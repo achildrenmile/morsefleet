@@ -31,6 +31,9 @@ else
     exit 1
 fi
 
+# Synology uses /usr/local/bin for docker
+DOCKER_CMD="/usr/local/bin/docker"
+
 # Parse arguments
 REBUILD_FLAG=""
 if [ "$1" == "--rebuild" ]; then
@@ -67,7 +70,9 @@ fi
 
 # Get current branch and remote
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+GIT_REMOTE=$(git remote get-url origin)
 echo -e "Branch: ${GREEN}${CURRENT_BRANCH}${NC}"
+echo -e "Repository: ${GREEN}${GIT_REMOTE}${NC}"
 
 # ============================================================================
 # Step 2: Pull or clone on Synology
@@ -75,32 +80,17 @@ echo -e "Branch: ${GREEN}${CURRENT_BRANCH}${NC}"
 echo ""
 echo -e "${BLUE}[2/4] Syncing repository on Synology...${NC}"
 
-# Get the git remote URL
-GIT_REMOTE=$(git remote get-url origin)
-echo -e "Repository: ${GREEN}${GIT_REMOTE}${NC}"
+# Check if directory exists
+DIR_EXISTS=$(ssh "${SYNOLOGY_HOST}" "[ -d '${REMOTE_DIR}' ] && echo 'yes' || echo 'no'")
 
-ssh "${SYNOLOGY_HOST}" bash << ENDSSH
-set -e
-
-# Create docker directory if it doesn't exist
-mkdir -p /volume1/docker
-
-# Clone or pull repository
-if [ -d "${REMOTE_DIR}" ]; then
+if [ "$DIR_EXISTS" == "yes" ]; then
     echo "Updating existing repository..."
-    cd "${REMOTE_DIR}"
-    git fetch origin
-    git reset --hard origin/${CURRENT_BRANCH}
-    git clean -fd
+    ssh "${SYNOLOGY_HOST}" "cd ${REMOTE_DIR} && git fetch origin && git reset --hard origin/${CURRENT_BRANCH} && git clean -fd"
 else
     echo "Cloning repository..."
-    git clone "${GIT_REMOTE}" "${REMOTE_DIR}"
-    cd "${REMOTE_DIR}"
-    git checkout ${CURRENT_BRANCH}
+    ssh "${SYNOLOGY_HOST}" "mkdir -p /volume1/docker && git clone ${GIT_REMOTE} ${REMOTE_DIR}"
+    ssh "${SYNOLOGY_HOST}" "cd ${REMOTE_DIR} && git checkout ${CURRENT_BRANCH}"
 fi
-
-echo "Repository synced successfully"
-ENDSSH
 
 echo -e "${GREEN}✓ Repository synced${NC}"
 
@@ -110,18 +100,10 @@ echo -e "${GREEN}✓ Repository synced${NC}"
 echo ""
 echo -e "${BLUE}[3/4] Building Docker image on Synology...${NC}"
 
-ssh "${SYNOLOGY_HOST}" bash << ENDSSH
-set -e
-cd "${REMOTE_DIR}"
-
-echo "Building Docker image: ${IMAGE_NAME}"
-docker build ${REBUILD_FLAG} -t "${IMAGE_NAME}" .
-
-echo "Image built successfully"
-docker images "${IMAGE_NAME}" --format "Size: {{.Size}}"
-ENDSSH
+ssh "${SYNOLOGY_HOST}" "${DOCKER_CMD} build ${REBUILD_FLAG} -t ${IMAGE_NAME} ${REMOTE_DIR}"
 
 echo -e "${GREEN}✓ Docker image built${NC}"
+ssh "${SYNOLOGY_HOST}" "${DOCKER_CMD} images ${IMAGE_NAME} --format 'Size: {{.Size}}'"
 
 # ============================================================================
 # Step 4: Restart container
@@ -129,35 +111,30 @@ echo -e "${GREEN}✓ Docker image built${NC}"
 echo ""
 echo -e "${BLUE}[4/4] Restarting container...${NC}"
 
-ssh "${SYNOLOGY_HOST}" bash << ENDSSH
-set -e
+# Stop and remove existing container
+echo "Stopping existing container (if any)..."
+ssh "${SYNOLOGY_HOST}" "${DOCKER_CMD} stop ${CONTAINER_NAME} 2>/dev/null || true"
+ssh "${SYNOLOGY_HOST}" "${DOCKER_CMD} rm ${CONTAINER_NAME} 2>/dev/null || true"
 
-# Stop and remove existing container if running
-if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}\$"; then
-    echo "Stopping existing container..."
-    docker stop "${CONTAINER_NAME}" 2>/dev/null || true
-    docker rm "${CONTAINER_NAME}" 2>/dev/null || true
-fi
-
+# Start new container
 echo "Starting new container..."
-docker run -d \
-    --name "${CONTAINER_NAME}" \
+ssh "${SYNOLOGY_HOST}" "${DOCKER_CMD} run -d \
+    --name ${CONTAINER_NAME} \
     --restart unless-stopped \
-    --health-cmd="wget --no-verbose --tries=1 --spider http://localhost/health || exit 1" \
+    --health-cmd='wget --no-verbose --tries=1 --spider http://localhost/health || exit 1' \
     --health-interval=30s \
     --health-timeout=10s \
     --health-retries=3 \
     --health-start-period=5s \
     -p 127.0.0.1:${CONTAINER_PORT} \
-    "${IMAGE_NAME}"
+    ${IMAGE_NAME}"
 
-# Wait for container to be healthy
-echo "Waiting for container to be healthy..."
+# Wait for container to start
+echo "Waiting for container to start..."
 sleep 3
 
 # Check container status
-docker ps --filter "name=${CONTAINER_NAME}" --format "Container: {{.Names}} | Status: {{.Status}}"
-ENDSSH
+ssh "${SYNOLOGY_HOST}" "${DOCKER_CMD} ps --filter 'name=${CONTAINER_NAME}' --format 'Container: {{.Names}} | Status: {{.Status}}'"
 
 echo -e "${GREEN}✓ Container restarted${NC}"
 
@@ -188,7 +165,12 @@ if [ "$PUBLIC_CHECK" == "200" ]; then
     echo -e "${GREEN}OK${NC}"
 else
     echo -e "${YELLOW}PENDING (${PUBLIC_CHECK})${NC}"
-    echo -e "${YELLOW}Note: Cloudflare tunnel may need configuration${NC}"
+    echo ""
+    echo -e "${YELLOW}Cloudflare tunnel configuration needed:${NC}"
+    echo -e "  Add public hostname in Cloudflare Zero Trust dashboard:"
+    echo -e "    Subdomain: ${GREEN}morsefleet${NC}"
+    echo -e "    Domain:    ${GREEN}oeradio.at${NC}"
+    echo -e "    Service:   ${GREEN}http://localhost:${LOCAL_PORT}${NC}"
 fi
 
 # ============================================================================
@@ -201,9 +183,8 @@ echo ""
 echo -e "Local:  http://127.0.0.1:${LOCAL_PORT}/ (on Synology)"
 echo -e "Public: ${SITE_URL}"
 echo ""
-echo -e "${BLUE}Container logs:${NC}"
-echo "  ssh ${SYNOLOGY_HOST} docker logs -f ${CONTAINER_NAME}"
-echo ""
-echo -e "${BLUE}Cloudflare tunnel config (if needed):${NC}"
-echo "  Add route: morsefleet.oeradio.at → http://localhost:${LOCAL_PORT}"
+echo -e "${BLUE}Useful commands:${NC}"
+echo "  Logs:    ssh ${SYNOLOGY_HOST} '${DOCKER_CMD} logs -f ${CONTAINER_NAME}'"
+echo "  Status:  ssh ${SYNOLOGY_HOST} '${DOCKER_CMD} ps -f name=${CONTAINER_NAME}'"
+echo "  Restart: ssh ${SYNOLOGY_HOST} '${DOCKER_CMD} restart ${CONTAINER_NAME}'"
 echo -e "${BLUE}════════════════════════════════════════════════════════════${NC}"
