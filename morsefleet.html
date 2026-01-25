@@ -201,10 +201,13 @@ section h2 {
 
 .grid-labels-top {
     display: grid;
-    grid-template-columns: 28px repeat(7, 1fr);
+    grid-template-columns: 28px repeat(7, 38px);
     gap: 2px;
     margin-bottom: 2px;
-    max-width: calc(28px + 7 * 38px + 12px);
+}
+
+.grid-labels-top.labels-9x9 {
+    grid-template-columns: 28px repeat(9, 30px);
 }
 
 .grid-labels-top span {
@@ -236,11 +239,24 @@ section h2 {
     font-size: 0.75em;
 }
 
+.grid-labels-left.labels-9x9 span {
+    height: 30px;
+    font-size: 0.65em;
+}
+
 .grid {
     display: grid;
+    gap: 2px;
+}
+
+.grid, .grid-7x7 {
     grid-template-columns: repeat(7, 38px);
     grid-template-rows: repeat(7, 38px);
-    gap: 2px;
+}
+
+.grid-9x9 {
+    grid-template-columns: repeat(9, 30px);
+    grid-template-rows: repeat(9, 30px);
 }
 
 .cell {
@@ -3368,12 +3384,17 @@ class GameUI {
     recreateGrids(gridSize) {
         this.gridSize = gridSize;
 
-        // Update grid CSS for new size
-        const gridStyle = `repeat(${gridSize}, 1fr)`;
-        this.elements.targetGrid.style.gridTemplateColumns = gridStyle;
-        this.elements.targetGrid.style.gridTemplateRows = gridStyle;
-        this.elements.playerGrid.style.gridTemplateColumns = gridStyle;
-        this.elements.playerGrid.style.gridTemplateRows = gridStyle;
+        // Update grid class for different sizes
+        this.elements.targetGrid.classList.remove('grid-7x7', 'grid-9x9');
+        this.elements.playerGrid.classList.remove('grid-7x7', 'grid-9x9');
+
+        if (gridSize === 9) {
+            this.elements.targetGrid.classList.add('grid-9x9');
+            this.elements.playerGrid.classList.add('grid-9x9');
+        } else {
+            this.elements.targetGrid.classList.add('grid-7x7');
+            this.elements.playerGrid.classList.add('grid-7x7');
+        }
 
         // Recreate grid cells
         this.createTargetGrid();
@@ -3389,6 +3410,14 @@ class GameUI {
         const playerLabelsTop = document.getElementById('player-grid-labels-top');
         const targetLabelsLeft = document.getElementById('target-grid-labels-left');
         const targetLabelsTop = document.getElementById('target-grid-labels-top');
+
+        // Update label classes for grid size
+        [playerLabelsLeft, targetLabelsLeft, playerLabelsTop, targetLabelsTop].forEach(el => {
+            el.classList.remove('labels-9x9');
+            if (gridSize === 9) {
+                el.classList.add('labels-9x9');
+            }
+        });
 
         // Clear and recreate row labels (left)
         playerLabelsLeft.innerHTML = '';
