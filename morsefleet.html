@@ -1300,9 +1300,14 @@ footer {
 
 /* Small phones */
 @media (max-width: 360px) {
-    .grid {
+    .grid, .grid-7x7 {
         grid-template-columns: repeat(7, 32px);
         grid-template-rows: repeat(7, 32px);
+    }
+
+    .grid-9x9 {
+        grid-template-columns: repeat(9, 26px);
+        grid-template-rows: repeat(9, 26px);
     }
 
     .grid-labels-left span {
@@ -1311,12 +1316,25 @@ footer {
         font-size: 0.65em;
     }
 
+    .grid-labels-left.labels-9x9 span {
+        height: 26px;
+        font-size: 0.55em;
+    }
+
     .grid-labels-top {
         grid-template-columns: 22px repeat(7, 32px);
     }
 
+    .grid-labels-top.labels-9x9 {
+        grid-template-columns: 22px repeat(9, 26px);
+    }
+
     .grid-labels-top span {
         font-size: 0.65em;
+    }
+
+    .grid-labels-top.labels-9x9 span {
+        font-size: 0.55em;
     }
 
     header h1 {
@@ -1338,9 +1356,14 @@ footer {
         font-size: 2em;
     }
 
-    .grid {
+    .grid, .grid-7x7 {
         grid-template-columns: repeat(7, 45px);
         grid-template-rows: repeat(7, 45px);
+    }
+
+    .grid-9x9 {
+        grid-template-columns: repeat(9, 36px);
+        grid-template-rows: repeat(9, 36px);
     }
 
     .grid-labels-left span {
@@ -1348,8 +1371,17 @@ footer {
         height: 45px;
     }
 
+    .grid-labels-left.labels-9x9 span {
+        height: 36px;
+        font-size: 0.65em;
+    }
+
     .grid-labels-top {
         grid-template-columns: 32px repeat(7, 45px);
+    }
+
+    .grid-labels-top.labels-9x9 {
+        grid-template-columns: 32px repeat(9, 36px);
     }
 
     .morse-key {
@@ -1385,9 +1417,14 @@ footer {
         padding: 20px;
     }
 
-    .grid {
+    .grid, .grid-7x7 {
         grid-template-columns: repeat(7, 50px);
         grid-template-rows: repeat(7, 50px);
+    }
+
+    .grid-9x9 {
+        grid-template-columns: repeat(9, 40px);
+        grid-template-rows: repeat(9, 40px);
     }
 
     .grid-labels-left span {
@@ -1395,8 +1432,17 @@ footer {
         height: 50px;
     }
 
+    .grid-labels-left.labels-9x9 span {
+        height: 40px;
+        font-size: 0.65em;
+    }
+
     .grid-labels-top {
         grid-template-columns: 36px repeat(7, 50px);
+    }
+
+    .grid-labels-top.labels-9x9 {
+        grid-template-columns: 36px repeat(9, 40px);
     }
 
     .cell {
@@ -1438,9 +1484,14 @@ footer {
         margin-bottom: 6px;
     }
 
-    .grid {
+    .grid, .grid-7x7 {
         grid-template-columns: repeat(7, 30px);
         grid-template-rows: repeat(7, 30px);
+    }
+
+    .grid-9x9 {
+        grid-template-columns: repeat(9, 24px);
+        grid-template-rows: repeat(9, 24px);
     }
 
     .grid-labels-left span {
@@ -1449,12 +1500,25 @@ footer {
         font-size: 0.65em;
     }
 
+    .grid-labels-left.labels-9x9 span {
+        height: 24px;
+        font-size: 0.55em;
+    }
+
     .grid-labels-top {
         grid-template-columns: 22px repeat(7, 30px);
     }
 
+    .grid-labels-top.labels-9x9 {
+        grid-template-columns: 22px repeat(9, 24px);
+    }
+
     .grid-labels-top span {
         font-size: 0.65em;
+    }
+
+    .grid-labels-top.labels-9x9 span {
+        font-size: 0.55em;
     }
 
     .morse-key {
