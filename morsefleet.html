@@ -2041,7 +2041,7 @@ const Tutorial = {
                         </button>
                     </div>
 
-                    <div class="tutorial-step" style="margin-top: 20px; margin-bottom: 0;">
+                    <div class="tutorial-step" style="margin-top: 20px;">
                         <div class="tutorial-step-header">
                             <span class="tutorial-step-num">5</span>
                             <h3>Computer Response</h3>
@@ -2052,6 +2052,21 @@ const Tutorial = {
                             <span style="color: #e94560;">S (...)</span> = Ship hit!<br>
                             <span style="color: #ff6b6b;">K (-.-))</span> = Ship sunk!
                         </p>
+                    </div>
+
+                    <div class="tutorial-step" style="margin-bottom: 0;">
+                        <div class="tutorial-step-header">
+                            <span class="tutorial-step-num">6</span>
+                            <h3>Autoplay Mode</h3>
+                        </div>
+                        <p>Want to see the full game in action? Click <strong>Autoplay Game</strong>
+                           to watch the game play itself automatically. The Morse key will be
+                           operated, coordinates sent, and you'll see and hear everything!</p>
+                        <div class="tutorial-controls" style="border: none; padding-top: 10px; margin-top: 10px;">
+                            <button class="tutorial-btn-demo" id="autoplay-btn" style="background: #4ecca3;">
+                                ▶ Autoplay Game
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2067,6 +2082,7 @@ const Tutorial = {
     setupHandlers() {
         const closeBtn = this.overlay.querySelector('.tutorial-close');
         const demoBtn = this.overlay.querySelector('#demo-start-btn');
+        const autoplayBtn = this.overlay.querySelector('#autoplay-btn');
 
         closeBtn.onclick = () => this.remove();
 
@@ -2075,6 +2091,7 @@ const Tutorial = {
         };
 
         demoBtn.onclick = () => this.runDemo();
+        autoplayBtn.onclick = () => this.startAutoplay();
 
         // ESC to close
         this.escHandler = (e) => {
@@ -2228,6 +2245,14 @@ const Tutorial = {
     },
 
     /**
+     * Start autoplay mode - closes tutorial and plays the game automatically
+     */
+    startAutoplay() {
+        this.remove();
+        Autoplay.start();
+    },
+
+    /**
      * Initialize tutorial button
      */
     init() {
@@ -2235,6 +2260,276 @@ const Tutorial = {
         if (tutorialBtn) {
             tutorialBtn.onclick = () => this.show();
         }
+    }
+};
+
+// =============================================================================
+// AUTOPLAY MODE
+// =============================================================================
+
+/**
+ * Autoplay mode - automatically plays the game by simulating Morse key input
+ * Demonstrates the full game loop including computer responses
+ */
+const Autoplay = {
+    isRunning: false,
+    abortController: null,
+    statusEl: null,
+
+    /**
+     * Morse code patterns for coordinates
+     */
+    morsePatterns: {
+        'A': [80, 240],           // .-
+        'B': [240, 80, 80, 80],   // -...
+        'C': [240, 80, 240, 80],  // -.-.
+        'D': [240, 80, 80],       // -..
+        'E': [80],                // .
+        'F': [80, 80, 240, 80],   // ..-.
+        'G': [240, 240, 80],      // --.
+        '1': [80, 240, 240, 240, 240],   // .----
+        '2': [80, 80, 240, 240, 240],    // ..---
+        '3': [80, 80, 80, 240, 240],     // ...--
+        '4': [80, 80, 80, 80, 240],      // ....-
+        '5': [80, 80, 80, 80, 80],       // .....
+        '6': [240, 80, 80, 80, 80],      // -....
+        '7': [240, 240, 80, 80, 80]      // --...
+    },
+
+    /**
+     * Start autoplay mode
+     */
+    start() {
+        if (this.isRunning) return;
+        this.isRunning = true;
+        this.abortController = new AbortController();
+
+        // Create status overlay
+        this.createStatusOverlay();
+
+        // Start new game
+        if (window.game) {
+            window.game.newGame();
+        }
+
+        this.playGame();
+    },
+
+    /**
+     * Stop autoplay mode
+     */
+    stop() {
+        this.isRunning = false;
+        if (this.abortController) {
+            this.abortController.abort();
+            this.abortController = null;
+        }
+        this.removeStatusOverlay();
+    },
+
+    /**
+     * Create status overlay showing autoplay info
+     */
+    createStatusOverlay() {
+        this.removeStatusOverlay();
+
+        this.statusEl = document.createElement('div');
+        this.statusEl.id = 'autoplay-status';
+        this.statusEl.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(78, 204, 163, 0.95);
+            color: #1a1a2e;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        `;
+        this.statusEl.innerHTML = `
+            <span class="autoplay-dot" style="
+                width: 10px;
+                height: 10px;
+                background: #e94560;
+                border-radius: 50%;
+                animation: autoplay-pulse 1s infinite;
+            "></span>
+            <span id="autoplay-text">AUTOPLAY: Starting...</span>
+            <button id="autoplay-stop" style="
+                background: #e94560;
+                color: white;
+                border: none;
+                padding: 5px 12px;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 0.85em;
+                margin-left: 10px;
+            ">Stop</button>
+        `;
+
+        // Add pulse animation
+        const style = document.createElement('style');
+        style.id = 'autoplay-style';
+        style.textContent = `
+            @keyframes autoplay-pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.3; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.body.appendChild(this.statusEl);
+
+        // Stop button handler
+        document.getElementById('autoplay-stop').onclick = () => this.stop();
+    },
+
+    /**
+     * Remove status overlay
+     */
+    removeStatusOverlay() {
+        if (this.statusEl) {
+            this.statusEl.remove();
+            this.statusEl = null;
+        }
+        const style = document.getElementById('autoplay-style');
+        if (style) style.remove();
+    },
+
+    /**
+     * Update status text
+     */
+    updateStatus(text) {
+        const el = document.getElementById('autoplay-text');
+        if (el) el.textContent = 'AUTOPLAY: ' + text;
+    },
+
+    /**
+     * Play the game automatically
+     */
+    async playGame() {
+        const game = window.game;
+        if (!game) {
+            this.stop();
+            return;
+        }
+
+        const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+        const cols = ['1', '2', '3', '4', '5', '6', '7'];
+
+        // Generate random order of coordinates
+        const coords = [];
+        for (const row of rows) {
+            for (const col of cols) {
+                coords.push(row + col);
+            }
+        }
+        // Shuffle
+        for (let i = coords.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [coords[i], coords[j]] = [coords[j], coords[i]];
+        }
+
+        try {
+            for (const coord of coords) {
+                if (!this.isRunning || game.gameState.isGameOver) break;
+
+                this.updateStatus(`Targeting ${coord}...`);
+
+                // Check if already hit
+                const row = rows.indexOf(coord[0]);
+                const col = cols.indexOf(coord[1]);
+                if (game.gameState.getCellState(row, col) !== 'unknown') {
+                    continue;
+                }
+
+                // Send the coordinate via Morse
+                await this.sendCoordinate(coord, game);
+
+                if (!this.isRunning) break;
+
+                // Wait a moment before next shot
+                await this.sleep(1500);
+            }
+
+            if (game.gameState.isGameOver && this.isRunning) {
+                this.updateStatus(`Victory in ${game.gameState.shotsFired} shots!`);
+                await this.sleep(3000);
+            }
+
+        } catch (e) {
+            // Aborted
+        }
+
+        this.stop();
+    },
+
+    /**
+     * Send a coordinate by simulating Morse key presses
+     */
+    async sendCoordinate(coord, game) {
+        // Clear any existing input
+        game.morseInput.clear();
+
+        // Send first character (letter)
+        await this.sendCharacter(coord[0], game);
+        await this.sleep(350); // Inter-character gap
+
+        // Send second character (number)
+        await this.sendCharacter(coord[1], game);
+        await this.sleep(400); // Wait for character to be decoded
+
+        // Trigger send
+        this.updateStatus(`Sending ${coord}...`);
+        await game.sendCoordinate();
+
+        // Wait for response to play
+        await this.sleep(500);
+    },
+
+    /**
+     * Send a single character by simulating key presses
+     */
+    async sendCharacter(char, game) {
+        const pattern = this.morsePatterns[char];
+        if (!pattern) return;
+
+        for (let i = 0; i < pattern.length; i++) {
+            const duration = pattern[i];
+
+            // Key down
+            game.morseInput.keyDown();
+            await this.sleep(duration);
+
+            // Key up
+            game.morseInput.keyUp();
+
+            // Gap between elements (except last)
+            if (i < pattern.length - 1) {
+                await this.sleep(100);
+            }
+        }
+    },
+
+    /**
+     * Sleep helper with abort support
+     */
+    sleep(ms) {
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(resolve, ms);
+            if (this.abortController) {
+                this.abortController.signal.addEventListener('abort', () => {
+                    clearTimeout(timeout);
+                    reject(new Error('Aborted'));
+                });
+            }
+        });
     }
 };
 
