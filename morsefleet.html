@@ -320,6 +320,8 @@ section h2 {
 .cell-sample.hit::after { content: 'X'; color: #fff; }
 .cell-sample.sunk { background: #7f1d1d; }
 .cell-sample.sunk::after { content: '#'; color: #ccc; }
+.cell-sample.ship { background: var(--accent-primary); }
+.cell-sample.ship::after { content: '■'; color: #fff; }
 
 /* Morse Display */
 .morse-display {
@@ -1546,6 +1548,11 @@ footer {
                             <div id="player-grid" class="grid"></div>
                         </div>
                     </div>
+                    <div class="legend">
+                        <span class="legend-item"><span class="cell-sample ship"></span> <span data-i18n="ship">Schiff</span></span>
+                        <span class="legend-item"><span class="cell-sample hit"></span> <span data-i18n="hit">Treffer</span></span>
+                        <span class="legend-item"><span class="cell-sample sunk"></span> <span data-i18n="sunk">Versenkt</span></span>
+                    </div>
                     <div id="last-shot-display" class="last-shot-display" style="display: none;"></div>
                 </section>
 
@@ -1762,6 +1769,7 @@ const i18n = {
             water: 'Wasser',
             hit: 'Treffer',
             sunk: 'Versenkt',
+            ship: 'Schiff',
             // Morse input
             morseInput: 'Morseeingabe',
             currentSignal: 'Aktuelles Signal:',
@@ -1894,6 +1902,7 @@ const i18n = {
             water: 'Water',
             hit: 'Hit',
             sunk: 'Sunk',
+            ship: 'Ship',
             // Morse input
             morseInput: 'Morse Input',
             currentSignal: 'Current Signal:',
@@ -2026,6 +2035,7 @@ const i18n = {
             water: 'Voda',
             hit: 'Zadetek',
             sunk: 'Potopljena',
+            ship: 'Ladja',
             // Morse input
             morseInput: 'Morzejeva tipka',
             currentSignal: 'Trenutni signal:',
