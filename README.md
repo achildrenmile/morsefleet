@@ -112,14 +112,66 @@ G = --.     N = -.         6 = -....
                            9 = ----.
 ```
 
+## Connecting a Hardware Morse Key
+
+MorseFleet supports real CW paddles and keys. See [HARDWARE_KEY_SUPPORT.md](HARDWARE_KEY_SUPPORT.md) for detailed build guides.
+
+### Quick Start Options
+
+| Method | Browser Support | DIY Cost | Difficulty |
+|--------|-----------------|----------|------------|
+| **USB HID (Pi Pico)** | All browsers | ~$5 | Easy |
+| **USB HID (VBand)** | All browsers | ~$25 | Plug & Play |
+| **USB Serial (Arduino)** | Chrome/Edge only | ~$5 | Easy |
+| **Morserino-32** | Chrome/Edge only | ~$120 | Plug & Play |
+
+### DIY Serial Adapter (5 minutes)
+
+For Chrome/Edge users, build a simple serial adapter:
+
+**Hardware:**
+- Arduino Nano (~$5) or any Arduino with USB
+- 3.5mm stereo jack (~$0.50)
+
+**Wiring:**
+```
+Arduino Nano          3.5mm TRS Jack
+    D2  ─────────────── Tip (Dit)
+    D3  ─────────────── Ring (Dah)
+   GND  ─────────────── Sleeve (Ground)
+```
+
+**Firmware** (upload via Arduino IDE):
+```cpp
+const int DIT_PIN = 2, DAH_PIN = 3;
+byte lastState = 0;
+
+void setup() {
+    pinMode(DIT_PIN, INPUT_PULLUP);
+    pinMode(DAH_PIN, INPUT_PULLUP);
+    Serial.begin(115200);
+}
+
+void loop() {
+    byte state = (!digitalRead(DIT_PIN) << 1) | !digitalRead(DAH_PIN);
+    if (state != lastState) {
+        Serial.write(state);
+        lastState = state;
+    }
+    delay(5);
+}
+```
+
+**In MorseFleet:** Settings ⚙️ → Serial (USB) → Baud: 115200 → Protocol: Simple Binary → Connect
+
 ## Technical Details
 
-- **Single-file SPA**: Everything in one HTML file (~6500 lines)
+- **Single-file SPA**: Everything in one HTML file (~7000 lines)
 - **No dependencies**: Pure HTML, CSS, JavaScript
 - **Web Audio API**: For Morse tone generation
+- **Web Serial API**: Direct serial port access (Chrome/Edge)
 - **LocalStorage**: For language preference and key settings
 - **Docker-ready**: Includes Dockerfile and nginx config
-- **Hardware Key Support**: USB HID keyboard emulation for CW paddles
 
 ## Project Structure
 

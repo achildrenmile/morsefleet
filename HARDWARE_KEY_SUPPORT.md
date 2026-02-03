@@ -1106,6 +1106,199 @@ void loop() {
 
 ---
 
+### Option E: Serial (USB) Adapter for MorseFleet Phase 2 ($5-10)
+
+**For Chrome/Edge users** who want direct serial connection instead of keyboard emulation.
+
+**Components:**
+- Arduino Nano/Pro Micro/ESP32 with USB ($5-10)
+- 3.5mm TRS stereo jack ($0.50)
+- USB cable
+
+**Supported Protocols in MorseFleet:**
+
+| Protocol | Format | Description |
+|----------|--------|-------------|
+| **Simple Binary** | Single byte | Bit 1 = dit, Bit 0 = dah |
+| **ASCII** | Characters | D/d = dit down/up, H/h = dah down/up |
+| **Morserino** | Special | Morserino-32 keying events |
+
+---
+
+#### Simple Binary Protocol (Recommended for DIY)
+
+The easiest protocol to implement. Send a single byte whenever paddle state changes:
+
+```
+Byte format: 0b000000DH
+  Bit 1 (D) = Dit paddle state (1=pressed, 0=released)
+  Bit 0 (H) = Dah paddle state (1=pressed, 0=released)
+
+Examples:
+  0x00 (0b00) = Both released
+  0x01 (0b01) = Dah pressed only
+  0x02 (0b10) = Dit pressed only
+  0x03 (0b11) = Both pressed (squeeze)
+```
+
+**Arduino Nano/Pro Micro Firmware (Simple Binary):**
+
+```cpp
+// MorseFleet Serial Adapter - Simple Binary Protocol
+// For Arduino Nano, Pro Micro, or any ATmega328/32U4 board
+
+const int DIT_PIN = 2;   // Connect to 3.5mm Tip
+const int DAH_PIN = 3;   // Connect to 3.5mm Ring
+                         // Connect GND to 3.5mm Sleeve
+
+const int DEBOUNCE_MS = 5;
+
+byte lastState = 0;
+unsigned long lastChange = 0;
+
+void setup() {
+    pinMode(DIT_PIN, INPUT_PULLUP);
+    pinMode(DAH_PIN, INPUT_PULLUP);
+    Serial.begin(115200);  // Match baud rate in MorseFleet settings
+}
+
+void loop() {
+    // Read paddle state (LOW = pressed due to INPUT_PULLUP)
+    byte ditPressed = !digitalRead(DIT_PIN);
+    byte dahPressed = !digitalRead(DAH_PIN);
+
+    // Combine into single byte: bit1=dit, bit0=dah
+    byte currentState = (ditPressed << 1) | dahPressed;
+
+    // Debounce and send only on change
+    if (currentState != lastState && (millis() - lastChange) > DEBOUNCE_MS) {
+        Serial.write(currentState);
+        lastState = currentState;
+        lastChange = millis();
+    }
+}
+```
+
+**Wiring Diagram:**
+
+```
+        Arduino Nano/Pro Micro
+       ┌─────────────────────┐
+       │                     │
+       │  D2 ────────────────────── Tip (Dit)
+       │                     │         │
+       │  D3 ────────────────────── Ring (Dah)
+       │                     │         │
+       │  GND ───────────────────── Sleeve (Ground)
+       │                     │
+       │  USB ──── to Computer
+       │                     │
+       └─────────────────────┘
+
+    3.5mm TRS Jack:
+         ┌───┬───┬─────────┐
+         │TIP│RNG│ SLEEVE  │
+         │Dit│Dah│  GND    │
+         └───┴───┴─────────┘
+```
+
+---
+
+#### ASCII Protocol
+
+Human-readable, good for debugging:
+
+```cpp
+// MorseFleet Serial Adapter - ASCII Protocol
+const int DIT_PIN = 2;
+const int DAH_PIN = 3;
+const int DEBOUNCE_MS = 5;
+
+bool lastDit = false;
+bool lastDah = false;
+unsigned long lastChange = 0;
+
+void setup() {
+    pinMode(DIT_PIN, INPUT_PULLUP);
+    pinMode(DAH_PIN, INPUT_PULLUP);
+    Serial.begin(115200);
+}
+
+void loop() {
+    bool ditPressed = !digitalRead(DIT_PIN);
+    bool dahPressed = !digitalRead(DAH_PIN);
+
+    if (millis() - lastChange < DEBOUNCE_MS) return;
+
+    if (ditPressed != lastDit) {
+        Serial.write(ditPressed ? 'D' : 'd');  // D=down, d=up
+        lastDit = ditPressed;
+        lastChange = millis();
+    }
+
+    if (dahPressed != lastDah) {
+        Serial.write(dahPressed ? 'H' : 'h');  // H=down, h=up
+        lastDah = dahPressed;
+        lastChange = millis();
+    }
+}
+```
+
+---
+
+#### ESP32 Version (with optional WiFi)
+
+```cpp
+// MorseFleet Serial Adapter - ESP32 Version
+// Can also add WiFi/BLE in future
+
+const int DIT_PIN = 4;   // GPIO4
+const int DAH_PIN = 5;   // GPIO5
+const int DEBOUNCE_MS = 5;
+
+byte lastState = 0;
+unsigned long lastChange = 0;
+
+void setup() {
+    pinMode(DIT_PIN, INPUT_PULLUP);
+    pinMode(DAH_PIN, INPUT_PULLUP);
+    Serial.begin(115200);
+}
+
+void loop() {
+    byte ditPressed = !digitalRead(DIT_PIN);
+    byte dahPressed = !digitalRead(DAH_PIN);
+    byte currentState = (ditPressed << 1) | dahPressed;
+
+    if (currentState != lastState && (millis() - lastChange) > DEBOUNCE_MS) {
+        Serial.write(currentState);
+        lastState = currentState;
+        lastChange = millis();
+    }
+}
+```
+
+---
+
+#### How to Use with MorseFleet
+
+1. **Flash the firmware** to your Arduino/ESP32
+2. **Connect your paddle** via 3.5mm jack
+3. **Open MorseFleet** in Chrome or Edge
+4. Click **⚙️ Settings** → Select **"Serial (USB)"**
+5. Set **Baud Rate: 115200** (or match your firmware)
+6. Set **Protocol: Simple Binary** (or ASCII)
+7. Click **Connect** → Select your Arduino from the list
+8. Choose keyer mode (Straight, Iambic A/B, Bug, etc.)
+9. Start playing!
+
+**Troubleshooting:**
+- **No device in list?** Check USB cable, try different port
+- **No response?** Verify baud rate matches firmware
+- **Erratic behavior?** Add 10nF capacitors across paddle contacts for debouncing
+
+---
+
 ## Compatible Commercial Products
 
 ### Ready-Made USB Interfaces
