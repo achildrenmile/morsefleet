@@ -713,6 +713,255 @@ footer {
     text-decoration: underline;
 }
 
+/* Key Settings Modal */
+.key-settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.key-settings-modal {
+    background: var(--bg-secondary);
+    border: 2px solid var(--accent-primary);
+    border-radius: 12px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+.key-settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+    border-radius: 10px 10px 0 0;
+    position: sticky;
+    top: 0;
+}
+
+.key-settings-header h2 {
+    color: var(--accent-primary);
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.key-settings-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.key-settings-close:hover {
+    color: var(--accent-primary);
+}
+
+.key-settings-content {
+    padding: 16px;
+}
+
+.key-settings-section {
+    margin-bottom: 16px;
+}
+
+.key-settings-section h3 {
+    color: var(--accent-success);
+    font-size: 0.85em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.key-settings-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.key-settings-row label {
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    min-width: 100px;
+}
+
+.key-settings-row select,
+.key-settings-row input[type="number"] {
+    flex: 1;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 0.9em;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.key-settings-row select:focus,
+.key-settings-row input:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 1px;
+}
+
+.key-binding-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 0.9em;
+    background: var(--bg-tertiary);
+    color: var(--accent-success);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    min-width: 120px;
+    transition: all 0.2s;
+}
+
+.key-binding-btn:hover {
+    background: var(--border-color);
+}
+
+.key-binding-btn.listening {
+    background: var(--accent-primary);
+    color: white;
+    border-color: var(--accent-primary);
+    animation: pulse-key 1s infinite;
+}
+
+@keyframes pulse-key {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.key-settings-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.key-settings-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--accent-primary);
+}
+
+.key-settings-checkbox label {
+    color: var(--text-primary);
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.key-settings-info {
+    background: var(--bg-tertiary);
+    border-left: 3px solid var(--accent-primary);
+    padding: 10px 12px;
+    margin: 12px 0;
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    border-radius: 0 6px 6px 0;
+}
+
+.key-settings-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.key-settings-buttons .btn {
+    flex: 1;
+    padding: 10px 16px;
+    font-size: 0.9em;
+}
+
+.btn-reset {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-reset:hover {
+    background: var(--border-color);
+    color: var(--text-primary);
+}
+
+/* Settings gear button */
+.btn-settings {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85em;
+    transition: all 0.2s;
+}
+
+.btn-settings:hover {
+    background: var(--border-color);
+    color: var(--accent-primary);
+}
+
+.btn-settings svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Keyer mode descriptions */
+.keyer-mode-desc {
+    font-size: 0.75em;
+    color: var(--text-muted);
+    margin-left: 4px;
+}
+
+/* Mobile adjustments for key settings */
+@media (max-width: 500px) {
+    .key-settings-modal {
+        max-width: 100%;
+        margin: 10px;
+        max-height: 95vh;
+    }
+
+    .key-settings-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .key-settings-row label {
+        min-width: auto;
+    }
+
+    .key-binding-btn {
+        min-width: auto;
+    }
+}
+
 /* Tutorial Button */
 .btn-tutorial {
     background: var(--accent-success);
@@ -1612,6 +1861,15 @@ footer {
                         <option value="advanced" data-i18n-value="modeAdvanced">Erweitert 9×9 (A-Z, 0-9)</option>
                     </select>
                 </div>
+                <div class="status-item">
+                    <button id="key-settings-btn" class="btn-settings" title="Morse Key Settings">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        <span data-i18n="keySettings">Taste</span>
+                    </button>
+                </div>
             </section>
 
             <!-- Ship Placement UI -->
@@ -1855,6 +2113,565 @@ const MorseTiming = {
 const MORSE_TIMING = MorseTiming.get();
 
 // =============================================================================
+// KEY SETTINGS - Hardware Morse Key Support
+// =============================================================================
+
+/**
+ * Key presets for compatibility with different CW practice websites/adapters
+ */
+const KEY_PRESETS = {
+    'vband-ctrl': {
+        name: 'VBand/Vail (Ctrl)',
+        dit: 'ControlLeft',
+        dah: 'ControlRight',
+        description: 'Standard VBand adapter keys'
+    },
+    'vband-brackets': {
+        name: 'VBand (Brackets)',
+        dit: 'BracketLeft',
+        dah: 'BracketRight',
+        description: 'VBand [ ] keys'
+    },
+    'morsecode-me': {
+        name: 'morsecode.me',
+        dit: 'KeyE',
+        dah: 'KeyI',
+        description: 'E/I keys for morsecode.me'
+    },
+    'vail-alt': {
+        name: 'Vail (X/Z)',
+        dit: 'KeyX',
+        dah: 'KeyZ',
+        description: 'Alternative Vail keys'
+    },
+    'space': {
+        name: 'Spacebar Only',
+        dit: 'Space',
+        dah: 'Space',
+        description: 'Single key straight mode'
+    },
+    'custom': {
+        name: 'Custom',
+        dit: null,
+        dah: null,
+        description: 'User-defined keys'
+    }
+};
+
+/**
+ * Keyer modes for different operating styles
+ */
+const KEYER_MODES = {
+    'straight': {
+        name: 'Straight Key',
+        description: 'Manual timing of all elements'
+    },
+    'bug': {
+        name: 'Bug (Semi-Auto)',
+        description: 'Auto dits, manual dahs'
+    },
+    'iambic-a': {
+        name: 'Iambic A',
+        description: 'Alternating, stops on release'
+    },
+    'iambic-b': {
+        name: 'Iambic B',
+        description: 'Alternating, +1 element on release'
+    },
+    'ultimatic': {
+        name: 'Ultimatic',
+        description: 'Last paddle pressed wins'
+    }
+};
+
+/**
+ * KeySettings manages hardware key configuration
+ */
+class KeySettings {
+    constructor() {
+        this.defaults = {
+            inputMethod: 'keyboard',      // 'onscreen' | 'keyboard' | 'gamepad'
+            keyerMode: 'straight',        // 'straight' | 'bug' | 'iambic-a' | 'iambic-b' | 'ultimatic'
+            keyPreset: 'space',           // Preset name or 'custom'
+            straightKey: 'Space',         // For straight key mode
+            ditKey: 'ControlLeft',        // VBand standard
+            dahKey: 'ControlRight',       // VBand standard
+            keyerWpm: 15,                 // Speed for automatic elements (iambic/bug)
+            swapPaddles: false            // Swap dit/dah for left-handed operators
+        };
+
+        this.settings = { ...this.defaults };
+        this.listeners = [];
+        this.load();
+    }
+
+    /**
+     * Load settings from localStorage
+     */
+    load() {
+        try {
+            const saved = localStorage.getItem('morsefleet-key-settings');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                this.settings = { ...this.defaults, ...parsed };
+            }
+        } catch (e) {
+            console.warn('Failed to load key settings:', e);
+        }
+    }
+
+    /**
+     * Save settings to localStorage
+     */
+    save() {
+        try {
+            localStorage.setItem('morsefleet-key-settings', JSON.stringify(this.settings));
+        } catch (e) {
+            console.warn('Failed to save key settings:', e);
+        }
+        this.notifyListeners();
+    }
+
+    /**
+     * Get a setting value
+     */
+    get(key) {
+        return this.settings[key];
+    }
+
+    /**
+     * Set a setting value
+     */
+    set(key, value) {
+        this.settings[key] = value;
+        this.save();
+    }
+
+    /**
+     * Apply a key preset
+     */
+    applyPreset(presetName) {
+        const preset = KEY_PRESETS[presetName];
+        if (preset && preset.dit && preset.dah) {
+            this.settings.keyPreset = presetName;
+            this.settings.ditKey = preset.dit;
+            this.settings.dahKey = preset.dah;
+            // For single-key presets (like space), also set straight key
+            if (preset.dit === preset.dah) {
+                this.settings.straightKey = preset.dit;
+            }
+            this.save();
+        } else if (presetName === 'custom') {
+            this.settings.keyPreset = 'custom';
+            this.save();
+        }
+    }
+
+    /**
+     * Get effective dit key (considering swap)
+     */
+    getDitKey() {
+        const key = this.settings.swapPaddles ? this.settings.dahKey : this.settings.ditKey;
+        return key;
+    }
+
+    /**
+     * Get effective dah key (considering swap)
+     */
+    getDahKey() {
+        const key = this.settings.swapPaddles ? this.settings.ditKey : this.settings.dahKey;
+        return key;
+    }
+
+    /**
+     * Check if a key code matches the straight key
+     */
+    isStraightKey(code) {
+        return code === this.settings.straightKey;
+    }
+
+    /**
+     * Check if a key code matches dit
+     */
+    isDitKey(code) {
+        return code === this.getDitKey();
+    }
+
+    /**
+     * Check if a key code matches dah
+     */
+    isDahKey(code) {
+        return code === this.getDahKey();
+    }
+
+    /**
+     * Check if using paddle mode (iambic or bug)
+     */
+    isPaddleMode() {
+        return ['iambic-a', 'iambic-b', 'ultimatic', 'bug'].includes(this.settings.keyerMode);
+    }
+
+    /**
+     * Reset to defaults
+     */
+    reset() {
+        this.settings = { ...this.defaults };
+        this.save();
+    }
+
+    /**
+     * Add a change listener
+     */
+    addListener(fn) {
+        this.listeners.push(fn);
+    }
+
+    /**
+     * Notify all listeners of changes
+     */
+    notifyListeners() {
+        this.listeners.forEach(fn => fn(this.settings));
+    }
+
+    /**
+     * Get human-readable key name
+     */
+    static getKeyName(code) {
+        if (!code) return '-';
+        const names = {
+            'Space': 'Space',
+            'ControlLeft': 'Left Ctrl',
+            'ControlRight': 'Right Ctrl',
+            'ShiftLeft': 'Left Shift',
+            'ShiftRight': 'Right Shift',
+            'AltLeft': 'Left Alt',
+            'AltRight': 'Right Alt',
+            'BracketLeft': '[',
+            'BracketRight': ']',
+            'Comma': ',',
+            'Period': '.',
+            'Slash': '/',
+            'Backslash': '\\',
+            'Semicolon': ';',
+            'Quote': "'",
+            'Backquote': '`',
+            'Minus': '-',
+            'Equal': '='
+        };
+        if (names[code]) return names[code];
+        if (code.startsWith('Key')) return code.slice(3);
+        if (code.startsWith('Digit')) return code.slice(5);
+        return code;
+    }
+}
+
+// =============================================================================
+// IAMBIC KEYER - Electronic keyer for paddles
+// =============================================================================
+
+/**
+ * IambicKeyer implements iambic A, B, and ultimatic keying modes
+ */
+class IambicKeyer {
+    constructor(options) {
+        this.audio = options.audio;
+        this.onElement = options.onElement;     // Callback: (element) => void  ('.' or '-')
+        this.getWpm = options.getWpm;           // Function returning current WPM
+        this.onStateChange = options.onStateChange; // Callback for UI updates
+
+        this.ditPressed = false;
+        this.dahPressed = false;
+        this.currentElement = null;             // 'dit' | 'dah' | null
+        this.lastElement = null;
+        this.elementTimer = null;
+        this.mode = 'iambic-b';                 // 'iambic-a' | 'iambic-b' | 'ultimatic'
+        this.keyMemory = null;                  // For iambic B mode
+        this.running = false;
+    }
+
+    getUnitTime() {
+        return Math.round(1200 / this.getWpm());
+    }
+
+    setMode(mode) {
+        this.mode = mode;
+    }
+
+    ditDown() {
+        this.ditPressed = true;
+        if (this.mode === 'ultimatic') {
+            this.keyMemory = 'dit';
+        }
+        this.update();
+        this.notifyState();
+    }
+
+    ditUp() {
+        this.ditPressed = false;
+        if (this.mode === 'iambic-b' && this.currentElement === 'dah') {
+            this.keyMemory = 'dit';  // Remember for extra element
+        }
+        this.update();
+        this.notifyState();
+    }
+
+    dahDown() {
+        this.dahPressed = true;
+        if (this.mode === 'ultimatic') {
+            this.keyMemory = 'dah';
+        }
+        this.update();
+        this.notifyState();
+    }
+
+    dahUp() {
+        this.dahPressed = false;
+        if (this.mode === 'iambic-b' && this.currentElement === 'dit') {
+            this.keyMemory = 'dah';  // Remember for extra element
+        }
+        this.update();
+        this.notifyState();
+    }
+
+    update() {
+        if (this.currentElement) return;  // Element in progress
+
+        let nextElement = null;
+
+        if (this.mode === 'ultimatic') {
+            // Last key pressed wins
+            if (this.keyMemory) {
+                nextElement = this.keyMemory;
+            } else if (this.ditPressed) {
+                nextElement = 'dit';
+            } else if (this.dahPressed) {
+                nextElement = 'dah';
+            }
+        } else {
+            // Iambic A/B
+            if (this.ditPressed && this.dahPressed) {
+                // Both pressed: alternate
+                nextElement = this.lastElement === 'dit' ? 'dah' : 'dit';
+            } else if (this.ditPressed) {
+                nextElement = 'dit';
+            } else if (this.dahPressed) {
+                nextElement = 'dah';
+            } else if (this.mode === 'iambic-b' && this.keyMemory) {
+                // Mode B: send one more element after release
+                nextElement = this.keyMemory;
+                this.keyMemory = null;
+            }
+        }
+
+        if (nextElement) {
+            this.sendElement(nextElement);
+        }
+    }
+
+    sendElement(element) {
+        this.currentElement = element;
+        this.lastElement = element;
+        this.running = true;
+
+        const unit = this.getUnitTime();
+        const duration = element === 'dit' ? unit : unit * 3;
+
+        this.audio.startTone();
+        this.onElement(element === 'dit' ? '.' : '-');
+        this.notifyState();
+
+        this.elementTimer = setTimeout(() => {
+            this.audio.stopTone();
+            this.currentElement = null;
+            this.notifyState();
+
+            // Inter-element gap (1 unit)
+            setTimeout(() => {
+                if (this.ditPressed || this.dahPressed || this.keyMemory) {
+                    this.update();
+                } else {
+                    this.running = false;
+                    this.notifyState();
+                }
+            }, unit);
+        }, duration);
+    }
+
+    stop() {
+        clearTimeout(this.elementTimer);
+        this.audio.stopTone();
+        this.currentElement = null;
+        this.keyMemory = null;
+        this.ditPressed = false;
+        this.dahPressed = false;
+        this.running = false;
+        this.notifyState();
+    }
+
+    notifyState() {
+        if (this.onStateChange) {
+            this.onStateChange({
+                isKeyDown: this.currentElement !== null || this.ditPressed || this.dahPressed,
+                ditPressed: this.ditPressed,
+                dahPressed: this.dahPressed,
+                currentElement: this.currentElement,
+                running: this.running
+            });
+        }
+    }
+
+    isActive() {
+        return this.ditPressed || this.dahPressed || this.currentElement !== null;
+    }
+}
+
+// =============================================================================
+// BUG KEYER - Semi-automatic keyer (auto dits, manual dahs)
+// =============================================================================
+
+/**
+ * BugKeyer implements semi-automatic "bug" style keying
+ * Dit paddle: automatic, timed dits
+ * Dah paddle: manual timing (like straight key)
+ */
+class BugKeyer {
+    constructor(options) {
+        this.audio = options.audio;
+        this.onElement = options.onElement;
+        this.getWpm = options.getWpm;
+        this.onStateChange = options.onStateChange;
+        this.onManualKeyChange = options.onManualKeyChange; // For manual dah timing
+
+        this.ditPressed = false;
+        this.dahPressed = false;
+        this.dahStartTime = null;
+        this.isPlayingDit = false;
+        this.ditTimer = null;
+        this.running = false;
+    }
+
+    getUnitTime() {
+        return Math.round(1200 / this.getWpm());
+    }
+
+    ditDown() {
+        this.ditPressed = true;
+        if (!this.dahPressed) {
+            this.startDitStream();
+        }
+        this.notifyState();
+    }
+
+    ditUp() {
+        this.ditPressed = false;
+        this.stopDitStream();
+        this.notifyState();
+    }
+
+    dahDown() {
+        this.dahPressed = true;
+        this.dahStartTime = Date.now();
+        this.stopDitStream();
+        this.audio.startTone();
+        this.running = true;
+        // Notify for manual timing mode
+        if (this.onManualKeyChange) {
+            this.onManualKeyChange(true);
+        }
+        this.notifyState();
+    }
+
+    dahUp() {
+        this.dahPressed = false;
+        this.audio.stopTone();
+
+        // Notify manual key up
+        if (this.onManualKeyChange) {
+            this.onManualKeyChange(false);
+        }
+
+        // Resume dit stream if dit still pressed
+        if (this.ditPressed) {
+            setTimeout(() => {
+                if (this.ditPressed && !this.dahPressed) {
+                    this.startDitStream();
+                }
+            }, this.getUnitTime());
+        } else {
+            this.running = false;
+        }
+        this.notifyState();
+    }
+
+    startDitStream() {
+        if (this.isPlayingDit || this.dahPressed) return;
+
+        this.isPlayingDit = true;
+        this.running = true;
+        this.playDit();
+    }
+
+    playDit() {
+        if (!this.ditPressed || this.dahPressed) {
+            this.isPlayingDit = false;
+            if (!this.dahPressed) {
+                this.running = false;
+            }
+            this.notifyState();
+            return;
+        }
+
+        const unit = this.getUnitTime();
+
+        this.audio.startTone();
+        this.onElement('.');
+        this.notifyState();
+
+        this.ditTimer = setTimeout(() => {
+            this.audio.stopTone();
+            this.notifyState();
+            // Inter-element gap, then next dit
+            this.ditTimer = setTimeout(() => this.playDit(), unit);
+        }, unit);
+    }
+
+    stopDitStream() {
+        this.isPlayingDit = false;
+        if (this.ditTimer) {
+            clearTimeout(this.ditTimer);
+            this.ditTimer = null;
+        }
+    }
+
+    stop() {
+        this.ditPressed = false;
+        this.dahPressed = false;
+        this.stopDitStream();
+        this.audio.stopTone();
+        this.running = false;
+        this.notifyState();
+    }
+
+    notifyState() {
+        if (this.onStateChange) {
+            this.onStateChange({
+                isKeyDown: this.dahPressed || this.isPlayingDit,
+                ditPressed: this.ditPressed,
+                dahPressed: this.dahPressed,
+                running: this.running
+            });
+        }
+    }
+
+    isActive() {
+        return this.ditPressed || this.dahPressed || this.isPlayingDit;
+    }
+}
+
+// Global key settings instance
+const keySettings = new KeySettings();
+
+// =============================================================================
 // INTERNATIONALIZATION (i18n)
 // =============================================================================
 
@@ -1982,6 +2799,35 @@ const i18n = {
             helpTip2: 'Nutze den Autoplay-Modus um zu sehen wie das Spiel funktioniert',
             helpTip3: 'Die Geschwindigkeit (WPM) kannst du oben anpassen',
             helpTip4: 'Wähle den "Erweiterten Modus" um das gesamte Alphabet (A-N) und alle Ziffern (0-9) zu lernen',
+            // Key Settings
+            keySettings: 'Taste Einstellungen',
+            keySettingsTitle: 'Morsetaste Einstellungen',
+            inputMethod: 'Eingabemethode',
+            inputOnscreen: 'Bildschirmtaste',
+            inputKeyboard: 'Tastatur / USB-Adapter',
+            inputGamepad: 'Gamepad',
+            keyerMode: 'Tastmodus',
+            keyerStraight: 'Handtaste',
+            keyerStraightDesc: 'Manuelle Zeitsteuerung',
+            keyerBug: 'Bug (Halbautomatisch)',
+            keyerBugDesc: 'Auto-Punkte, manuelle Striche',
+            keyerIambicA: 'Iambisch A',
+            keyerIambicADesc: 'Alternierend, stoppt bei Loslassen',
+            keyerIambicB: 'Iambisch B',
+            keyerIambicBDesc: 'Alternierend, +1 Element',
+            keyerUltimatic: 'Ultimatisch',
+            keyerUltimaticDesc: 'Letzte gedrückte Taste gewinnt',
+            keyPreset: 'Tastenbelegung',
+            keyCustom: 'Benutzerdefiniert',
+            straightKey: 'Handtaste',
+            ditKey: 'Punkt (dit)',
+            dahKey: 'Strich (dah)',
+            pressKey: 'Taste drücken...',
+            keyerSpeed: 'Keyer Tempo',
+            swapPaddles: 'Paddel tauschen',
+            resetDefaults: 'Zurücksetzen',
+            close: 'Schließen',
+            keySettingsInfo: 'USB-Adapter wie VBand/Pi Pico? Wähle "VBand (Ctrl)" Voreinstellung.',
             // Imprint
             imprintTitle: 'Impressum',
             imprintInfo: 'Angaben gemäß § 5 ECG und § 25 MedienG',
@@ -2122,6 +2968,35 @@ const i18n = {
             helpTip2: 'Use Autoplay mode to see how the game works',
             helpTip3: 'You can adjust the speed (WPM) at the top',
             helpTip4: 'Select "Advanced Mode" to learn the full alphabet (A-N) and all digits (0-9)',
+            // Key Settings
+            keySettings: 'Key Settings',
+            keySettingsTitle: 'Morse Key Settings',
+            inputMethod: 'Input Method',
+            inputOnscreen: 'On-screen button',
+            inputKeyboard: 'Keyboard / USB adapter',
+            inputGamepad: 'Gamepad',
+            keyerMode: 'Keyer Mode',
+            keyerStraight: 'Straight Key',
+            keyerStraightDesc: 'Manual timing',
+            keyerBug: 'Bug (Semi-Auto)',
+            keyerBugDesc: 'Auto dits, manual dahs',
+            keyerIambicA: 'Iambic A',
+            keyerIambicADesc: 'Alternating, stops on release',
+            keyerIambicB: 'Iambic B',
+            keyerIambicBDesc: 'Alternating, +1 element',
+            keyerUltimatic: 'Ultimatic',
+            keyerUltimaticDesc: 'Last paddle pressed wins',
+            keyPreset: 'Key Preset',
+            keyCustom: 'Custom',
+            straightKey: 'Straight Key',
+            ditKey: 'Dit (dot)',
+            dahKey: 'Dah (dash)',
+            pressKey: 'Press a key...',
+            keyerSpeed: 'Keyer Speed',
+            swapPaddles: 'Swap Paddles',
+            resetDefaults: 'Reset to Defaults',
+            close: 'Close',
+            keySettingsInfo: 'Using USB adapter like VBand/Pi Pico? Select "VBand (Ctrl)" preset.',
             // Imprint
             imprintTitle: 'Imprint',
             imprintInfo: 'Information according to § 5 ECG and § 25 MedienG (Austrian law)',
@@ -2262,6 +3137,35 @@ const i18n = {
             helpTip2: 'Uporabi samodejni način da vidiš kako igra deluje',
             helpTip3: 'Hitrost (WPM) lahko prilagodiš na vrhu',
             helpTip4: 'Izberi "Napredni način" za učenje celotne abecede (A-N) in vseh številk (0-9)',
+            // Key Settings
+            keySettings: 'Nastavitve tipk',
+            keySettingsTitle: 'Nastavitve Morzejeve tipke',
+            inputMethod: 'Način vnosa',
+            inputOnscreen: 'Zaslonska tipka',
+            inputKeyboard: 'Tipkovnica / USB adapter',
+            inputGamepad: 'Igralna palica',
+            keyerMode: 'Način tipkanja',
+            keyerStraight: 'Ročna tipka',
+            keyerStraightDesc: 'Ročno merjenje časa',
+            keyerBug: 'Bug (Polavtomatsko)',
+            keyerBugDesc: 'Avto pike, ročne črtice',
+            keyerIambicA: 'Iambično A',
+            keyerIambicADesc: 'Izmenjujoče, ustavi ob sprostitvi',
+            keyerIambicB: 'Iambično B',
+            keyerIambicBDesc: 'Izmenjujoče, +1 element',
+            keyerUltimatic: 'Ultimatično',
+            keyerUltimaticDesc: 'Zadnja pritisnjena tipka zmaga',
+            keyPreset: 'Prednastavitev',
+            keyCustom: 'Po meri',
+            straightKey: 'Ročna tipka',
+            ditKey: 'Pika (dit)',
+            dahKey: 'Črtica (dah)',
+            pressKey: 'Pritisni tipko...',
+            keyerSpeed: 'Hitrost tipkanja',
+            swapPaddles: 'Zamenjaj lopatice',
+            resetDefaults: 'Ponastavi',
+            close: 'Zapri',
+            keySettingsInfo: 'Uporabljaš USB adapter kot VBand/Pi Pico? Izberi "VBand (Ctrl)" prednastavitev.',
             // Imprint
             imprintTitle: 'Impressum',
             imprintInfo: 'Podatki v skladu s § 5 ECG in § 25 MedienG (avstrijska zakonodaja)',
@@ -3927,6 +4831,48 @@ class MorseFleetGame {
             this.ui.updateMorseInput(state);
         });
 
+        // Initialize keyers for paddle modes
+        this.iambicKeyer = new IambicKeyer({
+            audio: this.audio,
+            onElement: (el) => this.handleKeyerElement(el),
+            getWpm: () => keySettings.get('keyerWpm'),
+            onStateChange: (state) => this.ui.updateMorseInput({
+                isKeyDown: state.isKeyDown,
+                currentSymbols: this.morseInput.currentSymbols,
+                decodedChars: this.morseInput.decodedChars
+            })
+        });
+
+        this.bugKeyer = new BugKeyer({
+            audio: this.audio,
+            onElement: (el) => this.handleKeyerElement(el),
+            getWpm: () => keySettings.get('keyerWpm'),
+            onStateChange: (state) => this.ui.updateMorseInput({
+                isKeyDown: state.isKeyDown,
+                currentSymbols: this.morseInput.currentSymbols,
+                decodedChars: this.morseInput.decodedChars
+            }),
+            onManualKeyChange: (isDown) => {
+                // For bug mode manual dah timing
+                if (isDown) {
+                    this.bugDahStartTime = Date.now();
+                } else if (this.bugDahStartTime) {
+                    const duration = Date.now() - this.bugDahStartTime;
+                    const unit = Math.round(1200 / keySettings.get('keyerWpm'));
+                    // Only register as dah if held long enough
+                    if (duration >= unit * 2) {
+                        this.handleKeyerElement('-');
+                    }
+                    this.bugDahStartTime = null;
+                }
+            }
+        });
+
+        // Track key states for paddle modes
+        this.ditKeyDown = false;
+        this.dahKeyDown = false;
+        this.bugDahStartTime = null;
+
         this.isProcessing = false;
         this.activeTouchId = null;
 
@@ -3935,6 +4881,28 @@ class MorseFleetGame {
 
         // Start in placement phase
         this.startPlacementPhase();
+    }
+
+    /**
+     * Handle element from keyer (iambic or bug)
+     */
+    handleKeyerElement(element) {
+        this.morseInput.currentSymbols += element;
+        this.morseInput.startGapTimer();
+        this.morseInput.updateUI();
+    }
+
+    /**
+     * Get the active keyer based on current mode
+     */
+    getActiveKeyer() {
+        const mode = keySettings.get('keyerMode');
+        if (mode === 'bug') return this.bugKeyer;
+        if (['iambic-a', 'iambic-b', 'ultimatic'].includes(mode)) {
+            this.iambicKeyer.setMode(mode);
+            return this.iambicKeyer;
+        }
+        return null;  // Straight key mode - no keyer
     }
 
     // =========================================================================
@@ -4164,22 +5132,75 @@ class MorseFleetGame {
         });
 
         // ===========================================
-        // KEYBOARD EVENTS (Spacebar)
+        // KEYBOARD EVENTS (Configurable Keys)
         // ===========================================
 
         document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && !e.repeat) {
-                e.preventDefault();
-                if (this.canPlayerInput()) {
-                    this.morseInput.keyDown();
+            // Skip if input method is not keyboard
+            if (keySettings.get('inputMethod') !== 'keyboard') return;
+
+            // Skip repeat events
+            if (e.repeat) return;
+
+            const mode = keySettings.get('keyerMode');
+            const keyer = this.getActiveKeyer();
+
+            if (mode === 'straight') {
+                // Straight key mode - single key, manual timing
+                if (keySettings.isStraightKey(e.code)) {
+                    e.preventDefault();
+                    if (this.canPlayerInput()) {
+                        this.morseInput.keyDown();
+                    }
+                }
+            } else {
+                // Paddle mode (iambic or bug)
+                if (keySettings.isDitKey(e.code) && !this.ditKeyDown) {
+                    e.preventDefault();
+                    this.ditKeyDown = true;
+                    if (this.canPlayerInput() && keyer) {
+                        keyer.ditDown();
+                    }
+                }
+                if (keySettings.isDahKey(e.code) && !this.dahKeyDown) {
+                    e.preventDefault();
+                    this.dahKeyDown = true;
+                    if (this.canPlayerInput() && keyer) {
+                        keyer.dahDown();
+                    }
                 }
             }
         });
 
         document.addEventListener('keyup', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                this.morseInput.keyUp();
+            // Skip if input method is not keyboard
+            if (keySettings.get('inputMethod') !== 'keyboard') return;
+
+            const mode = keySettings.get('keyerMode');
+            const keyer = this.getActiveKeyer();
+
+            if (mode === 'straight') {
+                // Straight key mode
+                if (keySettings.isStraightKey(e.code)) {
+                    e.preventDefault();
+                    this.morseInput.keyUp();
+                }
+            } else {
+                // Paddle mode
+                if (keySettings.isDitKey(e.code) && this.ditKeyDown) {
+                    e.preventDefault();
+                    this.ditKeyDown = false;
+                    if (keyer) {
+                        keyer.ditUp();
+                    }
+                }
+                if (keySettings.isDahKey(e.code) && this.dahKeyDown) {
+                    e.preventDefault();
+                    this.dahKeyDown = false;
+                    if (keyer) {
+                        keyer.dahUp();
+                    }
+                }
             }
         });
 
@@ -5299,6 +6320,325 @@ const HelpModal = {
 };
 
 // =============================================================================
+// KEY SETTINGS MODAL
+// =============================================================================
+
+/**
+ * KeySettingsModal - Configure hardware morse key/paddle input
+ */
+const KeySettingsModal = {
+    overlay: null,
+    listeningFor: null,  // 'straight' | 'dit' | 'dah' | null
+
+    /**
+     * Show the key settings modal
+     */
+    show() {
+        this.removeExisting();
+
+        const settings = keySettings.settings;
+        const overlay = document.createElement('div');
+        overlay.className = 'key-settings-overlay';
+
+        // Build preset options
+        const presetOptions = Object.entries(KEY_PRESETS).map(([key, preset]) =>
+            `<option value="${key}" ${settings.keyPreset === key ? 'selected' : ''}>${preset.name}</option>`
+        ).join('');
+
+        // Build keyer mode options
+        const keyerModeOptions = Object.entries(KEYER_MODES).map(([key, mode]) =>
+            `<option value="${key}" ${settings.keyerMode === key ? 'selected' : ''}>${mode.name}</option>`
+        ).join('');
+
+        overlay.innerHTML = `
+            <div class="key-settings-modal">
+                <div class="key-settings-header">
+                    <h2 data-i18n="keySettingsTitle">${i18n.t('keySettingsTitle')}</h2>
+                    <button class="key-settings-close">&times;</button>
+                </div>
+                <div class="key-settings-content">
+                    <!-- Input Method -->
+                    <div class="key-settings-section">
+                        <h3 data-i18n="inputMethod">${i18n.t('inputMethod')}</h3>
+                        <div class="key-settings-row">
+                            <label for="ks-input-method" data-i18n="inputMethod">${i18n.t('inputMethod')}:</label>
+                            <select id="ks-input-method">
+                                <option value="onscreen" ${settings.inputMethod === 'onscreen' ? 'selected' : ''} data-i18n-value="inputOnscreen">${i18n.t('inputOnscreen')}</option>
+                                <option value="keyboard" ${settings.inputMethod === 'keyboard' ? 'selected' : ''} data-i18n-value="inputKeyboard">${i18n.t('inputKeyboard')}</option>
+                                <option value="gamepad" ${settings.inputMethod === 'gamepad' ? 'selected' : ''} data-i18n-value="inputGamepad">${i18n.t('inputGamepad')}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Keyer Mode -->
+                    <div class="key-settings-section">
+                        <h3 data-i18n="keyerMode">${i18n.t('keyerMode')}</h3>
+                        <div class="key-settings-row">
+                            <label for="ks-keyer-mode">${i18n.t('keyerMode')}:</label>
+                            <select id="ks-keyer-mode">${keyerModeOptions}</select>
+                        </div>
+                        <div id="ks-keyer-mode-desc" class="keyer-mode-desc" style="color: var(--text-muted); font-size: 0.8em; margin-top: 4px;">
+                            ${KEYER_MODES[settings.keyerMode]?.description || ''}
+                        </div>
+                    </div>
+
+                    <!-- Key Preset -->
+                    <div class="key-settings-section" id="ks-keyboard-section">
+                        <h3 data-i18n="keyPreset">${i18n.t('keyPreset')}</h3>
+                        <div class="key-settings-row">
+                            <label for="ks-key-preset">${i18n.t('keyPreset')}:</label>
+                            <select id="ks-key-preset">${presetOptions}</select>
+                        </div>
+                    </div>
+
+                    <!-- Key Bindings (for straight key mode) -->
+                    <div class="key-settings-section" id="ks-straight-section" style="display: ${settings.keyerMode === 'straight' ? 'block' : 'none'};">
+                        <h3>${i18n.t('straightKey')}</h3>
+                        <div class="key-settings-row">
+                            <label data-i18n="straightKey">${i18n.t('straightKey')}:</label>
+                            <button id="ks-straight-key" class="key-binding-btn">${KeySettings.getKeyName(settings.straightKey)}</button>
+                        </div>
+                    </div>
+
+                    <!-- Key Bindings (for paddle modes) -->
+                    <div class="key-settings-section" id="ks-paddle-section" style="display: ${settings.keyerMode !== 'straight' ? 'block' : 'none'};">
+                        <h3>${i18n.t('ditKey')} / ${i18n.t('dahKey')}</h3>
+                        <div class="key-settings-row">
+                            <label data-i18n="ditKey">${i18n.t('ditKey')}:</label>
+                            <button id="ks-dit-key" class="key-binding-btn">${KeySettings.getKeyName(settings.ditKey)}</button>
+                        </div>
+                        <div class="key-settings-row">
+                            <label data-i18n="dahKey">${i18n.t('dahKey')}:</label>
+                            <button id="ks-dah-key" class="key-binding-btn">${KeySettings.getKeyName(settings.dahKey)}</button>
+                        </div>
+                        <div class="key-settings-checkbox">
+                            <input type="checkbox" id="ks-swap-paddles" ${settings.swapPaddles ? 'checked' : ''}>
+                            <label for="ks-swap-paddles" data-i18n="swapPaddles">${i18n.t('swapPaddles')}</label>
+                        </div>
+                    </div>
+
+                    <!-- Keyer Speed (for iambic/bug modes) -->
+                    <div class="key-settings-section" id="ks-speed-section" style="display: ${['iambic-a', 'iambic-b', 'ultimatic', 'bug'].includes(settings.keyerMode) ? 'block' : 'none'};">
+                        <h3 data-i18n="keyerSpeed">${i18n.t('keyerSpeed')}</h3>
+                        <div class="key-settings-row">
+                            <label for="ks-keyer-wpm">${i18n.t('keyerSpeed')}:</label>
+                            <input type="number" id="ks-keyer-wpm" min="5" max="50" value="${settings.keyerWpm}">
+                            <span>WPM</span>
+                        </div>
+                    </div>
+
+                    <!-- Info Box -->
+                    <div class="key-settings-info" data-i18n="keySettingsInfo">${i18n.t('keySettingsInfo')}</div>
+
+                    <!-- Buttons -->
+                    <div class="key-settings-buttons">
+                        <button id="ks-reset-btn" class="btn btn-reset" data-i18n="resetDefaults">${i18n.t('resetDefaults')}</button>
+                        <button id="ks-close-btn" class="btn" data-i18n="close">${i18n.t('close')}</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        this.overlay = overlay;
+        this.setupEventHandlers();
+    },
+
+    /**
+     * Setup event handlers for the modal
+     */
+    setupEventHandlers() {
+        const overlay = this.overlay;
+
+        // Close button
+        overlay.querySelector('.key-settings-close').onclick = () => this.close();
+        overlay.querySelector('#ks-close-btn').onclick = () => this.close();
+
+        // Click outside to close
+        overlay.onclick = (e) => {
+            if (e.target === overlay) this.close();
+        };
+
+        // Escape key to close (but not while listening for key)
+        this.escHandler = (e) => {
+            if (e.key === 'Escape' && !this.listeningFor) {
+                this.close();
+            }
+        };
+        document.addEventListener('keydown', this.escHandler);
+
+        // Input method change
+        overlay.querySelector('#ks-input-method').onchange = (e) => {
+            keySettings.set('inputMethod', e.target.value);
+            this.updateVisibility();
+        };
+
+        // Keyer mode change
+        overlay.querySelector('#ks-keyer-mode').onchange = (e) => {
+            keySettings.set('keyerMode', e.target.value);
+            // Update description
+            overlay.querySelector('#ks-keyer-mode-desc').textContent =
+                KEYER_MODES[e.target.value]?.description || '';
+            this.updateVisibility();
+        };
+
+        // Key preset change
+        overlay.querySelector('#ks-key-preset').onchange = (e) => {
+            keySettings.applyPreset(e.target.value);
+            this.updateKeyButtons();
+        };
+
+        // Key binding buttons
+        overlay.querySelector('#ks-straight-key').onclick = () => this.startListening('straight');
+        overlay.querySelector('#ks-dit-key').onclick = () => this.startListening('dit');
+        overlay.querySelector('#ks-dah-key').onclick = () => this.startListening('dah');
+
+        // Swap paddles
+        overlay.querySelector('#ks-swap-paddles').onchange = (e) => {
+            keySettings.set('swapPaddles', e.target.checked);
+        };
+
+        // Keyer WPM
+        overlay.querySelector('#ks-keyer-wpm').onchange = (e) => {
+            const wpm = parseInt(e.target.value, 10);
+            if (wpm >= 5 && wpm <= 50) {
+                keySettings.set('keyerWpm', wpm);
+            }
+        };
+
+        // Reset button
+        overlay.querySelector('#ks-reset-btn').onclick = () => {
+            keySettings.reset();
+            this.close();
+            this.show();  // Reopen with defaults
+        };
+    },
+
+    /**
+     * Update visibility of sections based on current settings
+     */
+    updateVisibility() {
+        const settings = keySettings.settings;
+        const overlay = this.overlay;
+
+        // Show/hide keyboard-specific sections
+        const isKeyboard = settings.inputMethod === 'keyboard';
+        overlay.querySelector('#ks-keyboard-section').style.display = isKeyboard ? 'block' : 'none';
+
+        // Show straight vs paddle sections
+        const isStraight = settings.keyerMode === 'straight';
+        overlay.querySelector('#ks-straight-section').style.display = isStraight ? 'block' : 'none';
+        overlay.querySelector('#ks-paddle-section').style.display = !isStraight ? 'block' : 'none';
+
+        // Show keyer speed for auto modes
+        const needsSpeed = ['iambic-a', 'iambic-b', 'ultimatic', 'bug'].includes(settings.keyerMode);
+        overlay.querySelector('#ks-speed-section').style.display = needsSpeed ? 'block' : 'none';
+    },
+
+    /**
+     * Update key binding button labels
+     */
+    updateKeyButtons() {
+        const settings = keySettings.settings;
+        this.overlay.querySelector('#ks-straight-key').textContent = KeySettings.getKeyName(settings.straightKey);
+        this.overlay.querySelector('#ks-dit-key').textContent = KeySettings.getKeyName(settings.ditKey);
+        this.overlay.querySelector('#ks-dah-key').textContent = KeySettings.getKeyName(settings.dahKey);
+    },
+
+    /**
+     * Start listening for a key press
+     */
+    startListening(which) {
+        this.listeningFor = which;
+        const btn = this.overlay.querySelector(
+            which === 'straight' ? '#ks-straight-key' :
+            which === 'dit' ? '#ks-dit-key' : '#ks-dah-key'
+        );
+        btn.classList.add('listening');
+        btn.textContent = i18n.t('pressKey');
+
+        this.keyListener = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Get the key code
+            const code = e.code;
+
+            // Save the key
+            if (which === 'straight') {
+                keySettings.set('straightKey', code);
+            } else if (which === 'dit') {
+                keySettings.set('ditKey', code);
+            } else if (which === 'dah') {
+                keySettings.set('dahKey', code);
+            }
+
+            // Mark as custom preset
+            keySettings.set('keyPreset', 'custom');
+            this.overlay.querySelector('#ks-key-preset').value = 'custom';
+
+            // Stop listening
+            this.stopListening();
+            this.updateKeyButtons();
+        };
+
+        document.addEventListener('keydown', this.keyListener, true);
+    },
+
+    /**
+     * Stop listening for key press
+     */
+    stopListening() {
+        if (this.keyListener) {
+            document.removeEventListener('keydown', this.keyListener, true);
+            this.keyListener = null;
+        }
+
+        if (this.listeningFor) {
+            const btn = this.overlay.querySelector(
+                this.listeningFor === 'straight' ? '#ks-straight-key' :
+                this.listeningFor === 'dit' ? '#ks-dit-key' : '#ks-dah-key'
+            );
+            btn.classList.remove('listening');
+            this.listeningFor = null;
+        }
+    },
+
+    /**
+     * Close the modal
+     */
+    close() {
+        this.stopListening();
+        if (this.escHandler) {
+            document.removeEventListener('keydown', this.escHandler);
+            this.escHandler = null;
+        }
+        if (this.overlay) {
+            this.overlay.remove();
+            this.overlay = null;
+        }
+    },
+
+    /**
+     * Remove existing modal
+     */
+    removeExisting() {
+        const existing = document.querySelector('.key-settings-overlay');
+        if (existing) existing.remove();
+    },
+
+    /**
+     * Initialize the settings button
+     */
+    init() {
+        const settingsBtn = document.getElementById('key-settings-btn');
+        if (settingsBtn) {
+            settingsBtn.onclick = () => this.show();
+        }
+    }
+};
+
+// =============================================================================
 // SITE CONFIG (Parent Site Branding)
 // =============================================================================
 
@@ -5400,6 +6740,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize help modal
     HelpModal.init();
+
+    // Initialize key settings modal
+    KeySettingsModal.init();
 
     // Prevent pull-to-refresh on mobile
     document.body.addEventListener('touchmove', (e) => {
