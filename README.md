@@ -25,6 +25,18 @@ MorseFleet is an interactive web-based game that combines the classic battleship
 - Automatic character recognition after pause
 - Audio feedback with authentic Morse tones
 
+### Hardware Morse Key Support (NEW!)
+- Connect real CW paddles via USB HID adapters
+- Compatible with VBand, Pi Pico (pico_vband), and similar devices
+- Multiple keyer modes:
+  - **Straight Key**: Manual timing of all elements
+  - **Bug (Semi-Auto)**: Automatic dits, manual dahs
+  - **Iambic A/B**: Alternating dits and dahs with squeeze keying
+  - **Ultimatic**: Last paddle pressed takes priority
+- Configurable key presets (VBand, morsecode.me, custom)
+- Adjustable keyer speed (10-30 WPM)
+- Click ⚙️ in the status bar to configure
+
 ### Smart Computer AI
 - Hunt-and-target algorithm
 - Checkerboard pattern for efficient hunting
@@ -97,23 +109,25 @@ G = --.     N = -.         6 = -....
 
 ## Technical Details
 
-- **Single-file SPA**: Everything in one HTML file (~5000 lines)
+- **Single-file SPA**: Everything in one HTML file (~6500 lines)
 - **No dependencies**: Pure HTML, CSS, JavaScript
 - **Web Audio API**: For Morse tone generation
-- **LocalStorage**: Only for language preference
+- **LocalStorage**: For language preference and key settings
 - **Docker-ready**: Includes Dockerfile and nginx config
+- **Hardware Key Support**: USB HID keyboard emulation for CW paddles
 
 ## Project Structure
 
 ```
 morsefleet/
-├── morsefleet.html        # Main application (single-file SPA)
-├── config.json            # Optional parent site branding
-├── nginx.conf             # Nginx configuration
-├── Dockerfile             # Docker build configuration
-├── docker-entrypoint.sh   # Container startup script
-├── deploy-production.sh   # Deployment script
-└── README.md              # This file
+├── morsefleet.html           # Main application (single-file SPA)
+├── config.json               # Optional parent site branding
+├── nginx.conf                # Nginx configuration
+├── Dockerfile                # Docker build configuration
+├── docker-entrypoint.sh      # Container startup script
+├── deploy-production.sh      # Deployment script
+├── HARDWARE_KEY_SUPPORT.md   # Hardware Morse key implementation docs
+└── README.md                 # This file
 ```
 
 ## Deployment

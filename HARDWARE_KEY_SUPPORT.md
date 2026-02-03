@@ -1,8 +1,8 @@
 # Hardware Morse Key Support - Implementation Plan
 
-**Document Version:** 2.0
+**Document Version:** 2.1
 **Date:** 2026-02-03
-**Status:** Planning
+**Status:** Phase 1 Complete, Phase 2-3 Planned
 
 ---
 
@@ -356,17 +356,45 @@ const PRESET_KEY_MODES = {
 
 ## Implementation Phases
 
-### Phase 1: Enhanced Keyboard Support (Priority: HIGH)
+### Phase 1: Enhanced Keyboard Support (Priority: HIGH) ✅ COMPLETED
 
 **Goal:** Support USB HID adapters (VBand, The Gadget, etc.) that emulate keyboard keys.
 
-**Scope:**
-- Configurable key bindings with presets
-- Straight key mode (single key, manual timing)
-- Iambic paddle mode (two keys: dit + dah)
-- Iambic keyer with Mode A/B support
-- Bug (semi-automatic) mode
-- Settings persistence (localStorage)
+**Status:** ✅ Implemented and deployed (2026-02-03)
+
+**Implemented Features:**
+- ✅ Configurable key bindings with presets (Space, VBand/Pi Pico, morsecode.me, custom)
+- ✅ Straight key mode (single key, manual timing)
+- ✅ Iambic paddle mode (two keys: dit + dah)
+- ✅ Iambic keyer with Mode A, B, and Ultimatic support
+- ✅ Bug (semi-automatic) mode with auto-repeat dits
+- ✅ Settings persistence (localStorage)
+- ✅ Settings modal UI with gear icon in status bar
+- ✅ Keyer speed control (10-30 WPM, separate from game speed)
+- ✅ Paddle swap option for left-handed operators
+- ✅ Full translations (German, English, Slovenian)
+
+**How to Use:**
+1. Click the ⚙️ gear icon in the status bar (next to language selector)
+2. Select your input method (Keyboard/USB HID)
+3. Choose a key preset:
+   - **Space**: Default spacebar for straight key
+   - **VBand/Pi Pico**: Left Ctrl = dit, Right Ctrl = dah
+   - **morsecode.me**: E = dit, I = dah
+   - **Custom**: Define your own keys
+4. Select keyer mode:
+   - **Straight Key**: Manual timing of all elements
+   - **Bug**: Auto-repeat dits, manual dahs
+   - **Iambic A**: Alternating, stops immediately on release
+   - **Iambic B**: Alternating, completes one more element on release
+   - **Ultimatic**: Last paddle pressed takes priority
+5. Adjust keyer speed if using Bug or Iambic modes
+
+**Compatible Hardware:**
+- Pi Pico with pico_vband firmware (recommended DIY, ~$5)
+- VBand USB Interface (~$25)
+- The Gadget (Seeeduino XIAO, ~$10)
+- Any USB HID keyboard emulator
 
 #### 1.1 Settings Data Structure
 
@@ -1190,3 +1218,4 @@ void loop() {
 |---------|------|---------|
 | 1.0 | 2026-02-03 | Initial planning document |
 | 2.0 | 2026-02-03 | Added comprehensive ham radio keyer analysis: key types (straight, bug, iambic), keyer modes (A/B/Ultimatic), standard wiring (3.5mm TRS), website compatibility modes, detailed hardware build guides, commercial product recommendations, Bug keyer implementation, expanded references |
+| 2.1 | 2026-02-03 | **Phase 1 Complete**: Implemented KeySettings class, IambicKeyer, BugKeyer, settings modal UI, key presets (Space, VBand, morsecode.me, custom), keyer modes (straight, bug, iambic A/B, ultimatic), paddle swap, translations (DE/EN/SL), deployed to production |
