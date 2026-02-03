@@ -907,6 +907,31 @@ footer {
     color: var(--text-primary);
 }
 
+.btn-primary {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #3b82f6;
+}
+
+.btn-primary:disabled {
+    background: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.btn-danger {
+    background: var(--accent-danger);
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
 /* Settings gear button */
 .btn-settings {
     background: var(--bg-tertiary);
@@ -2190,14 +2215,17 @@ const KEYER_MODES = {
 class KeySettings {
     constructor() {
         this.defaults = {
-            inputMethod: 'keyboard',      // 'onscreen' | 'keyboard' | 'gamepad'
+            inputMethod: 'keyboard',      // 'onscreen' | 'keyboard' | 'serial' | 'gamepad'
             keyerMode: 'straight',        // 'straight' | 'bug' | 'iambic-a' | 'iambic-b' | 'ultimatic'
             keyPreset: 'space',           // Preset name or 'custom'
             straightKey: 'Space',         // For straight key mode
             ditKey: 'ControlLeft',        // VBand standard
             dahKey: 'ControlRight',       // VBand standard
             keyerWpm: 15,                 // Speed for automatic elements (iambic/bug)
-            swapPaddles: false            // Swap dit/dah for left-handed operators
+            swapPaddles: false,           // Swap dit/dah for left-handed operators
+            // Serial settings (Phase 2)
+            serialBaudRate: 115200,       // Common baud rates: 9600, 115200
+            serialProtocol: 'simple'      // 'simple' | 'ascii' | 'morserino'
         };
 
         this.settings = { ...this.defaults };
@@ -2668,6 +2696,351 @@ class BugKeyer {
     }
 }
 
+// =============================================================================
+// SERIAL KEY INPUT - Web Serial API for direct serial connections (Phase 2)
+// =============================================================================
+
+/**
+ * SerialKeyInput provides direct serial port connection for USB-to-serial
+ * Morse key adapters. Supports Chrome/Edge 89+ only.
+ *
+ * Protocols:
+ * - simple: Single byte with bit flags (0x01=dah, 0x02=dit)
+ * - morserino: Morserino-32 keying events
+ * - ascii: ASCII characters for key state ('D'=dit down, 'd'=dit up, 'H'=dah down, 'h'=dah up)
+ */
+class SerialKeyInput {
+    constructor(options = {}) {
+        this.onDitChange = options.onDitChange;   // (pressed: boolean) => void
+        this.onDahChange = options.onDahChange;   // (pressed: boolean) => void
+        this.onStatusChange = options.onStatusChange; // (status, message?) => void
+        this.onError = options.onError;           // (error) => void
+
+        this.port = null;
+        this.reader = null;
+        this.readLoopPromise = null;
+        this.keepReading = false;
+
+        this.lastDitState = false;
+        this.lastDahState = false;
+
+        this.baudRate = options.baudRate || 115200;
+        this.protocol = options.protocol || 'simple'; // 'simple' | 'ascii' | 'morserino'
+    }
+
+    /**
+     * Check if Web Serial API is supported
+     */
+    static isSupported() {
+        return 'serial' in navigator;
+    }
+
+    /**
+     * Get list of supported baud rates
+     */
+    static getBaudRates() {
+        return [9600, 19200, 38400, 57600, 115200];
+    }
+
+    /**
+     * Get list of supported protocols
+     */
+    static getProtocols() {
+        return [
+            { id: 'simple', name: 'Simple Binary', desc: 'Single byte: bit0=dah, bit1=dit' },
+            { id: 'ascii', name: 'ASCII', desc: 'D/d=dit, H/h=dah (down/up)' },
+            { id: 'morserino', name: 'Morserino-32', desc: 'Morserino keying events' }
+        ];
+    }
+
+    /**
+     * Request and connect to a serial port
+     */
+    async connect() {
+        if (!SerialKeyInput.isSupported()) {
+            throw new Error('Web Serial API not supported in this browser');
+        }
+
+        try {
+            // Request port from user
+            this.port = await navigator.serial.requestPort();
+
+            // Open with configured baud rate
+            await this.port.open({
+                baudRate: this.baudRate,
+                dataBits: 8,
+                stopBits: 1,
+                parity: 'none',
+                flowControl: 'none'
+            });
+
+            this.onStatusChange?.('connected', `Connected at ${this.baudRate} baud`);
+
+            // Start reading
+            this.keepReading = true;
+            this.readLoopPromise = this.readLoop();
+
+            return true;
+        } catch (error) {
+            if (error.name === 'NotFoundError') {
+                // User cancelled the port selection
+                this.onStatusChange?.('cancelled');
+                return false;
+            }
+            this.onError?.(error);
+            this.onStatusChange?.('error', error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Continuously read from serial port
+     */
+    async readLoop() {
+        while (this.port?.readable && this.keepReading) {
+            this.reader = this.port.readable.getReader();
+
+            try {
+                while (this.keepReading) {
+                    const { value, done } = await this.reader.read();
+                    if (done) {
+                        break;
+                    }
+
+                    // Process received bytes
+                    for (const byte of value) {
+                        this.handleByte(byte);
+                    }
+                }
+            } catch (error) {
+                if (this.keepReading) {
+                    console.error('Serial read error:', error);
+                    this.onError?.(error);
+                }
+            } finally {
+                this.reader?.releaseLock();
+                this.reader = null;
+            }
+        }
+    }
+
+    /**
+     * Handle incoming byte based on protocol
+     */
+    handleByte(byte) {
+        switch (this.protocol) {
+            case 'simple':
+                this.handleSimpleByte(byte);
+                break;
+            case 'ascii':
+                this.handleAsciiByte(byte);
+                break;
+            case 'morserino':
+                this.handleMorserinoByte(byte);
+                break;
+        }
+    }
+
+    /**
+     * Simple binary protocol:
+     * Byte format: 0b000000DH
+     *   D = Dit paddle state (bit 1)
+     *   H = Dah paddle state (bit 0)
+     */
+    handleSimpleByte(byte) {
+        const ditState = (byte & 0x02) !== 0;
+        const dahState = (byte & 0x01) !== 0;
+
+        if (ditState !== this.lastDitState) {
+            this.onDitChange?.(ditState);
+            this.lastDitState = ditState;
+        }
+
+        if (dahState !== this.lastDahState) {
+            this.onDahChange?.(dahState);
+            this.lastDahState = dahState;
+        }
+    }
+
+    /**
+     * ASCII protocol:
+     * 'D' = Dit down, 'd' = Dit up
+     * 'H' = Dah down, 'h' = Dah up
+     * (Alternative: '.' for dit down, '-' for dah down, ' ' for release)
+     */
+    handleAsciiByte(byte) {
+        const char = String.fromCharCode(byte);
+
+        switch (char) {
+            case 'D':
+            case '.':
+                if (!this.lastDitState) {
+                    this.onDitChange?.(true);
+                    this.lastDitState = true;
+                }
+                break;
+            case 'd':
+                if (this.lastDitState) {
+                    this.onDitChange?.(false);
+                    this.lastDitState = false;
+                }
+                break;
+            case 'H':
+            case '-':
+                if (!this.lastDahState) {
+                    this.onDahChange?.(true);
+                    this.lastDahState = true;
+                }
+                break;
+            case 'h':
+                if (this.lastDahState) {
+                    this.onDahChange?.(false);
+                    this.lastDahState = false;
+                }
+                break;
+            case ' ':
+            case '0':
+                // Release both
+                if (this.lastDitState) {
+                    this.onDitChange?.(false);
+                    this.lastDitState = false;
+                }
+                if (this.lastDahState) {
+                    this.onDahChange?.(false);
+                    this.lastDahState = false;
+                }
+                break;
+        }
+    }
+
+    /**
+     * Morserino-32 protocol handler
+     * Morserino can send keying events via serial
+     */
+    handleMorserinoByte(byte) {
+        // Morserino sends specific byte values for key states
+        // Key down events: various codes depending on configuration
+        // This is a simplified implementation - may need adjustment
+        // based on actual Morserino serial output configuration
+
+        // Common Morserino keying output:
+        // When configured for "Keyer" mode serial output
+        if (byte === 0x01 || byte === 'L'.charCodeAt(0)) {
+            // Dit/Left paddle
+            if (!this.lastDitState) {
+                this.onDitChange?.(true);
+                this.lastDitState = true;
+            }
+        } else if (byte === 0x02 || byte === 'R'.charCodeAt(0)) {
+            // Dah/Right paddle
+            if (!this.lastDahState) {
+                this.onDahChange?.(true);
+                this.lastDahState = true;
+            }
+        } else if (byte === 0x00 || byte === 'U'.charCodeAt(0)) {
+            // Release
+            if (this.lastDitState) {
+                this.onDitChange?.(false);
+                this.lastDitState = false;
+            }
+            if (this.lastDahState) {
+                this.onDahChange?.(false);
+                this.lastDahState = false;
+            }
+        }
+    }
+
+    /**
+     * Set baud rate (requires reconnect)
+     */
+    setBaudRate(baudRate) {
+        this.baudRate = baudRate;
+    }
+
+    /**
+     * Set protocol
+     */
+    setProtocol(protocol) {
+        this.protocol = protocol;
+    }
+
+    /**
+     * Check if connected
+     */
+    isConnected() {
+        return this.port !== null && this.port.readable !== null;
+    }
+
+    /**
+     * Disconnect from serial port
+     */
+    async disconnect() {
+        this.keepReading = false;
+
+        // Release keys
+        if (this.lastDitState) {
+            this.onDitChange?.(false);
+            this.lastDitState = false;
+        }
+        if (this.lastDahState) {
+            this.onDahChange?.(false);
+            this.lastDahState = false;
+        }
+
+        // Cancel reader if active
+        if (this.reader) {
+            try {
+                await this.reader.cancel();
+            } catch (e) {
+                // Ignore cancel errors
+            }
+            this.reader = null;
+        }
+
+        // Wait for read loop to finish
+        if (this.readLoopPromise) {
+            try {
+                await this.readLoopPromise;
+            } catch (e) {
+                // Ignore
+            }
+            this.readLoopPromise = null;
+        }
+
+        // Close port
+        if (this.port) {
+            try {
+                await this.port.close();
+            } catch (e) {
+                // Ignore close errors
+            }
+            this.port = null;
+        }
+
+        this.onStatusChange?.('disconnected');
+    }
+
+    /**
+     * Send data to serial port (for future use with bidirectional protocols)
+     */
+    async send(data) {
+        if (!this.port?.writable) {
+            throw new Error('Port not writable');
+        }
+
+        const writer = this.port.writable.getWriter();
+        try {
+            const encoder = new TextEncoder();
+            await writer.write(encoder.encode(data));
+        } finally {
+            writer.releaseLock();
+        }
+    }
+}
+
+// Global serial input instance (created on demand)
+let serialKeyInput = null;
+
 // Global key settings instance
 const keySettings = new KeySettings();
 
@@ -2829,6 +3202,18 @@ const i18n = {
             resetDefaults: 'Zurücksetzen',
             close: 'Schließen',
             keySettingsInfo: 'USB-Adapter wie VBand/Pi Pico? Wähle "VBand (Ctrl)" Voreinstellung.',
+            // Serial (Phase 2)
+            inputSerial: 'Seriell (USB)',
+            serialConnection: 'Serielle Verbindung',
+            serialBaudRate: 'Baudrate',
+            serialProtocol: 'Protokoll',
+            serialConnect: 'Verbinden',
+            serialDisconnect: 'Trennen',
+            serialConnecting: 'Verbinde...',
+            serialStatusConnected: 'Verbunden',
+            serialStatusDisconnected: 'Nicht verbunden',
+            serialError: 'Fehler',
+            serialInfo: 'Nur Chrome/Edge. Für Morserino-32 oder DIY Arduino-Adapter.',
             // Imprint
             imprintTitle: 'Impressum',
             imprintInfo: 'Angaben gemäß § 5 ECG und § 25 MedienG',
@@ -2999,6 +3384,18 @@ const i18n = {
             resetDefaults: 'Reset to Defaults',
             close: 'Close',
             keySettingsInfo: 'Using USB adapter like VBand/Pi Pico? Select "VBand (Ctrl)" preset.',
+            // Serial (Phase 2)
+            inputSerial: 'Serial (USB)',
+            serialConnection: 'Serial Connection',
+            serialBaudRate: 'Baud Rate',
+            serialProtocol: 'Protocol',
+            serialConnect: 'Connect',
+            serialDisconnect: 'Disconnect',
+            serialConnecting: 'Connecting...',
+            serialStatusConnected: 'Connected',
+            serialStatusDisconnected: 'Not connected',
+            serialError: 'Error',
+            serialInfo: 'Chrome/Edge only. For Morserino-32 or DIY Arduino adapters.',
             // Imprint
             imprintTitle: 'Imprint',
             imprintInfo: 'Information according to § 5 ECG and § 25 MedienG (Austrian law)',
@@ -3169,6 +3566,18 @@ const i18n = {
             resetDefaults: 'Ponastavi',
             close: 'Zapri',
             keySettingsInfo: 'Uporabljaš USB adapter kot VBand/Pi Pico? Izberi "VBand (Ctrl)" prednastavitev.',
+            // Serial (Phase 2)
+            inputSerial: 'Serijsko (USB)',
+            serialConnection: 'Serijska povezava',
+            serialBaudRate: 'Hitrost',
+            serialProtocol: 'Protokol',
+            serialConnect: 'Poveži',
+            serialDisconnect: 'Prekini',
+            serialConnecting: 'Povezujem...',
+            serialStatusConnected: 'Povezano',
+            serialStatusDisconnected: 'Ni povezano',
+            serialError: 'Napaka',
+            serialInfo: 'Samo Chrome/Edge. Za Morserino-32 ali DIY Arduino adapterje.',
             // Imprint
             imprintTitle: 'Impressum',
             imprintInfo: 'Podatki v skladu s § 5 ECG in § 25 MedienG (avstrijska zakonodaja)',
@@ -4909,6 +5318,93 @@ class MorseFleetGame {
     }
 
     // =========================================================================
+    // SERIAL INPUT HANDLERS
+    // =========================================================================
+
+    /**
+     * Handle dit paddle down from serial input
+     */
+    handleSerialDitDown() {
+        const inputMethod = keySettings.get('inputMethod');
+        if (inputMethod !== 'serial') return;
+
+        const swapped = keySettings.get('swapPaddles');
+        const keyer = this.getActiveKeyer();
+
+        if (keyer) {
+            if (swapped) {
+                keyer.dahDown();
+            } else {
+                keyer.ditDown();
+            }
+        } else {
+            // Straight key mode - treat dit as key down
+            this.morseInput.handleKeyDown();
+        }
+    }
+
+    /**
+     * Handle dit paddle up from serial input
+     */
+    handleSerialDitUp() {
+        const inputMethod = keySettings.get('inputMethod');
+        if (inputMethod !== 'serial') return;
+
+        const swapped = keySettings.get('swapPaddles');
+        const keyer = this.getActiveKeyer();
+
+        if (keyer) {
+            if (swapped) {
+                keyer.dahUp();
+            } else {
+                keyer.ditUp();
+            }
+        } else {
+            // Straight key mode - treat dit as key up
+            this.morseInput.handleKeyUp();
+        }
+    }
+
+    /**
+     * Handle dah paddle down from serial input
+     */
+    handleSerialDahDown() {
+        const inputMethod = keySettings.get('inputMethod');
+        if (inputMethod !== 'serial') return;
+
+        const swapped = keySettings.get('swapPaddles');
+        const keyer = this.getActiveKeyer();
+
+        if (keyer) {
+            if (swapped) {
+                keyer.ditDown();
+            } else {
+                keyer.dahDown();
+            }
+        }
+        // In straight key mode, dah paddle does nothing
+    }
+
+    /**
+     * Handle dah paddle up from serial input
+     */
+    handleSerialDahUp() {
+        const inputMethod = keySettings.get('inputMethod');
+        if (inputMethod !== 'serial') return;
+
+        const swapped = keySettings.get('swapPaddles');
+        const keyer = this.getActiveKeyer();
+
+        if (keyer) {
+            if (swapped) {
+                keyer.ditUp();
+            } else {
+                keyer.dahUp();
+            }
+        }
+    }
+
+    // =========================================================================
     // GAME MODE
     // =========================================================================
 
@@ -6369,9 +6865,43 @@ const KeySettingsModal = {
                             <select id="ks-input-method">
                                 <option value="onscreen" ${settings.inputMethod === 'onscreen' ? 'selected' : ''} data-i18n-value="inputOnscreen">${i18n.t('inputOnscreen')}</option>
                                 <option value="keyboard" ${settings.inputMethod === 'keyboard' ? 'selected' : ''} data-i18n-value="inputKeyboard">${i18n.t('inputKeyboard')}</option>
+                                ${SerialKeyInput.isSupported() ? `<option value="serial" ${settings.inputMethod === 'serial' ? 'selected' : ''} data-i18n-value="inputSerial">${i18n.t('inputSerial')}</option>` : ''}
                                 <option value="gamepad" ${settings.inputMethod === 'gamepad' ? 'selected' : ''} data-i18n-value="inputGamepad">${i18n.t('inputGamepad')}</option>
                             </select>
                         </div>
+                    </div>
+
+                    <!-- Serial Port Section (Chrome/Edge only) -->
+                    <div class="key-settings-section" id="ks-serial-section" style="display: ${settings.inputMethod === 'serial' ? 'block' : 'none'};">
+                        <h3 data-i18n="serialConnection">${i18n.t('serialConnection')}</h3>
+                        <div class="key-settings-row">
+                            <label for="ks-serial-baud">${i18n.t('serialBaudRate')}:</label>
+                            <select id="ks-serial-baud">
+                                ${SerialKeyInput.getBaudRates().map(rate =>
+                                    `<option value="${rate}" ${settings.serialBaudRate === rate ? 'selected' : ''}>${rate}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                        <div class="key-settings-row">
+                            <label for="ks-serial-protocol">${i18n.t('serialProtocol')}:</label>
+                            <select id="ks-serial-protocol">
+                                ${SerialKeyInput.getProtocols().map(p =>
+                                    `<option value="${p.id}" ${settings.serialProtocol === p.id ? 'selected' : ''}>${p.name}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                        <div id="ks-serial-protocol-desc" class="keyer-mode-desc" style="color: var(--text-muted); font-size: 0.8em; margin-top: 4px;">
+                            ${SerialKeyInput.getProtocols().find(p => p.id === settings.serialProtocol)?.desc || ''}
+                        </div>
+                        <div class="key-settings-row" style="margin-top: 12px;">
+                            <button id="ks-serial-connect" class="btn ${serialKeyInput?.isConnected() ? 'btn-danger' : 'btn-primary'}">
+                                ${serialKeyInput?.isConnected() ? i18n.t('serialDisconnect') : i18n.t('serialConnect')}
+                            </button>
+                            <span id="ks-serial-status" style="margin-left: 10px; color: var(--text-muted);">
+                                ${serialKeyInput?.isConnected() ? i18n.t('serialStatusConnected') : i18n.t('serialStatusDisconnected')}
+                            </span>
+                        </div>
+                        <div class="key-settings-info" style="margin-top: 8px;" data-i18n="serialInfo">${i18n.t('serialInfo')}</div>
                     </div>
 
                     <!-- Keyer Mode -->
@@ -6510,12 +7040,148 @@ const KeySettingsModal = {
             }
         };
 
+        // Serial controls (if present)
+        const serialBaud = overlay.querySelector('#ks-serial-baud');
+        const serialProtocol = overlay.querySelector('#ks-serial-protocol');
+        const serialConnect = overlay.querySelector('#ks-serial-connect');
+
+        if (serialBaud) {
+            serialBaud.onchange = (e) => {
+                keySettings.set('serialBaudRate', parseInt(e.target.value, 10));
+            };
+        }
+
+        if (serialProtocol) {
+            serialProtocol.onchange = (e) => {
+                keySettings.set('serialProtocol', e.target.value);
+                const desc = SerialKeyInput.getProtocols().find(p => p.id === e.target.value)?.desc || '';
+                overlay.querySelector('#ks-serial-protocol-desc').textContent = desc;
+            };
+        }
+
+        if (serialConnect) {
+            serialConnect.onclick = () => this.handleSerialConnect();
+        }
+
         // Reset button
         overlay.querySelector('#ks-reset-btn').onclick = () => {
             keySettings.reset();
             this.close();
             this.show();  // Reopen with defaults
         };
+    },
+
+    /**
+     * Handle serial connect/disconnect button
+     */
+    async handleSerialConnect() {
+        const connectBtn = this.overlay.querySelector('#ks-serial-connect');
+        const statusSpan = this.overlay.querySelector('#ks-serial-status');
+
+        if (serialKeyInput?.isConnected()) {
+            // Disconnect
+            await serialKeyInput.disconnect();
+            connectBtn.textContent = i18n.t('serialConnect');
+            connectBtn.classList.remove('btn-danger');
+            connectBtn.classList.add('btn-primary');
+            statusSpan.textContent = i18n.t('serialStatusDisconnected');
+            statusSpan.style.color = 'var(--text-muted)';
+        } else {
+            // Connect
+            const settings = keySettings.settings;
+
+            // Create new serial input if needed
+            if (!serialKeyInput) {
+                serialKeyInput = new SerialKeyInput({
+                    baudRate: settings.serialBaudRate,
+                    protocol: settings.serialProtocol,
+                    onDitChange: (pressed) => {
+                        // Forward to game's keyer if active
+                        if (window.morseFleetGame) {
+                            if (pressed) {
+                                window.morseFleetGame.handleSerialDitDown();
+                            } else {
+                                window.morseFleetGame.handleSerialDitUp();
+                            }
+                        }
+                    },
+                    onDahChange: (pressed) => {
+                        if (window.morseFleetGame) {
+                            if (pressed) {
+                                window.morseFleetGame.handleSerialDahDown();
+                            } else {
+                                window.morseFleetGame.handleSerialDahUp();
+                            }
+                        }
+                    },
+                    onStatusChange: (status, message) => {
+                        this.updateSerialStatus(status, message);
+                    },
+                    onError: (error) => {
+                        console.error('Serial error:', error);
+                    }
+                });
+            } else {
+                // Update settings
+                serialKeyInput.setBaudRate(settings.serialBaudRate);
+                serialKeyInput.setProtocol(settings.serialProtocol);
+            }
+
+            connectBtn.disabled = true;
+            connectBtn.textContent = i18n.t('serialConnecting');
+            statusSpan.textContent = i18n.t('serialConnecting');
+
+            try {
+                const connected = await serialKeyInput.connect();
+                if (connected) {
+                    connectBtn.textContent = i18n.t('serialDisconnect');
+                    connectBtn.classList.remove('btn-primary');
+                    connectBtn.classList.add('btn-danger');
+                    statusSpan.textContent = i18n.t('serialStatusConnected');
+                    statusSpan.style.color = 'var(--accent-success)';
+                } else {
+                    // User cancelled
+                    connectBtn.textContent = i18n.t('serialConnect');
+                    statusSpan.textContent = i18n.t('serialStatusDisconnected');
+                }
+            } catch (error) {
+                connectBtn.textContent = i18n.t('serialConnect');
+                statusSpan.textContent = `${i18n.t('serialError')}: ${error.message}`;
+                statusSpan.style.color = 'var(--accent-danger)';
+            } finally {
+                connectBtn.disabled = false;
+            }
+        }
+    },
+
+    /**
+     * Update serial status display
+     */
+    updateSerialStatus(status, message) {
+        const connectBtn = this.overlay?.querySelector('#ks-serial-connect');
+        const statusSpan = this.overlay?.querySelector('#ks-serial-status');
+        if (!connectBtn || !statusSpan) return;
+
+        switch (status) {
+            case 'connected':
+                connectBtn.textContent = i18n.t('serialDisconnect');
+                connectBtn.classList.remove('btn-primary');
+                connectBtn.classList.add('btn-danger');
+                statusSpan.textContent = message || i18n.t('serialStatusConnected');
+                statusSpan.style.color = 'var(--accent-success)';
+                break;
+            case 'disconnected':
+                connectBtn.textContent = i18n.t('serialConnect');
+                connectBtn.classList.remove('btn-danger');
+                connectBtn.classList.add('btn-primary');
+                statusSpan.textContent = i18n.t('serialStatusDisconnected');
+                statusSpan.style.color = 'var(--text-muted)';
+                break;
+            case 'error':
+                statusSpan.textContent = message || i18n.t('serialError');
+                statusSpan.style.color = 'var(--accent-danger)';
+                break;
+        }
     },
 
     /**
@@ -6527,12 +7193,20 @@ const KeySettingsModal = {
 
         // Show/hide keyboard-specific sections
         const isKeyboard = settings.inputMethod === 'keyboard';
+        const isSerial = settings.inputMethod === 'serial';
         overlay.querySelector('#ks-keyboard-section').style.display = isKeyboard ? 'block' : 'none';
 
-        // Show straight vs paddle sections
+        // Show/hide serial section
+        const serialSection = overlay.querySelector('#ks-serial-section');
+        if (serialSection) {
+            serialSection.style.display = isSerial ? 'block' : 'none';
+        }
+
+        // Show straight vs paddle sections (for keyboard/serial modes)
+        const showKeyBindings = isKeyboard || isSerial;
         const isStraight = settings.keyerMode === 'straight';
-        overlay.querySelector('#ks-straight-section').style.display = isStraight ? 'block' : 'none';
-        overlay.querySelector('#ks-paddle-section').style.display = !isStraight ? 'block' : 'none';
+        overlay.querySelector('#ks-straight-section').style.display = showKeyBindings && isStraight ? 'block' : 'none';
+        overlay.querySelector('#ks-paddle-section').style.display = showKeyBindings && !isStraight ? 'block' : 'none';
 
         // Show keyer speed for auto modes
         const needsSpeed = ['iambic-a', 'iambic-b', 'ultimatic', 'bug'].includes(settings.keyerMode);

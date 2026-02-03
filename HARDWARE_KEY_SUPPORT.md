@@ -1,8 +1,8 @@
 # Hardware Morse Key Support - Implementation Plan
 
-**Document Version:** 2.1
+**Document Version:** 2.2
 **Date:** 2026-02-03
-**Status:** Phase 1 Complete, Phase 2-3 Planned
+**Status:** Phase 1-2 Complete, Phase 3 Planned
 
 ---
 
@@ -709,16 +709,43 @@ class BugKeyer {
 
 ---
 
-### Phase 2: Web Serial API Support (Priority: MEDIUM)
+### Phase 2: Web Serial API Support (Priority: MEDIUM) ✅ COMPLETED
 
 **Goal:** Direct serial connection for Chrome/Edge users with Morserino-32 or custom serial interfaces.
 
-**Scope:**
-- Feature detection for Web Serial API
-- Connection UI with device picker
-- Morserino-32 protocol support
-- Simple binary protocol for DIY interfaces
-- Graceful fallback when unsupported
+**Status:** ✅ Implemented and deployed (2026-02-03)
+
+**Implemented Features:**
+- ✅ Feature detection for Web Serial API (`navigator.serial`)
+- ✅ Serial option in input method dropdown (Chrome/Edge only)
+- ✅ Connection UI with device picker and baud rate selection
+- ✅ Three protocol handlers: Simple Binary, ASCII, Morserino
+- ✅ Connect/Disconnect button with status indicator
+- ✅ Settings persistence (baud rate, protocol)
+- ✅ Full translations (German, English, Slovenian)
+
+**Browser Support:**
+- Chrome 89+ ✅
+- Edge 89+ ✅
+- Opera 76+ ✅
+- Firefox ❌ (not supported)
+- Safari ❌ (not supported)
+
+**How to Use:**
+1. Click ⚙️ gear icon in status bar
+2. Select "Serial (USB)" as input method
+3. Choose baud rate (default: 115200)
+4. Choose protocol:
+   - **Simple Binary**: Single byte with dit/dah bits
+   - **ASCII**: Character-based (D/d, H/h)
+   - **Morserino**: Morserino-32 keying events
+5. Click "Connect" and select your serial device
+6. Configure keyer mode as needed (straight, iambic, etc.)
+
+**Compatible Hardware:**
+- Morserino-32 (with serial keying output enabled)
+- DIY Arduino/ESP32 with USB serial
+- Any USB-to-serial adapter with simple key interface
 
 #### 2.1 Implementation Tasks
 
@@ -1219,3 +1246,4 @@ void loop() {
 | 1.0 | 2026-02-03 | Initial planning document |
 | 2.0 | 2026-02-03 | Added comprehensive ham radio keyer analysis: key types (straight, bug, iambic), keyer modes (A/B/Ultimatic), standard wiring (3.5mm TRS), website compatibility modes, detailed hardware build guides, commercial product recommendations, Bug keyer implementation, expanded references |
 | 2.1 | 2026-02-03 | **Phase 1 Complete**: Implemented KeySettings class, IambicKeyer, BugKeyer, settings modal UI, key presets (Space, VBand, morsecode.me, custom), keyer modes (straight, bug, iambic A/B, ultimatic), paddle swap, translations (DE/EN/SL), deployed to production |
+| 2.2 | 2026-02-03 | **Phase 2 Complete**: Implemented SerialKeyInput class with Web Serial API, three protocol handlers (simple binary, ASCII, Morserino), serial connection UI in settings modal, baud rate selection, connect/disconnect with status, full translations (DE/EN/SL) |

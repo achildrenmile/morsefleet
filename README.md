@@ -25,15 +25,20 @@ MorseFleet is an interactive web-based game that combines the classic battleship
 - Automatic character recognition after pause
 - Audio feedback with authentic Morse tones
 
-### Hardware Morse Key Support (NEW!)
-- Connect real CW paddles via USB HID adapters
-- Compatible with VBand, Pi Pico (pico_vband), and similar devices
+### Hardware Morse Key Support
+- **USB HID (Keyboard Emulation)** - Works in all browsers
+  - Connect real CW paddles via USB HID adapters
+  - Compatible with VBand, Pi Pico (pico_vband), and similar devices
+  - Configurable key presets (VBand, morsecode.me, custom)
+- **Web Serial API** - Chrome/Edge only
+  - Direct USB serial connection for Morserino-32 or DIY Arduino adapters
+  - Multiple protocols: Simple Binary, ASCII, Morserino
+  - Configurable baud rate (9600-115200)
 - Multiple keyer modes:
   - **Straight Key**: Manual timing of all elements
   - **Bug (Semi-Auto)**: Automatic dits, manual dahs
   - **Iambic A/B**: Alternating dits and dahs with squeeze keying
   - **Ultimatic**: Last paddle pressed takes priority
-- Configurable key presets (VBand, morsecode.me, custom)
 - Adjustable keyer speed (10-30 WPM)
 - Click ⚙️ in the status bar to configure
 
