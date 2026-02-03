@@ -882,6 +882,25 @@ footer {
     border-radius: 0 6px 6px 0;
 }
 
+.key-settings-build-link {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    margin: 8px 0 12px 0;
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-size: 0.85em;
+    border: 1px dashed var(--border-color);
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.key-settings-build-link:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
 .key-settings-buttons {
     display: flex;
     gap: 10px;
@@ -3202,6 +3221,8 @@ const i18n = {
             resetDefaults: 'Zurücksetzen',
             close: 'Schließen',
             keySettingsInfo: 'USB-Adapter wie VBand/Pi Pico? Wähle "VBand (Ctrl)" Voreinstellung.',
+            hardwareBuildGuide: '🔧 Eigenen Adapter bauen? Siehe Hardware-Bauanleitung auf GitHub',
+            hardwareBuildGuideUrl: 'https://github.com/achildrenmile/morsefleet/blob/main/HARDWARE_KEY_SUPPORT.md',
             // Serial (Phase 2)
             inputSerial: 'Seriell (USB)',
             serialConnection: 'Serielle Verbindung',
@@ -3384,6 +3405,8 @@ const i18n = {
             resetDefaults: 'Reset to Defaults',
             close: 'Close',
             keySettingsInfo: 'Using USB adapter like VBand/Pi Pico? Select "VBand (Ctrl)" preset.',
+            hardwareBuildGuide: '🔧 Build your own adapter? See Hardware Build Guide on GitHub',
+            hardwareBuildGuideUrl: 'https://github.com/achildrenmile/morsefleet/blob/main/HARDWARE_KEY_SUPPORT.md',
             // Serial (Phase 2)
             inputSerial: 'Serial (USB)',
             serialConnection: 'Serial Connection',
@@ -3566,6 +3589,8 @@ const i18n = {
             resetDefaults: 'Ponastavi',
             close: 'Zapri',
             keySettingsInfo: 'Uporabljaš USB adapter kot VBand/Pi Pico? Izberi "VBand (Ctrl)" prednastavitev.',
+            hardwareBuildGuide: '🔧 Zgradi svoj adapter? Glej navodila za gradnjo na GitHub',
+            hardwareBuildGuideUrl: 'https://github.com/achildrenmile/morsefleet/blob/main/HARDWARE_KEY_SUPPORT.md',
             // Serial (Phase 2)
             inputSerial: 'Serijsko (USB)',
             serialConnection: 'Serijska povezava',
@@ -6963,6 +6988,11 @@ const KeySettingsModal = {
 
                     <!-- Info Box -->
                     <div class="key-settings-info" data-i18n="keySettingsInfo">${i18n.t('keySettingsInfo')}</div>
+
+                    <!-- Hardware Build Guide Link -->
+                    <a href="${i18n.t('hardwareBuildGuideUrl')}" target="_blank" rel="noopener noreferrer" class="key-settings-build-link">
+                        ${i18n.t('hardwareBuildGuide')}
+                    </a>
 
                     <!-- Buttons -->
                     <div class="key-settings-buttons">
