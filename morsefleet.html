@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -1893,7 +1893,7 @@ footer {
                 <div class="status-item speed-selector">
                     <span class="label" data-i18n="language">Sprache:</span>
                     <select id="lang-select" class="speed-select">
-                        <option value="de" selected>Deutsch</option>
+                        <option value="de">Deutsch</option>
                         <option value="en">English</option>
                         <option value="sl">Slovenščina</option>
                     </select>
@@ -3068,7 +3068,8 @@ const keySettings = new KeySettings();
 // =============================================================================
 
 const i18n = {
-    currentLang: 'de',
+    currentLang: 'en',
+    supportedLangs: ['de', 'en', 'sl'],
 
     translations: {
         de: {
@@ -3642,6 +3643,8 @@ const i18n = {
     },
 
     updateUI() {
+        // Update html lang attribute
+        document.documentElement.lang = this.currentLang;
         // Update all translatable elements
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
@@ -3663,10 +3666,23 @@ const i18n = {
         }
     },
 
+    detectBrowserLang() {
+        const langs = navigator.languages || [navigator.language || navigator.userLanguage || ''];
+        for (const lang of langs) {
+            const code = lang.split('-')[0].toLowerCase();
+            if (this.supportedLangs.includes(code)) {
+                return code;
+            }
+        }
+        return 'en';
+    },
+
     init() {
         const saved = localStorage.getItem('morsefleet-lang');
-        if (saved && this.translations[saved]) {
+        if (saved && this.supportedLangs.includes(saved)) {
             this.currentLang = saved;
+        } else {
+            this.currentLang = this.detectBrowserLang();
         }
         this.updateUI();
     }
